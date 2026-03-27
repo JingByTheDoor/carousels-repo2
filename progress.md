@@ -24,6 +24,14 @@
 - Drafted the canonical input/output schemas in `gemini.md`.
 - Drafted a Google Sheets queue schema for automation input.
 - Recorded external research sources for Google Sheets API setup.
+- Received user approval for:
+  - topic-only automatic copy generation
+  - portrait `1080x1350` as the default output ratio
+  - the Google Sheets queue design
+- Added architecture SOPs for queue intake, content planning, Figma references, and Link verification.
+- Added Python project scaffolding, environment contract, and initial queue/planning tools.
+- Created a local `.venv` and installed the project in editable mode.
+- Added clean CLI handling for missing configuration values.
 
 ### Errors
 - `rg --files` returned no tracked files because the repository was empty. No corrective action required.
@@ -37,8 +45,14 @@
   - `1:46239`
   - `1:46288`
   - `1:46485`
-- No code execution tests were run because implementation is intentionally blocked during Blueprint.
+- Live credential-based Link tests are still pending because `.env` has not been configured yet.
+- `python -m compileall tools` passed.
+- `.venv\Scripts\python -m pip install -e .` succeeded.
+- `.venv\Scripts\python tools\plan_carousel.py --help` succeeded.
+- `.venv\Scripts\python tools\ensure_queue_sheet.py` failed cleanly with missing `GOOGLE_SERVICE_ACCOUNT_JSON`.
+- `.venv\Scripts\python tools\check_figma_access.py` failed cleanly with missing `FIGMA_ACCESS_TOKEN`.
 
 ### Current Status
-- Waiting on user approval of the drafted Blueprint assumptions.
-- Waiting on blueprint approval before any tool scripts are authored.
+- Blueprint is approved.
+- Tooling has been scaffolded and is ready for local verification.
+- Waiting on `.env` configuration for live API handshakes.

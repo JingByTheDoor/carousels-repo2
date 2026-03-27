@@ -18,6 +18,9 @@
 - Design guidance: use template carousels as examples/reference.
 - Delivery target: editable Figma output and exported image output.
 - Styling rule: reuse the palette and styles from the examples and explicitly report which references were used.
+- Topic-only input is approved to generate the full slide copy automatically.
+- Default aspect ratio is approved as `1080x1350`.
+- Google Sheets queue setup is approved.
 
 ## Figma Reference Findings
 - Figma file key: `SsqVEXMsFxp9WPbPIy9Sww`
@@ -27,7 +30,7 @@
   - Image-plus-text body reference: node `1:46239`
 - Secondary CTA reference identified: `typography slide 2` node `1:46288`
 - Secondary portrait reference identified: node `1:46485`
-- `Alder_1` gives the most coherent square carousel family for v1.
+- Portrait outputs should borrow layout direction from `1:46485` while preserving `Alder_1` palette and typography choices.
 
 ## Research
 - Official Google Sheets Python quickstart:
@@ -43,10 +46,10 @@
 - Do not write scripts in `tools/` until discovery is complete, the data schema is defined, and the blueprint is approved.
 - Business logic must be deterministic and encoded in SOPs plus atomic tools.
 - Intermediate artifacts belong in `.tmp/`.
+- The local Python layer currently stops at a `planned` payload; Figma frame creation remains an agent-side MCP action.
+- Live Link verification requires user-provided `.env` credentials before Google Sheets or Figma REST checks can succeed.
 
 ## Open Questions
-- Should topic-only input generate the full slide copy automatically? This is assumed for v1 but not yet explicitly approved.
-- Should v1 default to square `1080x1080` output, or should portrait `1080x1350` become the default?
 - Which Google account or Google Cloud project will own the Sheets credentials?
 
 ## Notes

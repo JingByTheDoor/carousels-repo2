@@ -1,9 +1,9 @@
 # Task Plan
 
 ## Status
-- Phase: `B - Blueprint`
-- Blueprint approval: `Pending user answers`
-- Tool/script authoring in `tools/`: `Blocked`
+- Phase: `L - Link / A - Architect`
+- Blueprint approval: `Approved`
+- Tool/script authoring in `tools/`: `Completed for v1 planning layer`
 
 ## Goal
 Bootstrap this repository under the B.L.A.S.T. protocol and pause implementation until discovery, schema definition, and blueprint approval are complete.
@@ -14,7 +14,7 @@ Bootstrap this repository under the B.L.A.S.T. protocol and pause implementation
 - Source of truth: Google Sheets queue for automation, with manual input supported during local testing
 - Primary output: editable Figma carousel
 - Secondary output: exported PNG slide set
-- Default aspect ratio for v1: `1080x1080` square
+- Default aspect ratio for v1: `1080x1350` portrait
 - Design rule: use the palette and visual language from approved Figma references and log exact reference nodes used
 - Primary Figma reference family:
   - Cover: `Alder_1` node `1:46227`
@@ -32,7 +32,7 @@ Bootstrap this repository under the B.L.A.S.T. protocol and pause implementation
 - [x] Create project memory files
 - [x] Initialize constitution and schema files
 - [x] Create scaffold directories: `architecture/`, `tools/`, `.tmp/`
-- [ ] Confirm project intent through discovery
+- [x] Confirm project intent through discovery
 
 ### Phase 1: Blueprint
 - [x] Capture North Star outcome
@@ -41,8 +41,8 @@ Bootstrap this repository under the B.L.A.S.T. protocol and pause implementation
 - [x] Confirm delivery payload and destination
 - [x] Confirm behavioral rules and guardrails
 - [x] Define canonical JSON data schema in `gemini.md`
-- [ ] Research relevant repos, docs, and prior art
-- [ ] Approve Blueprint
+- [x] Research relevant repos, docs, and prior art
+- [x] Approve Blueprint
 
 ### Phase 2: Link
 - [ ] Verify `.env` existence and required keys
@@ -64,6 +64,6 @@ Bootstrap this repository under the B.L.A.S.T. protocol and pause implementation
 - [ ] Finalize maintenance log in `gemini.md`
 
 ## Current Blockers
-- Blueprint is not yet approved.
 - Google Sheets credentials and access model are not yet configured.
-- No implementation work may begin until the above are resolved.
+- OpenAI and Google credentials are still needed for live Link verification.
+- Figma rendering is still an agent-side MCP step; the local tools currently stop at a `planned` payload.

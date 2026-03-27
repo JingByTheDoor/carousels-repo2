@@ -1,0 +1,16 @@
+[project]
+name = "carousel-automation"
+version = "0.1.0"
+description = "Deterministic Instagram carousel planning and queue tooling."
+requires-python = ">=3.11"
+dependencies = [
+  "google-api-python-client>=2.176.0",
+  "google-auth>=2.40.0",
+  "openai>=1.68.0",
+  "pydantic>=2.11.0",
+  "python-dotenv>=1.1.0",
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"

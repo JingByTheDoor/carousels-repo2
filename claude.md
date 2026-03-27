@@ -21,6 +21,7 @@ This repository follows the B.L.A.S.T. protocol and A.N.T. 3-layer architecture 
 - `.tmp/` stores intermediate and disposable artifacts only.
 - Environment secrets belong in `.env`, never in source files.
 - A task is not complete until the payload reaches its final destination.
+- The local Python layer may produce a `planned` payload before the final Figma MCP render step completes.
 
 ## Schema Governance
 - Canonical input/output schemas live in `gemini.md`.

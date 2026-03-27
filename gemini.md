@@ -15,7 +15,7 @@ Status: `Drafted for Blueprint approval`
   "output_modes": ["figma", "png"],
   "reference_style": "alder_1",
   "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
-  "reference_node_ids": ["1:46227", "1:46232", "1:46239"],
+  "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46288", "1:46485"],
   "notes": "string|null"
 }
 ```
@@ -24,7 +24,7 @@ Status: `Drafted for Blueprint approval`
 ```json
 {
   "job_id": "string",
-  "status": "queued|processing|complete|error",
+  "status": "queued|processing|planned|complete|error",
   "normalized_input": {
     "topic": "string|null",
     "script": "string|null",
@@ -88,7 +88,7 @@ Status: `Drafted for Blueprint approval`
       "file_key": "string",
       "node_id": "string",
       "node_name": "string",
-      "usage": "cover|body|cta|palette"
+      "usage": "cover|body|cta|palette|layout"
     }
   ],
   "figma_output": {
@@ -139,10 +139,11 @@ Status: `Drafted for Blueprint approval`
 - Any schema change requires updating this file before implementation changes proceed.
 - At least one of `topic` or `script` is required.
 - V1 default reference style is `alder_1`.
-- V1 default aspect ratio is `square_1080` unless explicitly overridden.
+- V1 default aspect ratio is `portrait_1080x1350` unless explicitly overridden.
 - The system must always record the exact Figma reference nodes it used.
 - If only `topic` is provided, the system is expected to generate a complete 7-slide content plan before layout.
 - If `script` is provided, the system restructures it into the 7-slide format instead of discarding it.
+- `planned` means the content payload exists and is waiting for the Figma render step.
 
 ## Maintenance Log
 
@@ -150,4 +151,6 @@ Status: `Drafted for Blueprint approval`
 - Initialized schema file during repository bootstrap.
 - Drafted v1 schemas for manual input and Google Sheets queue input.
 - Locked the 7-slide carousel contract: hook, five info slides, CTA.
+- Updated the queue state model to include `planned` before Figma rendering completes.
+- Switched the v1 default aspect ratio to `portrait_1080x1350`.
 - Implementation remains blocked pending blueprint approval.

@@ -8,6 +8,24 @@
 ## Goal
 Bootstrap this repository under the B.L.A.S.T. protocol and pause implementation until discovery, schema definition, and blueprint approval are complete.
 
+## Draft Blueprint
+- Product: Instagram carousel automation
+- Core flow: `topic/script in -> 7-slide carousel out`
+- Source of truth: Google Sheets queue for automation, with manual input supported during local testing
+- Primary output: editable Figma carousel
+- Secondary output: exported PNG slide set
+- Default aspect ratio for v1: `1080x1080` square
+- Design rule: use the palette and visual language from approved Figma references and log exact reference nodes used
+- Primary Figma reference family:
+  - Cover: `Alder_1` node `1:46227`
+  - Body: `Alder_1` node `1:46232`
+  - Body with image-mask variation: `Alder_1` node `1:46239`
+- Secondary references:
+  - CTA inspiration: `typography slide 2` node `1:46288`
+  - Portrait reference: node `1:46485`
+- Working assumption:
+  - If only a topic is provided, the system generates the full hook, five informational slides, and CTA copy automatically.
+
 ## Phases
 
 ### Phase 0: Initialization
@@ -18,11 +36,11 @@ Bootstrap this repository under the B.L.A.S.T. protocol and pause implementation
 
 ### Phase 1: Blueprint
 - [x] Capture North Star outcome
-- [ ] Identify integrations and credential readiness
-- [ ] Confirm source of truth
-- [ ] Confirm delivery payload and destination
-- [ ] Confirm behavioral rules and guardrails
-- [ ] Define canonical JSON data schema in `gemini.md`
+- [x] Identify integrations and credential readiness
+- [x] Confirm source of truth
+- [x] Confirm delivery payload and destination
+- [x] Confirm behavioral rules and guardrails
+- [x] Define canonical JSON data schema in `gemini.md`
 - [ ] Research relevant repos, docs, and prior art
 - [ ] Approve Blueprint
 
@@ -46,7 +64,6 @@ Bootstrap this repository under the B.L.A.S.T. protocol and pause implementation
 - [ ] Finalize maintenance log in `gemini.md`
 
 ## Current Blockers
-- Discovery answers have not been provided yet.
-- Data schema is not yet defined.
 - Blueprint is not yet approved.
+- Google Sheets credentials and access model are not yet configured.
 - No implementation work may begin until the above are resolved.

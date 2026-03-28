@@ -29,6 +29,10 @@
   - Text-first body reference: node `1:46232`
   - Image-plus-text body reference: node `1:46239`
 - Secondary CTA reference identified: `typography slide 2` node `1:46288`
+- Secondary centered dark reference identified: `typography slide 1` node `1:46201`
+- Secondary minimal statement references identified:
+  - `CP_3` node `1:46184`
+  - `CP_3` node `1:46190`
 - Secondary portrait reference identified: node `1:46485`
 - Portrait outputs should borrow layout direction from `1:46485` while preserving `Alder_1` palette and typography choices.
 - The current plugin renderer is a curated mix of those references:
@@ -37,6 +41,10 @@
   - Alternating mask-band body direction from `1:46239`
   - Dark CTA glow treatment from `1:46288`
   - Portrait framing from `1:46485`
+- The next style-engine pass is approved to use three recipe families:
+  - `reference_mix_alder_portrait`
+  - `reference_typography_signal`
+  - `reference_cp_minimal_split`
 
 ## Research
 - Official Google Sheets Python quickstart:

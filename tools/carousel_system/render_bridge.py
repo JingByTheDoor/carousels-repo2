@@ -51,6 +51,9 @@ def plan_row_to_render_item(settings: Settings, queue: GoogleSheetsQueue, row: Q
     record.language = payload.language or infer_language(record)
     record.style_family = payload.style_family
     record.style_recipe = payload.style_recipe
+    record.design_reference_log = [
+        reference for reference in record.design_reference_log if reference.node_id in set(payload.reference_node_ids)
+    ]
     record.render_artifact = build_render_artifact(render_payload_path, payload)
     write_output_record(job_path, record)
     write_plugin_render_payload(render_payload_path, payload)
@@ -59,7 +62,7 @@ def plan_row_to_render_item(settings: Settings, queue: GoogleSheetsQueue, row: Q
         {
             "job_id": job_id,
             "status": "planned",
-            "reference_nodes_used": ",".join(job.reference_node_ids),
+            "reference_nodes_used": ",".join(payload.reference_node_ids),
             "figma_url": "",
             "export_paths": str(job_path),
             "error": "",
@@ -114,6 +117,9 @@ def hydrate_planned_row(settings: Settings, queue: GoogleSheetsQueue, row: Queue
         record.language = payload.language or infer_language(record)
         record.style_family = payload.style_family
         record.style_recipe = payload.style_recipe
+        record.design_reference_log = [
+            reference for reference in record.design_reference_log if reference.node_id in set(payload.reference_node_ids)
+        ]
         record.render_artifact = build_render_artifact(render_payload_path, payload)
         write_output_record(job_path, record)
         write_plugin_render_payload(render_payload_path, payload)
@@ -124,6 +130,7 @@ def hydrate_planned_row(settings: Settings, queue: GoogleSheetsQueue, row: Queue
                 "style_family": payload.style_family,
                 "style_recipe": payload.style_recipe,
                 "prompt_version": record.prompt_version,
+                "reference_nodes_used": ",".join(payload.reference_node_ids),
                 "render_payload_path": str(render_payload_path),
             },
         )

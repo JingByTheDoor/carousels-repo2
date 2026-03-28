@@ -4,8 +4,6 @@ import re
 from pathlib import Path
 
 from carousel_system.models import (
-    DEFAULT_STYLE_FAMILY,
-    DEFAULT_STYLE_RECIPE,
     CarouselOutput,
     LayoutPreference,
     PluginRenderPayload,
@@ -17,6 +15,7 @@ from carousel_system.models import (
     TypographyTokens,
     VisualPriority,
 )
+from carousel_system.style_library import select_style_recipe
 
 
 EN_STOPWORDS = {
@@ -79,47 +78,6 @@ def infer_language(record: CarouselOutput) -> str:
     return "unknown"
 
 
-def select_style_family(record: CarouselOutput, language: str) -> tuple[str, str]:
-    dense_slide_count = sum(
-        1
-        for slide in record.content_plan
-        if len((slide.body or "")) > 125 or len(slide.headline) > 48
-    )
-    if language == "ru" or dense_slide_count >= 3:
-        return DEFAULT_STYLE_FAMILY, "alder_portrait_editorial_dense_v1"
-    return DEFAULT_STYLE_FAMILY, DEFAULT_STYLE_RECIPE
-
-
-def build_style_tokens() -> StyleTokens:
-    return StyleTokens(
-        light_background="#F4F6F7",
-        dark_background="#020202",
-        text_dark="#111111",
-        text_light="#FFFFFF",
-        accent_blue="#55C3EE",
-        accent_magenta="#9E0E4C",
-        accent_gold="#B59868",
-        accent_orange="#FF9300",
-        accent_purple="#6B1FD1",
-        accent_navy="#07215B",
-    )
-
-
-def build_typography_tokens() -> TypographyTokens:
-    return TypographyTokens(
-        cover_family="Inter",
-        cover_style="Black",
-        body_heading_family="Poppins",
-        body_heading_style="Bold",
-        body_family="Poppins",
-        body_style="Regular",
-        cta_heading_family="Inter",
-        cta_heading_style="Bold",
-        cta_body_family="Inter",
-        cta_body_style="Regular",
-    )
-
-
 def build_render_artifact(output_path: Path, payload: PluginRenderPayload) -> RenderArtifact:
     return RenderArtifact(
         path=str(output_path),
@@ -136,24 +94,24 @@ def build_plugin_render_payload(
     source_artifact_path: Path,
 ) -> PluginRenderPayload:
     language = infer_language(record)
-    style_family, style_recipe = select_style_family(record, language)
+    recipe = select_style_recipe(record, language)
     slides: list[RenderSlideSpec] = []
 
     for slide in record.content_plan:
-        slides.append(_build_render_slide(record, slide, language, style_recipe))
+        slides.append(_build_render_slide(record, slide, language, recipe.style_recipe))
 
     return PluginRenderPayload(
         job_id=record.job_id,
         page_name=f"{record.job_id}-plugin-render",
         prompt_version=record.prompt_version,
         language=language,
-        style_family=style_family,
-        style_recipe=style_recipe,
+        style_family=recipe.style_family,
+        style_recipe=recipe.style_recipe,
         source_artifact_path=str(source_artifact_path),
         reference_file_key=record.normalized_input.reference_file_key,
-        reference_node_ids=[reference.node_id for reference in record.design_reference_log],
-        style_tokens=build_style_tokens(),
-        typography=build_typography_tokens(),
+        reference_node_ids=list(recipe.reference_node_ids),
+        style_tokens=recipe.style_tokens,
+        typography=recipe.typography,
         slides=slides,
     )
 
@@ -168,6 +126,11 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
     if slide.slide_role == "hook":
         headline_short = _shorten_headline(slide.headline, language, hard_limit=42)
         display = headline_short if len(slide.headline) > 42 else slide.headline
+        safe_area = "cover_balanced" if style_recipe in {"typography_signal_glow_v1", "cp_split_minimal_statement_v1"} else "cover_tall_text"
+        accent_motif = {
+            "typography_signal_glow_v1": "signal_footer_lines",
+            "cp_split_minimal_statement_v1": "device_card_mock",
+        }.get(style_recipe, "geometric_cluster")
         return RenderSlideSpec(
             slide_number=slide.slide_number,
             slide_role=slide.slide_role,
@@ -185,12 +148,12 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             button_label=None,
             text_density=_hook_density(slide.headline),
             visual_priority="headline",
-            safe_area_profile="cover_tall_text",
-            max_headline_lines=6,
+            safe_area_profile=safe_area,
+            max_headline_lines=5 if style_recipe == "cp_split_minimal_statement_v1" else 6,
             max_body_lines=0,
             can_truncate_body=False,
             emphasis_words=_extract_emphasis_words(slide.headline, language),
-            accent_motif="geometric_cluster",
+            accent_motif=accent_motif,
         )
 
     if slide.slide_role == "cta":
@@ -219,7 +182,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             max_body_lines=4,
             can_truncate_body=True,
             emphasis_words=_extract_emphasis_words(slide.headline, language),
-            accent_motif="cta_signal_lines",
+            accent_motif="cta_signal_lines" if style_recipe != "cp_split_minimal_statement_v1" else "device_card_mock",
         )
 
     body_text = slide.body or ""
@@ -326,6 +289,10 @@ def _body_hard_limit(layout_variant: str, text_density: TextDensity) -> int:
 
 
 def _body_layout_variant(slide_number: int, body: str, style_recipe: str) -> str:
+    if style_recipe == "typography_signal_glow_v1":
+        return "body_spotlight_panel" if slide_number in {3, 5} else "body_editorial_bullet"
+    if style_recipe == "cp_split_minimal_statement_v1":
+        return "body_editorial_bullet" if slide_number in {2, 4, 6} else "body_spotlight_panel"
     if style_recipe == "alder_portrait_editorial_dense_v1":
         return "body_editorial_bullet" if slide_number in {2, 4, 6} else "body_mask_band_left"
 
@@ -339,6 +306,10 @@ def _body_layout_variant(slide_number: int, body: str, style_recipe: str) -> str
 
 
 def _body_accent_motif(slide_number: int, body: str, style_recipe: str) -> str:
+    if style_recipe == "typography_signal_glow_v1":
+        return "signal_glow_panel" if slide_number in {3, 5} else "signal_footer_lines"
+    if style_recipe == "cp_split_minimal_statement_v1":
+        return "device_card_mock"
     if style_recipe == "alder_portrait_editorial_dense_v1":
         return "editorial_count_markers" if slide_number in {2, 4, 6} else "mask_reference_band"
     if len(body) > 130:

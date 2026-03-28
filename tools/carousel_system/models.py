@@ -5,7 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 
-DEFAULT_REFERENCE_NODE_IDS = ["1:46227", "1:46232", "1:46239", "1:46288", "1:46485"]
+DEFAULT_REFERENCE_NODE_IDS = ["1:46227", "1:46232", "1:46239", "1:46201", "1:46288", "1:46184", "1:46190", "1:46485"]
 DEFAULT_PROMPT_VERSION = "baseline_v2"
 DEFAULT_STYLE_FAMILY = "reference_mix_alder_portrait"
 DEFAULT_STYLE_RECIPE = "alder_portrait_editorial_mix_v1"

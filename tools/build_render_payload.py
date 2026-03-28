@@ -36,6 +36,9 @@ def main() -> int:
     record.language = payload.language
     record.style_family = payload.style_family
     record.style_recipe = payload.style_recipe
+    record.design_reference_log = [
+        reference for reference in record.design_reference_log if reference.node_id in set(payload.reference_node_ids)
+    ]
     record.render_artifact = build_render_artifact(render_payload_path, payload)
     write_output_record(job_path, record)
     write_plugin_render_payload(render_payload_path, payload)

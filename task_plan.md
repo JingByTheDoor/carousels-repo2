@@ -58,7 +58,8 @@ Bootstrap this repository under the B.L.A.S.T. protocol and evolve the v1 planni
 - [x] Build a localhost plugin bridge for auto-poll render handoff
 - [ ] Validate the plugin against a live manual Figma run
 - [ ] Validate the localhost bridge against a live plugin auto-mode run
-- [ ] Expand style selection beyond the curated first-pass recipes
+- [x] Expand style selection beyond the curated first-pass recipes
+- [x] Add a multi-family style library grounded in `Alder_1`, `typography`, and `CP_3` references
 
 ### Phase 4: Stylize
 - [ ] Refine payload formatting

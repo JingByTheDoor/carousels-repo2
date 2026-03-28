@@ -296,6 +296,16 @@ async function renderSlide(frame, slide, payload) {
 }
 
 async function renderCoverSlide(frame, slide, payload) {
+  if (isTypographySignal(payload)) {
+    await renderTypographySignalCoverSlide(frame, slide, payload);
+    return;
+  }
+
+  if (isCpSplit(payload)) {
+    await renderCpSplitCoverSlide(frame, slide, payload);
+    return;
+  }
+
   const tokens = payload.style_tokens;
   setSolidFill(frame, tokens.dark_background);
 
@@ -356,6 +366,16 @@ async function renderCoverSlide(frame, slide, payload) {
 }
 
 async function renderEditorialBodySlide(frame, slide, payload) {
+  if (isTypographySignal(payload)) {
+    await renderTypographyEditorialBodySlide(frame, slide, payload);
+    return;
+  }
+
+  if (isCpSplit(payload)) {
+    await renderCpSplitBodySlide(frame, slide, payload, "text-left");
+    return;
+  }
+
   const tokens = payload.style_tokens;
   setSolidFill(frame, tokens.light_background);
   appendTopAccentBar(frame, tokens);
@@ -459,6 +479,16 @@ async function renderMaskBandBodySlide(frame, slide, payload) {
 }
 
 async function renderSpotlightBodySlide(frame, slide, payload) {
+  if (isTypographySignal(payload)) {
+    await renderTypographyPanelBodySlide(frame, slide, payload);
+    return;
+  }
+
+  if (isCpSplit(payload)) {
+    await renderCpSplitBodySlide(frame, slide, payload, "text-right");
+    return;
+  }
+
   const tokens = payload.style_tokens;
   setSolidFill(frame, tokens.light_background);
   appendTopAccentBar(frame, tokens);
@@ -515,7 +545,7 @@ async function renderSpotlightBodySlide(frame, slide, payload) {
   });
 
   await createTextBlock(frame, {
-    text: "Keep this point in rotation",
+    text: (slide.emphasis_words && slide.emphasis_words[0]) || "Key point",
     fontFamily: "Inter",
     fontStyle: "Semi Bold",
     fallbackStyle: "Bold",
@@ -532,6 +562,16 @@ async function renderSpotlightBodySlide(frame, slide, payload) {
 }
 
 async function renderCtaSlide(frame, slide, payload) {
+  if (isTypographySignal(payload)) {
+    await renderTypographySignalCtaSlide(frame, slide, payload);
+    return;
+  }
+
+  if (isCpSplit(payload)) {
+    await renderCpSplitCtaSlide(frame, slide, payload);
+    return;
+  }
+
   const tokens = payload.style_tokens;
   setSolidFill(frame, tokens.dark_background);
 
@@ -619,6 +659,394 @@ async function renderCtaSlide(frame, slide, payload) {
   await appendFooterSignal(frame, "Save", 760, 1110, "right");
 }
 
+async function renderTypographySignalCoverSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.dark_background);
+  appendTypographyGlowBackdrop(frame, tokens);
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.cover_family,
+    fontStyle: payload.typography.cover_style,
+    fallbackStyle: "Bold",
+    x: 96,
+    y: 224,
+    width: 888,
+    maxHeight: 520,
+    maxSize: 114,
+    minSize: 38,
+    lineHeight: 1.0,
+    color: tokens.text_light,
+    alignHorizontal: "CENTER"
+  });
+
+  await createTextBlock(frame, {
+    text: "Swipe through",
+    fontFamily: "Inter",
+    fontStyle: "Regular",
+    fallbackStyle: "Regular",
+    x: 360,
+    y: 1110,
+    width: 360,
+    maxHeight: 40,
+    maxSize: 24,
+    minSize: 16,
+    lineHeight: 1.0,
+    color: tokens.text_light,
+    alignHorizontal: "CENTER"
+  });
+
+  await appendFooterSignal(frame, "Save", 820, 1120, "right");
+  await appendFooterSignal(frame, "Read", 120, 1120, "left");
+}
+
+async function renderTypographyEditorialBodySlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.dark_background);
+  appendTypographyGlowBackdrop(frame, tokens);
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.body_heading_family,
+    fontStyle: payload.typography.body_heading_style,
+    fallbackStyle: "Bold",
+    x: 110,
+    y: 108,
+    width: 860,
+    maxHeight: 200,
+    maxSize: 66,
+    minSize: 32,
+    lineHeight: 1.04,
+    color: tokens.text_light,
+    alignHorizontal: "CENTER"
+  });
+
+  await createTextBlock(frame, {
+    text: slide.body_display || slide.body || "",
+    fontFamily: payload.typography.body_family,
+    fontStyle: payload.typography.body_style,
+    fallbackStyle: "Regular",
+    x: 124,
+    y: 350,
+    width: 832,
+    maxHeight: 420,
+    maxSize: 32,
+    minSize: 18,
+    lineHeight: 1.28,
+    color: tokens.text_light,
+    alignHorizontal: "CENTER"
+  });
+
+  await appendSlideNumberChip(frame, slide.slide_number, tokens);
+  await appendFooterSignal(frame, "Keep", 120, 1120, "left");
+  await appendFooterSignal(frame, "Save", 820, 1120, "right");
+}
+
+async function renderTypographyPanelBodySlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.dark_background);
+  appendTypographyGlowBackdrop(frame, tokens);
+  await appendSlideNumberChip(frame, slide.slide_number, tokens);
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.body_heading_family,
+    fontStyle: payload.typography.body_heading_style,
+    fallbackStyle: "Bold",
+    x: 92,
+    y: 104,
+    width: 896,
+    maxHeight: 190,
+    maxSize: 68,
+    minSize: 32,
+    lineHeight: 1.04,
+    color: tokens.text_light,
+    alignHorizontal: "LEFT"
+  });
+
+  const panel = figma.createRectangle();
+  panel.resize(930, 480);
+  panel.x = 76;
+  panel.y = 382;
+  panel.cornerRadius = 42;
+  panel.fills = [solidPaint("#FFFFFF", 0.08)];
+  panel.strokes = [solidPaint(tokens.text_light, 0.16)];
+  panel.strokeWeight = 2;
+  frame.appendChild(panel);
+
+  await createTextBlock(frame, {
+    text: slide.body_display || slide.body || "",
+    fontFamily: payload.typography.body_family,
+    fontStyle: payload.typography.body_style,
+    fallbackStyle: "Regular",
+    x: 128,
+    y: 452,
+    width: 826,
+    maxHeight: 330,
+    maxSize: 30,
+    minSize: 18,
+    lineHeight: 1.3,
+    color: tokens.text_light,
+    alignHorizontal: "LEFT"
+  });
+
+  await appendFooterSignal(frame, "Note", 120, 1120, "left");
+  await appendFooterSignal(frame, "Save", 820, 1120, "right");
+}
+
+async function renderTypographySignalCtaSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.dark_background);
+  appendTypographyGlowBackdrop(frame, tokens);
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.cta_heading_family,
+    fontStyle: payload.typography.cta_heading_style,
+    fallbackStyle: "Bold",
+    x: 94,
+    y: 228,
+    width: 892,
+    maxHeight: 260,
+    maxSize: 96,
+    minSize: 34,
+    lineHeight: 1.0,
+    color: tokens.text_light,
+    alignHorizontal: "CENTER"
+  });
+
+  if (slide.body_display || slide.body) {
+    await createTextBlock(frame, {
+      text: slide.body_display || slide.body,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 144,
+      y: 528,
+      width: 792,
+      maxHeight: 140,
+      maxSize: 34,
+      minSize: 18,
+      lineHeight: 1.18,
+      color: tokens.text_light,
+      alignHorizontal: "CENTER"
+    });
+  }
+
+  if (slide.supporting_text) {
+    await createTextBlock(frame, {
+      text: slide.supporting_text,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 196,
+      y: 690,
+      width: 688,
+      maxHeight: 72,
+      maxSize: 24,
+      minSize: 14,
+      lineHeight: 1.18,
+      color: tokens.text_light,
+      alignHorizontal: "CENTER"
+    });
+  }
+
+  const pill = figma.createRectangle();
+  pill.resize(330, 76);
+  pill.x = 375;
+  pill.y = 800;
+  pill.cornerRadius = 999;
+  pill.fills = [solidPaint(tokens.text_light)];
+  frame.appendChild(pill);
+
+  await createTextBlock(frame, {
+    text: slide.button_label || "Get access",
+    fontFamily: "Inter",
+    fontStyle: "Bold",
+    fallbackStyle: "Bold",
+    x: 398,
+    y: 820,
+    width: 284,
+    maxHeight: 34,
+    maxSize: 24,
+    minSize: 16,
+    lineHeight: 1.0,
+    color: tokens.text_dark,
+    alignHorizontal: "CENTER"
+  });
+
+  await appendFooterSignal(frame, "Like", 86, 1110, "left");
+  await appendFooterSignal(frame, "Comment", 248, 1210, "center");
+  await appendFooterSignal(frame, "Save for later", 904, 1110, "right");
+}
+
+async function renderCpSplitCoverSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.light_background);
+  appendCpAccentDot(frame, 910, 156, 18, tokens.accent_blue, 0.88);
+  appendCpAccentDot(frame, 942, 156, 10, tokens.text_dark, 0.64);
+  appendCpDeviceCard(frame, 694, 262, 290, 720, tokens);
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.cover_family,
+    fontStyle: payload.typography.cover_style,
+    fallbackStyle: "Bold",
+    x: 74,
+    y: 122,
+    width: 590,
+    maxHeight: 880,
+    maxSize: 94,
+    minSize: 38,
+    lineHeight: 1.08,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+}
+
+async function renderCpSplitBodySlide(frame, slide, payload, orientation) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.light_background);
+  await appendSlideNumberChip(frame, slide.slide_number, tokens);
+
+  const cardX = orientation === "text-right" ? 76 : 724;
+  const textX = orientation === "text-right" ? 446 : 86;
+  const textWidth = orientation === "text-right" ? 548 : 560;
+
+  appendCpDeviceCard(frame, cardX, 276, 282, 720, tokens);
+
+  if (slide.emphasis_words && slide.emphasis_words[0]) {
+    await createTextBlock(frame, {
+      text: slide.emphasis_words[0].toUpperCase(),
+      fontFamily: "Inter",
+      fontStyle: "Bold",
+      fallbackStyle: "Bold",
+      x: textX,
+      y: 126,
+      width: 260,
+      maxHeight: 40,
+      maxSize: 20,
+      minSize: 14,
+      lineHeight: 1.0,
+      color: tokens.accent_navy,
+      alignHorizontal: "LEFT"
+    });
+  }
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.body_heading_family,
+    fontStyle: payload.typography.body_heading_style,
+    fallbackStyle: "Bold",
+    x: textX,
+    y: 176,
+    width: textWidth,
+    maxHeight: 230,
+    maxSize: 64,
+    minSize: 30,
+    lineHeight: 1.08,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+
+  await createTextBlock(frame, {
+    text: slide.body_display || slide.body || "",
+    fontFamily: payload.typography.body_family,
+    fontStyle: payload.typography.body_style,
+    fallbackStyle: "Regular",
+    x: textX,
+    y: 452,
+    width: textWidth,
+    maxHeight: 520,
+    maxSize: 30,
+    minSize: 18,
+    lineHeight: 1.32,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+}
+
+async function renderCpSplitCtaSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.light_background);
+  appendCpDeviceCard(frame, 744, 250, 250, 720, tokens);
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.cta_heading_family,
+    fontStyle: payload.typography.cta_heading_style,
+    fallbackStyle: "Bold",
+    x: 82,
+    y: 168,
+    width: 590,
+    maxHeight: 320,
+    maxSize: 88,
+    minSize: 34,
+    lineHeight: 1.02,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+
+  if (slide.body_display || slide.body) {
+    await createTextBlock(frame, {
+      text: slide.body_display || slide.body,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 86,
+      y: 560,
+      width: 560,
+      maxHeight: 144,
+      maxSize: 30,
+      minSize: 18,
+      lineHeight: 1.24,
+      color: tokens.text_dark,
+      alignHorizontal: "LEFT"
+    });
+  }
+
+  if (slide.supporting_text) {
+    await createTextBlock(frame, {
+      text: slide.supporting_text,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 86,
+      y: 720,
+      width: 520,
+      maxHeight: 72,
+      maxSize: 22,
+      minSize: 14,
+      lineHeight: 1.18,
+      color: tokens.text_dark,
+      alignHorizontal: "LEFT"
+    });
+  }
+
+  const pill = figma.createRectangle();
+  pill.resize(320, 76);
+  pill.x = 86;
+  pill.y = 846;
+  pill.cornerRadius = 999;
+  pill.fills = [solidPaint(tokens.text_dark)];
+  frame.appendChild(pill);
+
+  await createTextBlock(frame, {
+    text: slide.button_label || "Get access",
+    fontFamily: "Inter",
+    fontStyle: "Bold",
+    fallbackStyle: "Bold",
+    x: 114,
+    y: 866,
+    width: 264,
+    maxHeight: 34,
+    maxSize: 24,
+    minSize: 16,
+    lineHeight: 1.0,
+    color: tokens.text_light,
+    alignHorizontal: "CENTER"
+  });
+}
+
 function appendNestedSquares(parent, baseNode, tokens) {
   const offsets = [
     { size: 238, x: 50, y: 50, color: tokens.accent_magenta, opacity: 0.76 },
@@ -634,6 +1062,92 @@ function appendNestedSquares(parent, baseNode, tokens) {
     rect.fills = [solidPaint(offset.color, offset.opacity)];
     parent.appendChild(rect);
   }
+}
+
+function appendTypographyGlowBackdrop(frame, tokens) {
+  appendGlow(frame, -40, 824, 460, tokens.accent_gold, 0.24);
+  appendGlow(frame, 748, 48, 360, tokens.accent_magenta, 0.26);
+  appendGlow(frame, 240, 120, 220, tokens.accent_navy, 0.2);
+}
+
+function appendCpDeviceCard(frame, x, y, width, height, tokens) {
+  const card = figma.createFrame();
+  card.name = "Device Card";
+  card.resize(width, height);
+  card.x = x;
+  card.y = y;
+  card.cornerRadius = 28;
+  card.clipsContent = true;
+  card.fills = [solidPaint("#FFFFFF")];
+  card.strokes = [solidPaint("#E8EAEE")];
+  card.strokeWeight = 2;
+  card.effects = [dropShadow("#111111", 0.12, 0, 18, 40)];
+  frame.appendChild(card);
+
+  const rail = figma.createRectangle();
+  rail.resize(Math.round(width * 0.24), height);
+  rail.x = 0;
+  rail.y = 0;
+  rail.fills = [solidPaint("#FAFBFC")];
+  card.appendChild(rail);
+
+  for (let index = 0; index < 4; index += 1) {
+    const marker = figma.createEllipse();
+    marker.resize(28, 28);
+    marker.x = 18;
+    marker.y = 132 + index * 96;
+    marker.fills = [solidPaint(index === 1 ? tokens.accent_blue : tokens.accent_gold, index === 1 ? 0.9 : 0.65)];
+    card.appendChild(marker);
+  }
+
+  const devicePanel = figma.createRectangle();
+  devicePanel.resize(Math.round(width * 0.5), 164);
+  devicePanel.x = Math.round(width * 0.38);
+  devicePanel.y = 108;
+  devicePanel.cornerRadius = 18;
+  devicePanel.fills = [solidPaint(tokens.text_dark)];
+  devicePanel.effects = [dropShadow("#111111", 0.18, 0, 12, 28)];
+  card.appendChild(devicePanel);
+
+  const deviceImage = figma.createRectangle();
+  deviceImage.resize(Math.round(width * 0.5), 124);
+  deviceImage.x = Math.round(width * 0.38);
+  deviceImage.y = 330;
+  deviceImage.cornerRadius = 16;
+  deviceImage.fills = [solidPaint(tokens.accent_navy, 0.95)];
+  card.appendChild(deviceImage);
+
+  const slider = figma.createRectangle();
+  slider.resize(Math.round(width * 0.46), 4);
+  slider.x = Math.round(width * 0.34);
+  slider.y = height - 82;
+  slider.cornerRadius = 999;
+  slider.fills = [solidPaint("#D8DEE8")];
+  card.appendChild(slider);
+
+  const knob = figma.createEllipse();
+  knob.resize(16, 16);
+  knob.x = slider.x + Math.round(slider.width * 0.38);
+  knob.y = slider.y - 6;
+  knob.fills = [solidPaint(tokens.accent_blue)];
+  card.appendChild(knob);
+
+  const smallChip = figma.createRectangle();
+  smallChip.resize(82, 18);
+  smallChip.x = Math.round(width * 0.38);
+  smallChip.y = 70;
+  smallChip.cornerRadius = 999;
+  smallChip.fills = [solidPaint("#F0F4F8")];
+  card.appendChild(smallChip);
+}
+
+function appendCpAccentDot(frame, x, y, size, hex, opacity) {
+  const dot = figma.createEllipse();
+  dot.resize(size, size);
+  dot.x = x;
+  dot.y = y;
+  dot.fills = [solidPaint(hex, opacity)];
+  frame.appendChild(dot);
 }
 
 function appendOrbitRings(parent, circle, strokeHex) {
@@ -714,6 +1228,14 @@ function appendGlow(frame, x, y, size, hex, opacity) {
   glow.fills = [solidPaint(hex, opacity)];
   glow.effects = [{ type: "LAYER_BLUR", radius: 110, visible: true }];
   frame.appendChild(glow);
+}
+
+function isTypographySignal(payload) {
+  return payload && payload.style_recipe === "typography_signal_glow_v1";
+}
+
+function isCpSplit(payload) {
+  return payload && payload.style_recipe === "cp_split_minimal_statement_v1";
 }
 
 function cleanText(value) {

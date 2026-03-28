@@ -78,6 +78,9 @@ def main() -> int:
     record.language = render_payload.language or infer_language(record)
     record.style_family = render_payload.style_family
     record.style_recipe = render_payload.style_recipe
+    record.design_reference_log = [
+        reference for reference in record.design_reference_log if reference.node_id in set(render_payload.reference_node_ids)
+    ]
     record.render_artifact = build_render_artifact(render_payload_path, render_payload)
     write_output_record(output_path, record)
     write_plugin_render_payload(render_payload_path, render_payload)

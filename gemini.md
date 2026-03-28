@@ -16,7 +16,7 @@ Status: `Approved and implemented`
   "output_modes": ["figma", "png"],
   "reference_style": "alder_1",
   "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
-  "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46288", "1:46485"],
+  "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46201", "1:46288", "1:46184", "1:46190", "1:46485"],
   "notes": "string|null"
 }
 ```
@@ -37,7 +37,7 @@ Status: `Approved and implemented`
     "output_modes": ["figma", "png"],
     "reference_style": "alder_1",
     "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
-    "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46288", "1:46485"],
+    "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46201", "1:46288", "1:46184", "1:46190", "1:46485"],
     "notes": "string|null"
   },
   "prompt_version": "baseline_v2",
@@ -144,7 +144,7 @@ Status: `Approved and implemented`
   "prompt_version": "baseline_v2",
   "language": "string",
   "style_family": "reference_mix_alder_portrait",
-  "style_recipe": "string",
+  "style_recipe": "alder_portrait_editorial_mix_v1|alder_portrait_editorial_dense_v1|typography_signal_glow_v1|cp_split_minimal_statement_v1",
   "source_artifact_path": "string",
   "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
   "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46288", "1:46485"],
@@ -261,6 +261,7 @@ Status: `Approved and implemented`
 - The plugin render path supports both manual file handoff and a localhost bridge handoff in the current implementation.
 - Input language should be preserved when possible; if no language is supplied, the system infers one for rendering metadata.
 - The plugin payload must carry render-aware display text and truncation metadata so the renderer does not infer layout-critical text decisions from raw copy alone.
+- The style engine may choose among the approved families `reference_mix_alder_portrait`, `reference_typography_signal`, and `reference_cp_minimal_split` based on content density and a deterministic content signature.
 
 ## Maintenance Log
 
@@ -275,3 +276,5 @@ Status: `Approved and implemented`
 - Expanded the Google Sheets queue columns to track language, style selection, prompt version, and plugin handoff files.
 - Upgraded the plugin payload contract to `figma_plugin_payload_v2` with render-aware slide metadata such as short/display variants, density, safe-area profile, and CTA button/support text.
 - Added a localhost bridge path so the Figma plugin can fetch the next job and post back render results without manual file transfer.
+- Approved additional reference nodes for the style engine: `1:46201`, `1:46184`, and `1:46190`.
+- Implemented a multi-family style library with deterministic recipe selection and exact per-recipe reference-node logging.

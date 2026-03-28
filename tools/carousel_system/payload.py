@@ -13,9 +13,12 @@ from carousel_system.models import (
 
 
 REFERENCE_NODE_DETAILS = {
+    "1:46184": ("CP_3", "cover"),
+    "1:46190": ("CP_3", "body"),
     "1:46227": ("Alder_1", "cover"),
     "1:46232": ("Alder_1", "body"),
     "1:46239": ("Alder_1", "palette"),
+    "1:46201": ("typography slide 1", "cta"),
     "1:46288": ("typography slide 2", "cta"),
     "1:46485": ("1971245499", "layout"),
 }

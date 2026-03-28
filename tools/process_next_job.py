@@ -44,6 +44,9 @@ def main() -> int:
         record.language = render_payload.language
         record.style_family = render_payload.style_family
         record.style_recipe = render_payload.style_recipe
+        record.design_reference_log = [
+            reference for reference in record.design_reference_log if reference.node_id in set(render_payload.reference_node_ids)
+        ]
         record.render_artifact = build_render_artifact(render_payload_path, render_payload)
         write_output_record(output_path, record)
         write_plugin_render_payload(render_payload_path, render_payload)
@@ -52,7 +55,7 @@ def main() -> int:
             {
                 "job_id": job_id,
                 "status": "planned",
-                "reference_nodes_used": ",".join(job.reference_node_ids),
+                "reference_nodes_used": ",".join(render_payload.reference_node_ids),
                 "figma_url": "",
                 "export_paths": str(output_path),
                 "error": "",

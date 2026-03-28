@@ -11,6 +11,7 @@ This repo turns a `topic` or `script` into a validated 7-slide Instagram carouse
   - slide 7 CTA
 - Plugin-ready render payload generation
 - Render-aware plugin payload generation with display-safe text variants
+- Multi-family style selection grounded in approved Figma references
 - Figma reference logging for every generated payload
 
 ## Current render architecture
@@ -51,6 +52,18 @@ python -m venv .venv
 That command now writes both:
 - `.tmp/jobs/<job_id>.json`
 - `.tmp/render-jobs/<job_id>.render.json`
+
+## Style families
+The render payload can now choose among multiple reference-driven families:
+- `reference_mix_alder_portrait`
+- `reference_typography_signal`
+- `reference_cp_minimal_split`
+
+You can also force a family when testing:
+```powershell
+.venv\Scripts\python tools\plan_carousel.py --topic "4 principles of clear interfaces" --reference-style cp_3
+.venv\Scripts\python tools\plan_carousel.py --topic "Why consistency matters in branding" --reference-style typography_signal
+```
 
 ## Queue processing
 Add rows to the `queue` worksheet using the approved headers, then run:
@@ -98,4 +111,4 @@ That command now plans the content and writes the plugin render payload in one p
 ## Current limitations
 - PNG export automation is still not implemented in the local toolchain.
 - The plugin bridge still depends on a live Figma desktop session with the development plugin running.
-- The richer style engine is still a curated first pass grounded in the approved Figma references, not a full harvested library of every example frame.
+- The style engine now supports multiple recipe families, but it is still a curated library rather than a full automatic harvest of every example frame in the reference file.

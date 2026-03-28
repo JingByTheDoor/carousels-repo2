@@ -37,6 +37,21 @@
   - `README.md`
 - Added a localhost render bridge in `tools/render_server.py`.
 - Added shared bridge/finalization helpers in `tools/carousel_system/render_bridge.py`.
+- Added a local style library in `tools/carousel_system/style_library.py` with these recipe families:
+  - `reference_mix_alder_portrait`
+  - `reference_typography_signal`
+  - `reference_cp_minimal_split`
+- Expanded the approved reference pool to include:
+  - `1:46201`
+  - `1:46184`
+  - `1:46190`
+- Updated render-payload generation so the selected recipe now controls:
+  - style family
+  - style recipe
+  - exact reference node IDs
+  - style tokens
+  - typography tokens
+- Updated the plugin renderer to branch visually by recipe instead of rendering every job with the same curated mix.
 - Extended the plugin UI with:
   - `Poll Next Job`
   - `Start Auto Mode`
@@ -84,6 +99,11 @@
 - A temporary bridge boot on port `8766` returned `GET /health -> {"status":"ok","host":"127.0.0.1","port":8766}`.
 - After the CORS/PNA patch, `GET /next-job` returns cross-origin headers on error/no-content paths instead of leaving the plugin with a transport-level failure.
 - `node --check .\figma_plugin\code.js` still passed after moving bridge networking into the plugin controller.
+- `python -m compileall tools` passed after the style-library integration.
+- `node --check .\figma_plugin\code.js` passed after the multi-family renderer changes.
+- `.venv\Scripts\python tools\plan_carousel.py --job-id style-smoke-short ...` generated `reference_typography_signal / typography_signal_glow_v1`.
+- `.venv\Scripts\python tools\plan_carousel.py --job-id style-smoke-cp ... --reference-style cp_3` generated `reference_cp_minimal_split / cp_split_minimal_statement_v1`.
+- `.venv\Scripts\python tools\build_render_payload.py --job-id sheet-row-2` still passed after the selector changes.
 - Live end-to-end plugin rendering inside Figma is not yet verified in this turn.
 
 ### Current Status
@@ -91,4 +111,5 @@
 - The repo now has a local Figma plugin render path that can replace the chat-bound MCP render step.
 - The local finalize step exists, but it still needs one live plugin run for end-to-end confirmation.
 - The localhost bridge now exists, but it still needs one live auto-mode plugin pass for end-to-end confirmation.
+- The style engine now supports multiple recipe families and exact per-recipe reference logging.
 - PNG export automation is still not implemented in the local toolchain.

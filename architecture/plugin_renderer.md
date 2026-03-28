@@ -34,6 +34,14 @@ Render approved carousel payloads inside Figma without relying on Codex or chat-
   - Black stage
   - Oversized white headline
   - Geometric accent cluster
+- Minimal split references: `1:46184`, `1:46190`
+  - Light neutral background
+  - Large left or right text block
+  - Floating device-card style object on the opposite side
+- Typography signal references: `1:46201`, `1:46288`
+  - Dark stage with soft magenta/gold glow quadrants
+  - Centered or stacked large type
+  - Footer signal lines for engagement cues
 - Body references: `1:46232`, `1:46239`
   - Light editorial background
   - Poppins heading/body mix
@@ -51,6 +59,7 @@ Render approved carousel payloads inside Figma without relying on Codex or chat-
 - The plugin must render the slides in deterministic left-to-right order.
 - The plugin should return file/page/node metadata in a result JSON the Python layer can apply.
 - The plugin may approximate the approved references through curated style tokens and layout recipes, but it must log the approved node IDs that informed the payload.
+- The plugin must branch on `style_recipe` so different payload families produce materially different layouts, not just recolored versions of the same composition.
 
 ## Local bridge contract
 - Bridge endpoint: `http://localhost:8765`

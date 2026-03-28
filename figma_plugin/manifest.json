@@ -6,7 +6,8 @@
   "editorType": ["figma"],
   "documentAccess": "dynamic-page",
   "networkAccess": {
-    "allowedDomains": ["none"],
+    "allowedDomains": ["http://localhost:8765"],
+    "reasoning": "Access the local carousel render bridge during development and local automation runs.",
     "devAllowedDomains": ["http://localhost:8765"]
   }
 }

@@ -63,6 +63,10 @@
 - The first payload contract was too thin for reliable layout decisions, which caused weak text fitting on the rendered slides.
 - The first localhost bridge pass still needed explicit CORS and `OPTIONS` handling because the plugin UI uses browser-style `fetch()` requests.
 - Figma Desktop rejected `devAllowedDomains` using `http://127.0.0.1:8765`, so the plugin bridge now standardizes on `http://localhost:8765`.
+- The bridge also needed CORS headers on `204 /next-job` responses plus `Access-Control-Allow-Private-Network: true` so the plugin would not collapse those responses into a generic `Failed to fetch`.
+- The plugin UI bridge requests were moved out of the iframe and into `figma_plugin/code.js` so localhost polling/result posting now uses the Figma plugin runtime instead of browser-style iframe `fetch()`.
+- The manifest now allows `http://localhost:8765` in both `allowedDomains` and `devAllowedDomains`, with explicit reasoning, in case the runtime ignores `devAllowedDomains` for localhost fetches.
+- After enabling `documentAccess: dynamic-page`, the renderer had to stop assigning `figma.currentPage` directly and switch to `await figma.setCurrentPageAsync(page)`.
 
 ### Test / Verification
 - `python -m compileall tools` passed.
@@ -78,6 +82,8 @@
 - `.venv\Scripts\python tools\apply_render_result.py --help` passed.
 - `Get-Content .\figma_plugin\manifest.json | ConvertFrom-Json` passed after adding `networkAccess` and `documentAccess`.
 - A temporary bridge boot on port `8766` returned `GET /health -> {"status":"ok","host":"127.0.0.1","port":8766}`.
+- After the CORS/PNA patch, `GET /next-job` returns cross-origin headers on error/no-content paths instead of leaving the plugin with a transport-level failure.
+- `node --check .\figma_plugin\code.js` still passed after moving bridge networking into the plugin controller.
 - Live end-to-end plugin rendering inside Figma is not yet verified in this turn.
 
 ### Current Status

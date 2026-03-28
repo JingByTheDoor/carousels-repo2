@@ -32,10 +32,29 @@ const FONT_FALLBACKS = {
 };
 
 figma.ui.onmessage = async (message) => {
-  if (!message || message.type !== "render-payload") {
+  if (!message || !message.type) {
     return;
   }
 
+  switch (message.type) {
+    case "render-payload":
+      await handleRenderPayload(message);
+      return;
+    case "bridge-poll-next-job":
+      await handleBridgePoll(message);
+      return;
+    case "bridge-post-render-result":
+      await handleBridgePostResult(message);
+      return;
+    case "bridge-post-render-error":
+      await handleBridgePostError(message);
+      return;
+    default:
+      return;
+  }
+};
+
+async function handleRenderPayload(message) {
   try {
     const payload = normalizePayload(message.payload);
     figma.ui.postMessage({ type: "status", message: "Rendering carousel..." });
@@ -43,11 +62,144 @@ figma.ui.onmessage = async (message) => {
     figma.notify(`Rendered ${payload.job_id} into ${result.page_name}`);
     figma.ui.postMessage({ type: "render-complete", result });
   } catch (error) {
-    const text = error instanceof Error ? error.message : String(error);
+    const text = formatUnknownError(error);
     figma.notify(text, { error: true });
     figma.ui.postMessage({ type: "render-error", message: text });
   }
-};
+}
+
+async function handleBridgePoll(message) {
+  try {
+    const serverUrl = normalizeServerUrl(message.serverUrl);
+    const response = await fetch(`${serverUrl}/next-job`);
+    if (response.status === 204) {
+      figma.ui.postMessage({ type: "bridge-empty" });
+      return;
+    }
+
+    const payload = await parseBridgeResponse(response);
+    if (!payload || !payload.payload) {
+      throw new Error("Render bridge returned an invalid job payload.");
+    }
+
+    figma.ui.postMessage({ type: "bridge-next-job", job: payload });
+  } catch (error) {
+    figma.ui.postMessage({
+      type: "bridge-error",
+      action: "poll",
+      message: formatUnknownError(error),
+      details: serializeUnknownError(error)
+    });
+  }
+}
+
+async function handleBridgePostResult(message) {
+  try {
+    const serverUrl = normalizeServerUrl(message.serverUrl);
+    const response = await fetch(`${serverUrl}/render-result`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(message.result)
+    });
+    const payload = await parseBridgeResponse(response);
+    figma.ui.postMessage({ type: "bridge-post-complete", payload });
+  } catch (error) {
+    figma.ui.postMessage({
+      type: "bridge-error",
+      action: "post-result",
+      message: formatUnknownError(error),
+      details: serializeUnknownError(error)
+    });
+  }
+}
+
+async function handleBridgePostError(message) {
+  try {
+    const serverUrl = normalizeServerUrl(message.serverUrl);
+    const response = await fetch(`${serverUrl}/render-error`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        job_id: message.jobId,
+        error: message.error
+      })
+    });
+    const payload = await parseBridgeResponse(response);
+    figma.ui.postMessage({ type: "bridge-post-error-complete", payload });
+  } catch (error) {
+    figma.ui.postMessage({
+      type: "bridge-error",
+      action: "post-error",
+      message: formatUnknownError(error),
+      details: serializeUnknownError(error)
+    });
+  }
+}
+
+async function parseBridgeResponse(response) {
+  const raw = await response.text();
+  let payload = {};
+  if (raw) {
+    try {
+      payload = JSON.parse(raw);
+    } catch (error) {
+      throw new Error(`Render bridge returned invalid JSON (${response.status}).`);
+    }
+  }
+
+  if (!response.ok) {
+    const errorMessage = payload && typeof payload.error === "string"
+      ? payload.error
+      : `Render bridge returned ${response.status}.`;
+    throw new Error(errorMessage);
+  }
+
+  return payload;
+}
+
+function normalizeServerUrl(serverUrl) {
+  if (typeof serverUrl !== "string" || !serverUrl.trim()) {
+    throw new Error("Render bridge URL is required.");
+  }
+  return serverUrl.trim().replace(/\/+$/, "");
+}
+
+function formatUnknownError(error) {
+  if (error instanceof Error && typeof error.message === "string" && error.message.trim()) {
+    return error.message;
+  }
+
+  if (error && typeof error === "object") {
+    if (typeof error.message === "string" && error.message.trim()) {
+      return error.message;
+    }
+    if (typeof error.error === "string" && error.error.trim()) {
+      return error.error;
+    }
+    const serialized = serializeUnknownError(error);
+    return serialized || "Unknown bridge error.";
+  }
+
+  if (typeof error === "string" && error.trim()) {
+    return error;
+  }
+
+  return String(error);
+}
+
+function serializeUnknownError(error) {
+  if (error === null || typeof error === "undefined") {
+    return "";
+  }
+  if (typeof error === "string") {
+    return error;
+  }
+  try {
+    return JSON.stringify(error);
+  } catch (serializationError) {
+    return String(error);
+  }
+}
 
 function normalizePayload(payload) {
   if (!payload || typeof payload !== "object") {
@@ -89,7 +241,7 @@ function normalizeSlide(slide) {
 async function renderCarousel(payload) {
   const page = figma.createPage();
   page.name = uniquePageName(payload.page_name || `${payload.job_id}-plugin-render`);
-  figma.currentPage = page;
+  await figma.setCurrentPageAsync(page);
 
   const frames = [];
   const nodeIds = [];

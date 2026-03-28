@@ -225,11 +225,31 @@
       let autoTimer = null;
 
       function setStatus(text, variant) {
-        statusNode.textContent = text;
+        statusNode.textContent = formatStatusText(text);
         statusNode.className = "status";
         if (variant) {
           statusNode.classList.add(variant);
         }
+      }
+
+      function formatStatusText(value) {
+        if (typeof value === "string") {
+          return value;
+        }
+        if (value && typeof value === "object") {
+          if (typeof value.message === "string" && value.message.trim()) {
+            return value.message;
+          }
+          if (typeof value.error === "string" && value.error.trim()) {
+            return value.error;
+          }
+          try {
+            return JSON.stringify(value);
+          } catch (error) {
+            return String(value);
+          }
+        }
+        return String(value);
       }
 
       function getServerUrl() {
@@ -327,57 +347,16 @@
           return;
         }
 
-        try {
-          setStatus("Polling the local render bridge for the next job...", "");
-          const response = await fetch(`${serverUrl}/next-job`);
-          if (response.status === 204) {
-            setStatus("No planned jobs available right now.", "");
-            scheduleAutoPoll(5000);
-            return;
-          }
-          if (!response.ok) {
-            throw new Error(`Render bridge returned ${response.status}.`);
-          }
-
-          const payload = await response.json();
-          if (!payload || !payload.payload) {
-            throw new Error("Render bridge returned an invalid job payload.");
-          }
-
-          currentBridgeJobId = payload.job_id || payload.payload.job_id || null;
-          payloadInput.value = JSON.stringify(payload.payload, null, 2);
-          currentPayload = payload.payload;
-          startRender(payload.payload, true);
-        } catch (error) {
-          setStatus(error.message || String(error), "error");
-          scheduleAutoPoll(5000);
-        }
-      }
-
-      async function postRenderResult(result) {
-        const serverUrl = getServerUrl();
-        const response = await fetch(`${serverUrl}/render-result`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(result),
-        });
-        if (!response.ok) {
-          throw new Error(`Unable to post render result (${response.status}).`);
-        }
-        return response.json();
-      }
-
-      async function postRenderError(jobId, errorText) {
-        const serverUrl = getServerUrl();
-        const response = await fetch(`${serverUrl}/render-error`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ job_id: jobId, error: errorText }),
-        });
-        if (!response.ok) {
-          throw new Error(`Unable to post render error (${response.status}).`);
-        }
-        return response.json();
+        setStatus("Polling the local render bridge for the next job...", "");
+        parent.postMessage(
+          {
+            pluginMessage: {
+              type: "bridge-poll-next-job",
+              serverUrl,
+            },
+          },
+          "*"
+        );
       }
 
       function startRender(payload, fromBridge) {
@@ -478,16 +457,17 @@
           isRendering = false;
           updateResult(message.result);
           if (currentBridgeJobId) {
-            try {
-              await postRenderResult(message.result);
-              setStatus("Render complete and posted back to the local bridge.", "success");
-            } catch (error) {
-              setStatus(error.message || String(error), "error");
-            } finally {
-              currentBridgeJobId = null;
-              currentPayload = null;
-              scheduleAutoPoll(1000);
-            }
+            setStatus("Render complete. Posting result back to the local bridge...", "");
+            parent.postMessage(
+              {
+                pluginMessage: {
+                  type: "bridge-post-render-result",
+                  serverUrl: getServerUrl(),
+                  result: message.result,
+                },
+              },
+              "*"
+            );
             return;
           }
 
@@ -500,21 +480,68 @@
           isRendering = false;
           const errorText = message.message || "Render failed.";
           if (currentBridgeJobId) {
-            try {
-              await postRenderError(currentBridgeJobId, errorText);
-              setStatus(`Render failed and was reported to the local bridge: ${errorText}`, "error");
-            } catch (error) {
-              setStatus(error.message || String(error), "error");
-            } finally {
-              currentBridgeJobId = null;
-              currentPayload = null;
-              scheduleAutoPoll(5000);
-            }
+            setStatus(`Render failed. Reporting the error back to the local bridge: ${errorText}`, "error");
+            parent.postMessage(
+              {
+                pluginMessage: {
+                  type: "bridge-post-render-error",
+                  serverUrl: getServerUrl(),
+                  jobId: currentBridgeJobId,
+                  error: errorText,
+                },
+              },
+              "*"
+            );
             return;
           }
 
           currentPayload = null;
           setStatus(errorText, "error");
+          return;
+        }
+
+        if (message.type === "bridge-empty") {
+          setStatus("No planned jobs available right now.", "");
+          scheduleAutoPoll(5000);
+          return;
+        }
+
+        if (message.type === "bridge-next-job") {
+          const payload = message.job;
+          currentBridgeJobId = payload.job_id || (payload.payload && payload.payload.job_id) || null;
+          payloadInput.value = JSON.stringify(payload.payload, null, 2);
+          currentPayload = payload.payload;
+          startRender(payload.payload, true);
+          return;
+        }
+
+        if (message.type === "bridge-post-complete") {
+          setStatus("Render complete and posted back to the local bridge.", "success");
+          currentBridgeJobId = null;
+          currentPayload = null;
+          scheduleAutoPoll(1000);
+          return;
+        }
+
+        if (message.type === "bridge-post-error-complete") {
+          setStatus("Render error posted back to the local bridge.", "error");
+          currentBridgeJobId = null;
+          currentPayload = null;
+          scheduleAutoPoll(5000);
+          return;
+        }
+
+        if (message.type === "bridge-error") {
+          const errorText = message.message || message.details || "Render bridge request failed.";
+          setStatus(errorText, "error");
+          if (message.action === "poll") {
+            scheduleAutoPoll(5000);
+          }
+          if (message.action === "post-result" || message.action === "post-error") {
+            currentBridgeJobId = null;
+            currentPayload = null;
+            scheduleAutoPoll(5000);
+          }
         }
       };
     </script>

@@ -58,6 +58,8 @@
 - Live plugin rendering still requires a human to open Figma and run the local plugin.
 - The local bridge path can remove manual JSON upload/download, but it still depends on a live Figma desktop session with the development plugin running.
 - Figma `fileKey` access from plugins depends on private-plugin API availability; the plugin tolerates `null` when unavailable.
+- Figma Desktop’s plugin webview treats localhost fetches like browser requests, so the bridge must send CORS headers even on `204 No Content` and should advertise `Access-Control-Allow-Private-Network: true`.
+- Using the plugin iframe for localhost bridge traffic is brittle; the better integration point is the plugin controller in `code.js`, which can make the bridge requests and send structured results back to the UI.
 
 ## Open Questions
 - Which Google account or Google Cloud project will own the Sheets credentials long term?

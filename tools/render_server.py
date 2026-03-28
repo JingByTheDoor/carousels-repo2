@@ -42,28 +42,30 @@ def main() -> int:
             self.end_headers()
 
         def do_GET(self) -> None:
-            path = urlparse(self.path).path
-            if path == "/health":
-                self._write_json(HTTPStatus.OK, {"status": "ok", "host": host, "port": port})
-                return
-
-            if path == "/next-job":
-                item = acquire_next_render_item(settings, queue)
-                if item is None:
-                    self.send_response(HTTPStatus.NO_CONTENT)
-                    self.end_headers()
+            try:
+                path = urlparse(self.path).path
+                if path == "/health":
+                    self._write_json(HTTPStatus.OK, {"status": "ok", "host": host, "port": port})
                     return
-                self._write_json(
-                    HTTPStatus.OK,
-                    {
-                        "job_id": item.job_id,
-                        "row_number": item.row_number,
-                        "payload": item.payload.model_dump(),
-                    },
-                )
-                return
 
-            self._write_json(HTTPStatus.NOT_FOUND, {"error": "Not found"})
+                if path == "/next-job":
+                    item = acquire_next_render_item(settings, queue)
+                    if item is None:
+                        self._write_no_content()
+                        return
+                    self._write_json(
+                        HTTPStatus.OK,
+                        {
+                            "job_id": item.job_id,
+                            "row_number": item.row_number,
+                            "payload": item.payload.model_dump(),
+                        },
+                    )
+                    return
+
+                self._write_json(HTTPStatus.NOT_FOUND, {"error": "Not found"})
+            except Exception as exc:  # noqa: BLE001
+                self._write_json(HTTPStatus.BAD_REQUEST, {"error": str(exc)})
 
         def do_POST(self) -> None:
             path = urlparse(self.path).path
@@ -126,10 +128,16 @@ def main() -> int:
             self.end_headers()
             self.wfile.write(body)
 
+        def _write_no_content(self) -> None:
+            self.send_response(HTTPStatus.NO_CONTENT)
+            self._write_cors_headers()
+            self.end_headers()
+
         def _write_cors_headers(self) -> None:
             self.send_header("Access-Control-Allow-Origin", "*")
             self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
             self.send_header("Access-Control-Allow-Headers", "Content-Type")
+            self.send_header("Access-Control-Allow-Private-Network", "true")
 
     httpd = ThreadingHTTPServer((host, port), RenderBridgeHandler)
     print(json.dumps({"status": "listening", "host": host, "port": port}, indent=2))

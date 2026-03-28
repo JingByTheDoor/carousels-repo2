@@ -46,9 +46,18 @@
   - `1:9052` cover with profile header / footer rail
   - `1:9076` body slide with open text field
   - `1:9176` centered CTA slide
+- Additional portrait white-profile references identified:
+  - `1:9064` cover with profile header / footer rail
+  - `1:9086` body slide with open text field
+  - `1:9187` centered CTA slide
+- Additional light typography references identified:
+  - `1:14767` white editorial comparison layout
+  - `1:14775` dark image-bottom cover layout
+  - `1:14788` white CTA with footer signals
 - Portrait outputs now have two approved directions:
   - `1:46485` for the original portrait layout direction used by the upper families
   - `1:9052` / `1:9076` / `1:9176` for the black-profile portrait family
+  - `1:9064` / `1:9086` / `1:9187` for the white-profile portrait family
 - The current plugin renderer is a curated mix of those references:
   - Black dramatic cover from `1:46227`
   - Light editorial body slides from `1:46232`
@@ -65,6 +74,8 @@
   - `reference_cp_longform_split`
   - `reference_cp_gallery_wall`
   - `reference_sadekov_black_profile`
+  - `reference_sadekov_white_profile`
+  - `reference_typography_editorial_light`
 
 ## Research
 - Official Google Sheets Python quickstart:

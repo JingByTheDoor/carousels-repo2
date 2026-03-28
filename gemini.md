@@ -16,7 +16,7 @@ Status: `Approved and implemented`
   "output_modes": ["figma", "png"],
   "reference_style": "auto",
   "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
-  "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46248", "1:46256", "1:46264", "1:46201", "1:46288", "1:46184", "1:46190", "1:46271", "1:46277", "1:46283", "1:46485", "1:9052", "1:9076", "1:9176"],
+  "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46248", "1:46256", "1:46264", "1:46201", "1:46288", "1:46184", "1:46190", "1:46271", "1:46277", "1:46283", "1:46485", "1:9052", "1:9064", "1:9076", "1:9086", "1:9176", "1:9187", "1:14767", "1:14775", "1:14788"],
   "notes": "string|null"
 }
 ```
@@ -37,7 +37,7 @@ Status: `Approved and implemented`
     "output_modes": ["figma", "png"],
     "reference_style": "auto",
     "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
-    "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46248", "1:46256", "1:46264", "1:46201", "1:46288", "1:46184", "1:46190", "1:46271", "1:46277", "1:46283", "1:46485", "1:9052", "1:9076", "1:9176"],
+    "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46248", "1:46256", "1:46264", "1:46201", "1:46288", "1:46184", "1:46190", "1:46271", "1:46277", "1:46283", "1:46485", "1:9052", "1:9064", "1:9076", "1:9086", "1:9176", "1:9187", "1:14767", "1:14775", "1:14788"],
     "notes": "string|null"
   },
   "prompt_version": "baseline_v2",
@@ -143,8 +143,8 @@ Status: `Approved and implemented`
   "page_name": "string",
   "prompt_version": "baseline_v2",
   "language": "string",
-  "style_family": "reference_mix_alder_portrait|reference_alder_split_media|reference_alder_text_only|reference_typography_signal|reference_cp_minimal_split|reference_cp_longform_split|reference_cp_gallery_wall|reference_sadekov_black_profile",
-  "style_recipe": "alder_portrait_editorial_mix_v1|alder_portrait_editorial_dense_v1|alder_split_media_right_v1|alder_split_media_left_v1|alder_text_only_air_v1|typography_signal_glow_v1|cp_split_minimal_statement_v1|cp_split_longform_v1|cp_gallery_wall_v1|sadekov_black_profile_minimal_v1",
+  "style_family": "reference_mix_alder_portrait|reference_alder_split_media|reference_alder_text_only|reference_typography_signal|reference_cp_minimal_split|reference_cp_longform_split|reference_cp_gallery_wall|reference_sadekov_black_profile|reference_sadekov_white_profile|reference_typography_editorial_light",
+  "style_recipe": "alder_portrait_editorial_mix_v1|alder_portrait_editorial_dense_v1|alder_split_media_right_v1|alder_split_media_left_v1|alder_text_only_air_v1|typography_signal_glow_v1|cp_split_minimal_statement_v1|cp_split_longform_v1|cp_gallery_wall_v1|sadekov_black_profile_minimal_v1|sadekov_white_profile_minimal_v1|typography_editorial_light_v1",
   "source_artifact_path": "string",
   "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
   "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46288", "1:46485"],
@@ -261,7 +261,7 @@ Status: `Approved and implemented`
 - The plugin render path supports both manual file handoff and a localhost bridge handoff in the current implementation.
 - Input language should be preserved when possible; if no language is supplied, the system infers one for rendering metadata.
 - The plugin payload must carry render-aware display text and truncation metadata so the renderer does not infer layout-critical text decisions from raw copy alone.
-- The style engine may choose among the approved families `reference_mix_alder_portrait`, `reference_alder_split_media`, `reference_alder_text_only`, `reference_typography_signal`, `reference_cp_minimal_split`, `reference_cp_longform_split`, `reference_cp_gallery_wall`, and `reference_sadekov_black_profile` based on content density and a deterministic content signature.
+- The style engine may choose among the approved families `reference_mix_alder_portrait`, `reference_alder_split_media`, `reference_alder_text_only`, `reference_typography_signal`, `reference_cp_minimal_split`, `reference_cp_longform_split`, `reference_cp_gallery_wall`, `reference_sadekov_black_profile`, `reference_sadekov_white_profile`, and `reference_typography_editorial_light` based on content density and a deterministic content signature.
 
 ## Maintenance Log
 
@@ -280,3 +280,5 @@ Status: `Approved and implemented`
 - Implemented a multi-family style library with deterministic recipe selection and exact per-recipe reference-node logging.
 - Expanded the approved reference pool to include the lower portrait black-profile family: `1:9052`, `1:9076`, and `1:9176`.
 - Added `reference_sadekov_black_profile / sadekov_black_profile_minimal_v1` so the selector now covers the distinct portrait family in the source file instead of only the square families plus the single portrait layout reference.
+- Expanded the approved reference pool to include the lower white-profile family (`1:9064`, `1:9086`, `1:9187`) and the alternate light typography family (`1:14767`, `1:14775`, `1:14788`).
+- Added `reference_sadekov_white_profile / sadekov_white_profile_minimal_v1` and `reference_typography_editorial_light / typography_editorial_light_v1` so the selector now covers the remaining distinct archetypes in the provided file.

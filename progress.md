@@ -49,6 +49,13 @@
   - `1:9052`
   - `1:9076`
   - `1:9176`
+- Expanded the approved reference pool again to cover the white-profile portrait family and alternate light typography family:
+  - `1:9064`
+  - `1:9086`
+  - `1:9187`
+  - `1:14767`
+  - `1:14775`
+  - `1:14788`
 - Updated render-payload generation so the selected recipe now controls:
   - style family
   - style recipe
@@ -57,6 +64,9 @@
   - typography tokens
 - Updated the plugin renderer to branch visually by recipe instead of rendering every job with the same curated mix.
 - Added a new portrait black-profile recipe grounded in the lower section of the Figma file so the style engine now covers the distinct portrait family as well.
+- Added two more missing reference-backed families:
+  - `reference_sadekov_white_profile / sadekov_white_profile_minimal_v1`
+  - `reference_typography_editorial_light / typography_editorial_light_v1`
 - Expanded the default reference pool and design-reference log mappings so the new portrait family can be selected and traced without manual node overrides.
 - Extended the plugin UI with:
   - `Poll Next Job`
@@ -111,6 +121,8 @@
 - `node --check .\figma_plugin\code.js` passed after the multi-family renderer changes.
 - `node --check .\figma_plugin\code.js` passed after adding the portrait black-profile family.
 - `.venv\Scripts\python.exe tools\plan_carousel.py --job-id style-force-sadekov --topic "3 reasons clear lessons convert better" --reference-style sadekov` generated `reference_sadekov_black_profile / sadekov_black_profile_minimal_v1`.
+- `.venv\Scripts\python.exe tools\plan_carousel.py --job-id style-force-sadekov-light --topic "3 reasons a clear offer converts faster" --reference-style sadekov_light` generated `reference_sadekov_white_profile / sadekov_white_profile_minimal_v1`.
+- `.venv\Scripts\python.exe tools\plan_carousel.py --job-id style-force-typography-light --topic "How to explain a product comparison clearly" --reference-style typography_light` generated `reference_typography_editorial_light / typography_editorial_light_v1`.
 - `.venv\Scripts\python tools\plan_carousel.py --job-id style-smoke-short ...` generated `reference_typography_signal / typography_signal_glow_v1`.
 - `.venv\Scripts\python tools\plan_carousel.py --job-id style-smoke-cp ... --reference-style cp_3` generated `reference_cp_minimal_split / cp_split_minimal_statement_v1`.
 - `.venv\Scripts\python tools\build_render_payload.py --job-id sheet-row-2` still passed after the selector changes.
@@ -124,4 +136,5 @@
 - The localhost bridge now exists, but it still needs one live auto-mode plugin pass for end-to-end confirmation.
 - The style engine now supports multiple recipe families and exact per-recipe reference logging.
 - The style engine now covers the distinct slide archetypes from the approved Figma file, including the lower portrait black-profile family.
+- The style engine now covers the distinct slide archetypes from the approved Figma file, including the lower black-profile portrait family, the lower white-profile portrait family, and the alternate light typography set.
 - PNG export automation is still not implemented in the local toolchain.

@@ -301,6 +301,16 @@ async function renderCoverSlide(frame, slide, payload) {
     return;
   }
 
+  if (isSadekovWhiteProfile(payload)) {
+    await renderSadekovProfileLightCoverSlide(frame, slide, payload);
+    return;
+  }
+
+  if (isTypographyEditorialLight(payload)) {
+    await renderTypographyEditorialLightCoverSlide(frame, slide, payload);
+    return;
+  }
+
   if (isCpGallery(payload)) {
     await renderCpGalleryCoverSlide(frame, slide, payload);
     return;
@@ -378,6 +388,16 @@ async function renderCoverSlide(frame, slide, payload) {
 async function renderEditorialBodySlide(frame, slide, payload) {
   if (isSadekovBlackProfile(payload)) {
     await renderSadekovProfileBodySlide(frame, slide, payload);
+    return;
+  }
+
+  if (isSadekovWhiteProfile(payload)) {
+    await renderSadekovProfileLightBodySlide(frame, slide, payload);
+    return;
+  }
+
+  if (isTypographyEditorialLight(payload)) {
+    await renderTypographyEditorialLightBodySlide(frame, slide, payload);
     return;
   }
 
@@ -519,6 +539,16 @@ async function renderSpotlightBodySlide(frame, slide, payload) {
     return;
   }
 
+  if (isSadekovWhiteProfile(payload)) {
+    await renderSadekovProfileLightBodySlide(frame, slide, payload);
+    return;
+  }
+
+  if (isTypographyEditorialLight(payload)) {
+    await renderTypographyEditorialLightBodySlide(frame, slide, payload);
+    return;
+  }
+
   if (isAlderSplitRight(payload)) {
     await renderAlderSplitMediaBodySlide(frame, slide, payload, "right-tight");
     return;
@@ -624,6 +654,16 @@ async function renderSpotlightBodySlide(frame, slide, payload) {
 async function renderCtaSlide(frame, slide, payload) {
   if (isSadekovBlackProfile(payload)) {
     await renderSadekovProfileCtaSlide(frame, slide, payload);
+    return;
+  }
+
+  if (isSadekovWhiteProfile(payload)) {
+    await renderSadekovProfileLightCtaSlide(frame, slide, payload);
+    return;
+  }
+
+  if (isTypographyEditorialLight(payload)) {
+    await renderTypographyEditorialLightCtaSlide(frame, slide, payload);
     return;
   }
 
@@ -1129,9 +1169,9 @@ async function renderTypographySignalCtaSlide(frame, slide, payload) {
 async function renderSadekovProfileCoverSlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   setSolidFill(frame, tokens.dark_background);
-  await appendSadekovProfileHeader(frame, 160, tokens);
-  await appendSadekovFooter(frame);
-  appendSadekovArrowCue(frame, tokens);
+  await appendSadekovProfileHeader(frame, 160, tokens, "dark");
+  await appendSadekovFooter(frame, "dark");
+  appendSadekovArrowCue(frame, tokens, "dark");
 
   await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
@@ -1153,8 +1193,8 @@ async function renderSadekovProfileCoverSlide(frame, slide, payload) {
 async function renderSadekovProfileBodySlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   setSolidFill(frame, tokens.dark_background);
-  await appendSadekovProfileHeader(frame, 160, tokens);
-  await appendSadekovFooter(frame);
+  await appendSadekovProfileHeader(frame, 160, tokens, "dark");
+  await appendSadekovFooter(frame, "dark");
 
   await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
@@ -1194,8 +1234,8 @@ async function renderSadekovProfileBodySlide(frame, slide, payload) {
 async function renderSadekovProfileCtaSlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   setSolidFill(frame, tokens.dark_background);
-  await appendSadekovProfileHeader(frame, 256, tokens);
-  await appendSadekovFooter(frame);
+  await appendSadekovProfileHeader(frame, 256, tokens, "dark");
+  await appendSadekovFooter(frame, "dark");
 
   await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
@@ -1249,6 +1289,246 @@ async function renderSadekovProfileCtaSlide(frame, slide, payload) {
       alignHorizontal: "CENTER"
     });
   }
+}
+
+async function renderSadekovProfileLightCoverSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.light_background);
+  await appendSadekovProfileHeader(frame, 160, tokens, "light");
+  await appendSadekovFooter(frame, "light");
+  appendSadekovArrowCue(frame, tokens, "light");
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.cover_family,
+    fontStyle: payload.typography.cover_style,
+    fallbackStyle: "Bold",
+    x: 117,
+    y: 438,
+    width: 866,
+    maxHeight: 430,
+    maxSize: 90,
+    minSize: 34,
+    lineHeight: 0.98,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+}
+
+async function renderSadekovProfileLightBodySlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.light_background);
+  await appendSadekovProfileHeader(frame, 160, tokens, "light");
+  await appendSadekovFooter(frame, "light");
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.body_heading_family,
+    fontStyle: payload.typography.body_heading_style,
+    fallbackStyle: "Regular",
+    x: 120,
+    y: 417,
+    width: 899,
+    maxHeight: 140,
+    maxSize: 56,
+    minSize: 28,
+    lineHeight: 1.02,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+
+  if (slide.body_display || slide.body) {
+    await createTextBlock(frame, {
+      text: slide.body_display || slide.body,
+      fontFamily: payload.typography.body_family,
+      fontStyle: payload.typography.body_style,
+      fallbackStyle: "Regular",
+      x: 120,
+      y: 592,
+      width: 860,
+      maxHeight: 420,
+      maxSize: 34,
+      minSize: 18,
+      lineHeight: 1.22,
+      color: tokens.text_dark,
+      alignHorizontal: "LEFT"
+    });
+  }
+}
+
+async function renderSadekovProfileLightCtaSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.light_background);
+  await appendSadekovProfileHeader(frame, 256, tokens, "light");
+  await appendSadekovFooter(frame, "light");
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.cta_heading_family,
+    fontStyle: payload.typography.cta_heading_style,
+    fallbackStyle: "Regular",
+    x: 115,
+    y: 486,
+    width: 850,
+    maxHeight: 160,
+    maxSize: 68,
+    minSize: 30,
+    lineHeight: 1.04,
+    color: tokens.text_dark,
+    alignHorizontal: "CENTER"
+  });
+
+  const ctaBody = slide.body_display || slide.body;
+  if (ctaBody) {
+    await createTextBlock(frame, {
+      text: ctaBody,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 236,
+      y: 1070,
+      width: 608,
+      maxHeight: 90,
+      maxSize: 32,
+      minSize: 16,
+      lineHeight: 1.14,
+      color: "#222222",
+      alignHorizontal: "CENTER"
+    });
+  }
+
+  if (slide.supporting_text) {
+    await createTextBlock(frame, {
+      text: slide.supporting_text,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 236,
+      y: 1132,
+      width: 608,
+      maxHeight: 70,
+      maxSize: 28,
+      minSize: 14,
+      lineHeight: 1.1,
+      color: "#3F3F3F",
+      alignHorizontal: "CENTER"
+    });
+  }
+}
+
+async function renderTypographyEditorialLightCoverSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.dark_background);
+  appendTypographyToolCards(frame, tokens);
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.cover_family,
+    fontStyle: payload.typography.cover_style,
+    fallbackStyle: "Bold",
+    x: 82,
+    y: 126,
+    width: 820,
+    maxHeight: 420,
+    maxSize: 104,
+    minSize: 36,
+    lineHeight: 1.0,
+    color: tokens.text_light,
+    alignHorizontal: "LEFT"
+  });
+
+  if (slide.body_display || slide.body) {
+    await createBulletText(frame, slide.body_display || slide.body, 92, 544, 842, 180, 28, 18, tokens.text_light);
+  }
+}
+
+async function renderTypographyEditorialLightBodySlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.light_background);
+  appendTypographyEditorialCorners(frame, tokens);
+  appendBottomBar(frame, "#020202");
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.body_heading_family,
+    fontStyle: payload.typography.body_heading_style,
+    fallbackStyle: "Bold",
+    x: 120,
+    y: 164,
+    width: 840,
+    maxHeight: 240,
+    maxSize: 86,
+    minSize: 30,
+    lineHeight: 1.02,
+    color: tokens.text_dark,
+    alignHorizontal: "CENTER"
+  });
+
+  const columnTexts = splitTextForTwoColumns(slide.body_display || slide.body || "", slide.emphasis_words || []);
+  await createBulletText(frame, columnTexts[0], 108, 486, 340, 330, 28, 18, tokens.text_dark);
+  await createBulletText(frame, columnTexts[1], 626, 486, 340, 330, 28, 18, tokens.text_dark);
+}
+
+async function renderTypographyEditorialLightCtaSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  setSolidFill(frame, tokens.light_background);
+  appendBottomBar(frame, "#020202");
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.cta_heading_family,
+    fontStyle: payload.typography.cta_heading_style,
+    fallbackStyle: "Bold",
+    x: 112,
+    y: 436,
+    width: 856,
+    maxHeight: 190,
+    maxSize: 90,
+    minSize: 34,
+    lineHeight: 1.0,
+    color: tokens.text_dark,
+    alignHorizontal: "CENTER"
+  });
+
+  if (slide.body_display || slide.body) {
+    await createTextBlock(frame, {
+      text: slide.body_display || slide.body,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 120,
+      y: 628,
+      width: 840,
+      maxHeight: 130,
+      maxSize: 32,
+      minSize: 18,
+      lineHeight: 1.18,
+      color: tokens.text_dark,
+      alignHorizontal: "CENTER"
+    });
+  }
+
+  if (slide.supporting_text) {
+    await createTextBlock(frame, {
+      text: slide.supporting_text,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 180,
+      y: 768,
+      width: 720,
+      maxHeight: 72,
+      maxSize: 24,
+      minSize: 14,
+      lineHeight: 1.16,
+      color: "#2C2C2C",
+      alignHorizontal: "CENTER"
+    });
+  }
+
+  await appendFooterSignalTone(frame, "Like", 86, 1110, "left", "#111111");
+  await appendFooterSignalTone(frame, "Comment", 248, 1210, "center", "#111111");
+  await appendFooterSignalTone(frame, "Save for later", 904, 1110, "right", "#111111");
 }
 
 async function renderCpSplitCoverSlide(frame, slide, payload) {
@@ -1605,12 +1885,15 @@ function appendCpGalleryWall(frame, tokens) {
   });
 }
 
-async function appendSadekovProfileHeader(frame, topY, tokens) {
+async function appendSadekovProfileHeader(frame, topY, tokens, tone) {
+  const isLight = tone === "light";
+  const headlineColor = isLight ? tokens.text_dark : tokens.text_light;
+  const subColor = isLight ? "#454545" : "#D4D4D4";
   const avatar = figma.createEllipse();
   avatar.resize(138, 138);
   avatar.x = 88;
   avatar.y = topY;
-  avatar.fills = [solidPaint(tokens.text_light)];
+  avatar.fills = [solidPaint(isLight ? "#F4F4F4" : tokens.text_light)];
   frame.appendChild(avatar);
 
   const avatarInner = figma.createEllipse();
@@ -1641,7 +1924,7 @@ async function appendSadekovProfileHeader(frame, topY, tokens) {
     maxSize: 46,
     minSize: 24,
     lineHeight: 1.0,
-    color: tokens.text_light,
+    color: headlineColor,
     alignHorizontal: "LEFT"
   });
 
@@ -1657,7 +1940,7 @@ async function appendSadekovProfileHeader(frame, topY, tokens) {
     maxSize: 34,
     minSize: 18,
     lineHeight: 1.0,
-    color: "#D4D4D4",
+    color: subColor,
     alignHorizontal: "LEFT"
   });
 
@@ -1685,12 +1968,13 @@ async function appendSadekovProfileHeader(frame, topY, tokens) {
   });
 }
 
-async function appendSadekovFooter(frame) {
+async function appendSadekovFooter(frame, tone) {
+  const isLight = tone === "light";
   const line = figma.createRectangle();
   line.resize(959, 2);
   line.x = 60;
   line.y = 1284;
-  line.fills = [solidPaint("#6E6E6E", 0.86)];
+  line.fills = [solidPaint(isLight ? "#8A8A8A" : "#6E6E6E", 0.86)];
   frame.appendChild(line);
 
   await createTextBlock(frame, {
@@ -1705,19 +1989,20 @@ async function appendSadekovFooter(frame) {
     maxSize: 24,
     minSize: 16,
     lineHeight: 1.0,
-    color: "#676767",
+    color: isLight ? "#5E5E5E" : "#676767",
     alignHorizontal: "CENTER"
   });
 }
 
-function appendSadekovArrowCue(frame, tokens) {
+function appendSadekovArrowCue(frame, tokens, tone) {
+  const arrowColor = tone === "light" ? tokens.text_dark : tokens.text_light;
   const shaft = figma.createRectangle();
   shaft.resize(146, 10);
   shaft.x = 792;
   shaft.y = 1030;
   shaft.rotation = -8;
   shaft.cornerRadius = 999;
-  shaft.fills = [solidPaint(tokens.text_light, 0.96)];
+  shaft.fills = [solidPaint(arrowColor, 0.96)];
   frame.appendChild(shaft);
 
   const stem = figma.createRectangle();
@@ -1726,7 +2011,7 @@ function appendSadekovArrowCue(frame, tokens) {
   stem.y = 960;
   stem.rotation = -8;
   stem.cornerRadius = 999;
-  stem.fills = [solidPaint(tokens.text_light, 0.96)];
+  stem.fills = [solidPaint(arrowColor, 0.96)];
   frame.appendChild(stem);
 
   const head = figma.createPolygon();
@@ -1735,8 +2020,163 @@ function appendSadekovArrowCue(frame, tokens) {
   head.x = 904;
   head.y = 986;
   head.rotation = 90;
-  head.fills = [solidPaint(tokens.text_light, 0.96)];
+  head.fills = [solidPaint(arrowColor, 0.96)];
   frame.appendChild(head);
+}
+
+function appendTypographyToolCards(frame, tokens) {
+  appendGlow(frame, 300, 722, 420, tokens.accent_magenta, 0.2);
+
+  const leftCard = figma.createRectangle();
+  leftCard.resize(262, 262);
+  leftCard.x = 304;
+  leftCard.y = 834;
+  leftCard.rotation = -16;
+  leftCard.cornerRadius = 40;
+  leftCard.fills = [solidPaint("#22242A")];
+  leftCard.effects = [dropShadow("#000000", 0.26, 0, 18, 38)];
+  frame.appendChild(leftCard);
+
+  const leftMark = figma.createRectangle();
+  leftMark.resize(108, 108);
+  leftMark.x = 384;
+  leftMark.y = 904;
+  leftMark.rotation = -16;
+  leftMark.cornerRadius = 30;
+  leftMark.fills = [solidPaint(tokens.accent_blue, 0.86)];
+  frame.appendChild(leftMark);
+
+  const rightCard = figma.createRectangle();
+  rightCard.resize(300, 300);
+  rightCard.x = 548;
+  rightCard.y = 876;
+  rightCard.rotation = 14;
+  rightCard.cornerRadius = 42;
+  rightCard.fills = [solidPaint("#1D1E23")];
+  rightCard.effects = [dropShadow("#000000", 0.24, 0, 18, 38)];
+  frame.appendChild(rightCard);
+
+  const diamond = figma.createPolygon();
+  diamond.pointCount = 4;
+  diamond.resize(118, 118);
+  diamond.x = 640;
+  diamond.y = 974;
+  diamond.rotation = 14;
+  diamond.fills = [solidPaint(tokens.accent_orange)];
+  frame.appendChild(diamond);
+}
+
+function appendTypographyEditorialCorners(frame, tokens) {
+  const leftRibbon = figma.createPolygon();
+  leftRibbon.pointCount = 6;
+  leftRibbon.resize(240, 420);
+  leftRibbon.x = -58;
+  leftRibbon.y = 894;
+  leftRibbon.rotation = -10;
+  leftRibbon.fills = [solidPaint(tokens.accent_gold, 0.94)];
+  frame.appendChild(leftRibbon);
+
+  const leftCard = figma.createRectangle();
+  leftCard.resize(164, 164);
+  leftCard.x = 64;
+  leftCard.y = 1032;
+  leftCard.rotation = -12;
+  leftCard.cornerRadius = 32;
+  leftCard.fills = [solidPaint("#FFFFFF")];
+  leftCard.effects = [dropShadow("#111111", 0.12, 0, 12, 28)];
+  frame.appendChild(leftCard);
+
+  const leftGem = figma.createPolygon();
+  leftGem.pointCount = 4;
+  leftGem.resize(86, 86);
+  leftGem.x = 102;
+  leftGem.y = 1072;
+  leftGem.rotation = -12;
+  leftGem.fills = [solidPaint(tokens.accent_orange)];
+  frame.appendChild(leftGem);
+
+  const rightRibbon = figma.createPolygon();
+  rightRibbon.pointCount = 5;
+  rightRibbon.resize(320, 470);
+  rightRibbon.x = 848;
+  rightRibbon.y = 860;
+  rightRibbon.rotation = 16;
+  rightRibbon.fills = [solidPaint(tokens.accent_blue, 0.86)];
+  frame.appendChild(rightRibbon);
+
+  const rightCard = figma.createRectangle();
+  rightCard.resize(162, 162);
+  rightCard.x = 828;
+  rightCard.y = 1038;
+  rightCard.rotation = 10;
+  rightCard.cornerRadius = 34;
+  rightCard.fills = [solidPaint("#21232B")];
+  frame.appendChild(rightCard);
+
+  const rightChip = figma.createEllipse();
+  rightChip.resize(58, 58);
+  rightChip.x = 888;
+  rightChip.y = 1092;
+  rightChip.fills = [solidPaint(tokens.accent_blue)];
+  frame.appendChild(rightChip);
+}
+
+function appendBottomBar(frame, hex) {
+  const bar = figma.createRectangle();
+  bar.resize(1080, 20);
+  bar.x = 0;
+  bar.y = 1330;
+  bar.fills = [solidPaint(hex)];
+  frame.appendChild(bar);
+}
+
+async function createBulletText(frame, text, x, y, width, maxHeight, maxSize, minSize, color) {
+  const bullet = figma.createEllipse();
+  bullet.resize(16, 16);
+  bullet.x = x;
+  bullet.y = y + 18;
+  bullet.fills = [solidPaint(color)];
+  frame.appendChild(bullet);
+
+  await createTextBlock(frame, {
+    text,
+    fontFamily: "Inter",
+    fontStyle: "Regular",
+    fallbackStyle: "Regular",
+    x: x + 34,
+    y,
+    width: width - 34,
+    maxHeight,
+    maxSize,
+    minSize,
+    lineHeight: 1.22,
+    color,
+    alignHorizontal: "LEFT"
+  });
+}
+
+function splitTextForTwoColumns(text, emphasisWords) {
+  const cleaned = cleanText(text) || "";
+  if (!cleaned) {
+    return [
+      emphasisWords && emphasisWords[0] ? emphasisWords[0] : "Key point",
+      emphasisWords && emphasisWords[1] ? emphasisWords[1] : "Keep it simple"
+    ];
+  }
+
+  const words = cleaned.split(" ");
+  if (words.length < 10) {
+    return [
+      cleaned,
+      emphasisWords && emphasisWords.length ? emphasisWords.slice(0, 2).join(" ") : "Use clear examples"
+    ];
+  }
+
+  const pivot = Math.max(4, Math.floor(words.length / 2));
+  return [
+    words.slice(0, pivot).join(" "),
+    words.slice(pivot).join(" ")
+  ];
 }
 
 function appendOrbitRings(parent, circle, strokeHex) {
@@ -1851,6 +2291,14 @@ function isSadekovBlackProfile(payload) {
   return payload && payload.style_recipe === "sadekov_black_profile_minimal_v1";
 }
 
+function isSadekovWhiteProfile(payload) {
+  return payload && payload.style_recipe === "sadekov_white_profile_minimal_v1";
+}
+
+function isTypographyEditorialLight(payload) {
+  return payload && payload.style_recipe === "typography_editorial_light_v1";
+}
+
 function cleanText(value) {
   if (typeof value !== "string") {
     return null;
@@ -1860,25 +2308,29 @@ function cleanText(value) {
 }
 
 async function appendFooterSignal(frame, label, x, y, align) {
+  await appendFooterSignalTone(frame, label, x, y, align, "#FFFFFF");
+}
+
+async function appendFooterSignalTone(frame, label, x, y, align, colorHex) {
   const vertical = figma.createRectangle();
   vertical.resize(4, 110);
   vertical.x = x;
   vertical.y = y - 32;
-  vertical.fills = [solidPaint("#FFFFFF", 0.96)];
+  vertical.fills = [solidPaint(colorHex, 0.96)];
   frame.appendChild(vertical);
 
   const dot = figma.createEllipse();
   dot.resize(22, 22);
   dot.x = x - 11;
   dot.y = y + 70;
-  dot.fills = [solidPaint("#FFFFFF")];
+  dot.fills = [solidPaint(colorHex)];
   frame.appendChild(dot);
 
   const elbow = figma.createRectangle();
   elbow.resize(36, 4);
   elbow.x = align === "right" ? x - 36 : x;
   elbow.y = y - 32;
-  elbow.fills = [solidPaint("#FFFFFF", 0.96)];
+  elbow.fills = [solidPaint(colorHex, 0.96)];
   frame.appendChild(elbow);
 
   await createTextBlock(frame, {
@@ -1893,7 +2345,7 @@ async function appendFooterSignal(frame, label, x, y, align) {
     maxSize: 28,
     minSize: 20,
     lineHeight: 1.0,
-    color: "#FFFFFF",
+    color: colorHex,
     alignHorizontal: align === "right" ? "RIGHT" : "LEFT"
   });
 }

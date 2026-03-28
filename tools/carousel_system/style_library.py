@@ -194,6 +194,66 @@ SADEKOV_BLACK_PROFILE_RECIPE = StyleRecipeSpec(
     ),
 )
 
+SADEKOV_WHITE_PROFILE_RECIPE = StyleRecipeSpec(
+    style_family="reference_sadekov_white_profile",
+    style_recipe="sadekov_white_profile_minimal_v1",
+    reference_node_ids=("1:9064", "1:9086", "1:9187"),
+    style_tokens=StyleTokens(
+        light_background="#FFFFFF",
+        dark_background="#FFFFFF",
+        text_dark="#111111",
+        text_light="#FFFFFF",
+        accent_blue="#409DFF",
+        accent_magenta="#D9D9D9",
+        accent_gold="#A0A0A0",
+        accent_orange="#111111",
+        accent_purple="#EDEDED",
+        accent_navy="#1A1A1A",
+    ),
+    typography=TypographyTokens(
+        cover_family="Inter",
+        cover_style="Black",
+        body_heading_family="Inter",
+        body_heading_style="Regular",
+        body_family="Inter",
+        body_style="Regular",
+        cta_heading_family="Inter",
+        cta_heading_style="Regular",
+        cta_body_family="Inter",
+        cta_body_style="Regular",
+    ),
+)
+
+TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE = StyleRecipeSpec(
+    style_family="reference_typography_editorial_light",
+    style_recipe="typography_editorial_light_v1",
+    reference_node_ids=("1:14767", "1:14775", "1:14788"),
+    style_tokens=StyleTokens(
+        light_background="#FFFFFF",
+        dark_background="#171717",
+        text_dark="#111111",
+        text_light="#FFFFFF",
+        accent_blue="#79E7E2",
+        accent_magenta="#2F3134",
+        accent_gold="#F6D267",
+        accent_orange="#FFB300",
+        accent_purple="#5B5D60",
+        accent_navy="#101114",
+    ),
+    typography=TypographyTokens(
+        cover_family="Inter",
+        cover_style="Black",
+        body_heading_family="Inter",
+        body_heading_style="Bold",
+        body_family="Inter",
+        body_style="Regular",
+        cta_heading_family="Inter",
+        cta_heading_style="Black",
+        cta_body_family="Inter",
+        cta_body_style="Regular",
+    ),
+)
+
 STYLE_RECIPES: dict[str, StyleRecipeSpec] = {
     ALDER_RECIPE.style_recipe: ALDER_RECIPE,
     ALDER_DENSE_RECIPE.style_recipe: ALDER_DENSE_RECIPE,
@@ -205,6 +265,8 @@ STYLE_RECIPES: dict[str, StyleRecipeSpec] = {
     CP_LONGFORM_RECIPE.style_recipe: CP_LONGFORM_RECIPE,
     CP_GALLERY_RECIPE.style_recipe: CP_GALLERY_RECIPE,
     SADEKOV_BLACK_PROFILE_RECIPE.style_recipe: SADEKOV_BLACK_PROFILE_RECIPE,
+    SADEKOV_WHITE_PROFILE_RECIPE.style_recipe: SADEKOV_WHITE_PROFILE_RECIPE,
+    TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE.style_recipe: TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE,
 }
 
 
@@ -228,6 +290,10 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
         return CP_GALLERY_RECIPE
     if preference in {"sadekov", "black_profile", "profile_black", "reference_sadekov_black_profile"}:
         return SADEKOV_BLACK_PROFILE_RECIPE
+    if preference in {"sadekov_light", "white_profile", "profile_white", "reference_sadekov_white_profile"}:
+        return SADEKOV_WHITE_PROFILE_RECIPE
+    if preference in {"typography_light", "typography_editorial", "reference_typography_editorial_light"}:
+        return TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE
 
     body_lengths = [len(slide.body or "") for slide in record.content_plan if slide.slide_role == "info"]
     average_body = sum(body_lengths) / len(body_lengths) if body_lengths else 0
@@ -237,7 +303,7 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
     signature = _content_signature(record)
 
     if (language == "ru" and average_body > 100) or dense_slide_count >= 4 or average_body > 126:
-        candidates = [ALDER_DENSE_RECIPE, ALDER_TEXT_ONLY_RECIPE, CP_LONGFORM_RECIPE]
+        candidates = [ALDER_DENSE_RECIPE, ALDER_TEXT_ONLY_RECIPE, CP_LONGFORM_RECIPE, TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE]
         return candidates[signature % len(candidates)]
 
     if average_body > 102 or hook_length > 54:
@@ -247,12 +313,14 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
             ALDER_SPLIT_LEFT_RECIPE,
             CP_LONGFORM_RECIPE,
             TYPOGRAPHY_SIGNAL_RECIPE,
+            TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE,
         ]
         return candidates[signature % len(candidates)]
 
     if average_body > 82 or cta_length > 88:
         candidates = [
             TYPOGRAPHY_SIGNAL_RECIPE,
+            TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE,
             CP_SPLIT_RECIPE,
             ALDER_SPLIT_RIGHT_RECIPE,
             ALDER_SPLIT_LEFT_RECIPE,
@@ -265,7 +333,9 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
         CP_SPLIT_RECIPE,
         CP_GALLERY_RECIPE,
         TYPOGRAPHY_SIGNAL_RECIPE,
+        TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE,
         SADEKOV_BLACK_PROFILE_RECIPE,
+        SADEKOV_WHITE_PROFILE_RECIPE,
         ALDER_SPLIT_RIGHT_RECIPE,
         ALDER_SPLIT_LEFT_RECIPE,
     ]

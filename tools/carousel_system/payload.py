@@ -28,8 +28,14 @@ REFERENCE_NODE_DETAILS = {
     "1:46288": ("typography slide 2", "cta"),
     "1:46485": ("1971245499", "layout"),
     "1:9052": ("1971245110", "cover"),
+    "1:9064": ("1971245119", "cover"),
     "1:9076": ("1971245111", "body"),
+    "1:9086": ("1971245120", "body"),
     "1:9176": ("1971245118", "cta"),
+    "1:9187": ("1971245125", "cta"),
+    "1:14767": ("typography light editorial", "body"),
+    "1:14775": ("typography light dark-cover", "cover"),
+    "1:14788": ("typography light cta", "cta"),
 }
 
 

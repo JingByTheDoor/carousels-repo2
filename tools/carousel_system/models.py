@@ -23,6 +23,12 @@ DEFAULT_REFERENCE_NODE_IDS = [
     "1:9052",
     "1:9076",
     "1:9176",
+    "1:9064",
+    "1:9086",
+    "1:9187",
+    "1:14767",
+    "1:14775",
+    "1:14788",
 ]
 DEFAULT_PROMPT_VERSION = "baseline_v2"
 DEFAULT_STYLE_FAMILY = "reference_mix_alder_portrait"

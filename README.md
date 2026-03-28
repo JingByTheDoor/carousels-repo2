@@ -63,6 +63,8 @@ The render payload can now choose among multiple reference-driven families:
 - `reference_cp_longform_split`
 - `reference_cp_gallery_wall`
 - `reference_sadekov_black_profile`
+- `reference_sadekov_white_profile`
+- `reference_typography_editorial_light`
 
 You can also force a family when testing:
 ```powershell
@@ -73,6 +75,8 @@ You can also force a family when testing:
 .venv\Scripts\python tools\plan_carousel.py --topic "Why clear dashboards convert better" --reference-style cp_gallery
 .venv\Scripts\python tools\plan_carousel.py --topic "5 lessons from better onboarding" --reference-style alder_split_left
 .venv\Scripts\python tools\plan_carousel.py --topic "3 reasons clear teaching wins" --reference-style sadekov
+.venv\Scripts\python tools\plan_carousel.py --topic "Why a clear offer converts faster" --reference-style sadekov_light
+.venv\Scripts\python tools\plan_carousel.py --topic "How to explain a product comparison clearly" --reference-style typography_light
 ```
 
 ## Queue processing
@@ -121,4 +125,4 @@ That command now plans the content and writes the plugin render payload in one p
 ## Current limitations
 - PNG export automation is still not implemented in the local toolchain.
 - The plugin bridge still depends on a live Figma desktop session with the development plugin running.
-- The style engine now covers the unique slide archetypes from the approved reference file, but recipe selection is still deterministic and curated rather than a free-form recombination of every layer in the file.
+- The style engine now covers the distinct slide archetypes in the approved reference file, including the lower black-profile and white-profile portrait sets plus the alternate light typography set. Selection is still deterministic and curated rather than a free-form recombination of every layer in the file.

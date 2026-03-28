@@ -33,8 +33,22 @@
 - Secondary minimal statement references identified:
   - `CP_3` node `1:46184`
   - `CP_3` node `1:46190`
+- Additional `Alder_1` body variants identified:
+  - `1:46248` split text-left / media-right
+  - `1:46256` split media-left / text-right
+  - `1:46264` airy text-only
+- Additional `CP_3` variants identified:
+  - `1:46271` short statement cover
+  - `1:46277` longform split body
+  - `1:46283` gallery wall
 - Secondary portrait reference identified: node `1:46485`
-- Portrait outputs should borrow layout direction from `1:46485` while preserving `Alder_1` palette and typography choices.
+- Additional portrait black-profile references identified:
+  - `1:9052` cover with profile header / footer rail
+  - `1:9076` body slide with open text field
+  - `1:9176` centered CTA slide
+- Portrait outputs now have two approved directions:
+  - `1:46485` for the original portrait layout direction used by the upper families
+  - `1:9052` / `1:9076` / `1:9176` for the black-profile portrait family
 - The current plugin renderer is a curated mix of those references:
   - Black dramatic cover from `1:46227`
   - Light editorial body slides from `1:46232`
@@ -42,9 +56,15 @@
   - Dark CTA glow treatment from `1:46288`
   - Portrait framing from `1:46485`
 - The next style-engine pass is approved to use three recipe families:
+- The next style-engine pass is approved to use these recipe families:
   - `reference_mix_alder_portrait`
+  - `reference_alder_split_media`
+  - `reference_alder_text_only`
   - `reference_typography_signal`
   - `reference_cp_minimal_split`
+  - `reference_cp_longform_split`
+  - `reference_cp_gallery_wall`
+  - `reference_sadekov_black_profile`
 
 ## Research
 - Official Google Sheets Python quickstart:

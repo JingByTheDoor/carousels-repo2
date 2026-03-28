@@ -124,11 +124,87 @@ CP_SPLIT_RECIPE = StyleRecipeSpec(
     ),
 )
 
+ALDER_SPLIT_RIGHT_RECIPE = StyleRecipeSpec(
+    style_family="reference_alder_split_media",
+    style_recipe="alder_split_media_right_v1",
+    reference_node_ids=("1:46227", "1:46248", "1:46485"),
+    style_tokens=ALDER_RECIPE.style_tokens,
+    typography=ALDER_RECIPE.typography,
+)
+
+ALDER_SPLIT_LEFT_RECIPE = StyleRecipeSpec(
+    style_family="reference_alder_split_media",
+    style_recipe="alder_split_media_left_v1",
+    reference_node_ids=("1:46227", "1:46256", "1:46485"),
+    style_tokens=ALDER_RECIPE.style_tokens,
+    typography=ALDER_RECIPE.typography,
+)
+
+ALDER_TEXT_ONLY_RECIPE = StyleRecipeSpec(
+    style_family="reference_alder_text_only",
+    style_recipe="alder_text_only_air_v1",
+    reference_node_ids=("1:46227", "1:46264", "1:46485"),
+    style_tokens=ALDER_RECIPE.style_tokens,
+    typography=ALDER_RECIPE.typography,
+)
+
+CP_LONGFORM_RECIPE = StyleRecipeSpec(
+    style_family="reference_cp_longform_split",
+    style_recipe="cp_split_longform_v1",
+    reference_node_ids=("1:46190", "1:46277", "1:46485"),
+    style_tokens=CP_SPLIT_RECIPE.style_tokens,
+    typography=CP_SPLIT_RECIPE.typography,
+)
+
+CP_GALLERY_RECIPE = StyleRecipeSpec(
+    style_family="reference_cp_gallery_wall",
+    style_recipe="cp_gallery_wall_v1",
+    reference_node_ids=("1:46271", "1:46283", "1:46485"),
+    style_tokens=CP_SPLIT_RECIPE.style_tokens,
+    typography=CP_SPLIT_RECIPE.typography,
+)
+
+SADEKOV_BLACK_PROFILE_RECIPE = StyleRecipeSpec(
+    style_family="reference_sadekov_black_profile",
+    style_recipe="sadekov_black_profile_minimal_v1",
+    reference_node_ids=("1:9052", "1:9076", "1:9176"),
+    style_tokens=StyleTokens(
+        light_background="#F2F2F2",
+        dark_background="#000000",
+        text_dark="#111111",
+        text_light="#FFFFFF",
+        accent_blue="#409DFF",
+        accent_magenta="#303030",
+        accent_gold="#7B7B7B",
+        accent_orange="#FFFFFF",
+        accent_purple="#4A4A4A",
+        accent_navy="#121212",
+    ),
+    typography=TypographyTokens(
+        cover_family="Inter",
+        cover_style="Black",
+        body_heading_family="Inter",
+        body_heading_style="Regular",
+        body_family="Inter",
+        body_style="Regular",
+        cta_heading_family="Inter",
+        cta_heading_style="Regular",
+        cta_body_family="Inter",
+        cta_body_style="Regular",
+    ),
+)
+
 STYLE_RECIPES: dict[str, StyleRecipeSpec] = {
     ALDER_RECIPE.style_recipe: ALDER_RECIPE,
     ALDER_DENSE_RECIPE.style_recipe: ALDER_DENSE_RECIPE,
+    ALDER_SPLIT_RIGHT_RECIPE.style_recipe: ALDER_SPLIT_RIGHT_RECIPE,
+    ALDER_SPLIT_LEFT_RECIPE.style_recipe: ALDER_SPLIT_LEFT_RECIPE,
+    ALDER_TEXT_ONLY_RECIPE.style_recipe: ALDER_TEXT_ONLY_RECIPE,
     TYPOGRAPHY_SIGNAL_RECIPE.style_recipe: TYPOGRAPHY_SIGNAL_RECIPE,
     CP_SPLIT_RECIPE.style_recipe: CP_SPLIT_RECIPE,
+    CP_LONGFORM_RECIPE.style_recipe: CP_LONGFORM_RECIPE,
+    CP_GALLERY_RECIPE.style_recipe: CP_GALLERY_RECIPE,
+    SADEKOV_BLACK_PROFILE_RECIPE.style_recipe: SADEKOV_BLACK_PROFILE_RECIPE,
 }
 
 
@@ -136,10 +212,22 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
     preference = (record.normalized_input.reference_style or "").strip().lower()
     if preference in {"alder_forced", "alder_locked", "reference_mix_alder_portrait"}:
         return ALDER_DENSE_RECIPE if language == "ru" else ALDER_RECIPE
+    if preference in {"alder_split_right", "alder_right"}:
+        return ALDER_SPLIT_RIGHT_RECIPE
+    if preference in {"alder_split_left", "alder_left"}:
+        return ALDER_SPLIT_LEFT_RECIPE
+    if preference in {"alder_text_only", "alder_text"}:
+        return ALDER_TEXT_ONLY_RECIPE
     if preference in {"typography", "typography_signal", "signal"}:
         return TYPOGRAPHY_SIGNAL_RECIPE
     if preference in {"cp_3", "cp3", "minimal", "cp_split"}:
         return CP_SPLIT_RECIPE
+    if preference in {"cp_longform", "cp_long"}:
+        return CP_LONGFORM_RECIPE
+    if preference in {"cp_gallery", "gallery_wall", "gallery"}:
+        return CP_GALLERY_RECIPE
+    if preference in {"sadekov", "black_profile", "profile_black", "reference_sadekov_black_profile"}:
+        return SADEKOV_BLACK_PROFILE_RECIPE
 
     body_lengths = [len(slide.body or "") for slide in record.content_plan if slide.slide_role == "info"]
     average_body = sum(body_lengths) / len(body_lengths) if body_lengths else 0
@@ -149,15 +237,39 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
     signature = _content_signature(record)
 
     if (language == "ru" and average_body > 100) or dense_slide_count >= 4 or average_body > 126:
-        return ALDER_DENSE_RECIPE
+        candidates = [ALDER_DENSE_RECIPE, ALDER_TEXT_ONLY_RECIPE, CP_LONGFORM_RECIPE]
+        return candidates[signature % len(candidates)]
 
-    if hook_length <= 34 and average_body <= 116:
-        return CP_SPLIT_RECIPE if signature % 2 == 0 else TYPOGRAPHY_SIGNAL_RECIPE
+    if average_body > 102 or hook_length > 54:
+        candidates = [
+            ALDER_RECIPE,
+            ALDER_SPLIT_RIGHT_RECIPE,
+            ALDER_SPLIT_LEFT_RECIPE,
+            CP_LONGFORM_RECIPE,
+            TYPOGRAPHY_SIGNAL_RECIPE,
+        ]
+        return candidates[signature % len(candidates)]
 
-    if cta_length <= 96 and average_body <= 118 and signature % 3 == 0:
-        return TYPOGRAPHY_SIGNAL_RECIPE
+    if average_body > 82 or cta_length > 88:
+        candidates = [
+            TYPOGRAPHY_SIGNAL_RECIPE,
+            CP_SPLIT_RECIPE,
+            ALDER_SPLIT_RIGHT_RECIPE,
+            ALDER_SPLIT_LEFT_RECIPE,
+            CP_LONGFORM_RECIPE,
+            SADEKOV_BLACK_PROFILE_RECIPE,
+        ]
+        return candidates[signature % len(candidates)]
 
-    return CP_SPLIT_RECIPE if signature % 2 == 0 else TYPOGRAPHY_SIGNAL_RECIPE
+    candidates = [
+        CP_SPLIT_RECIPE,
+        CP_GALLERY_RECIPE,
+        TYPOGRAPHY_SIGNAL_RECIPE,
+        SADEKOV_BLACK_PROFILE_RECIPE,
+        ALDER_SPLIT_RIGHT_RECIPE,
+        ALDER_SPLIT_LEFT_RECIPE,
+    ]
+    return candidates[signature % len(candidates)]
 
 
 def _content_signature(record: CarouselOutput) -> int:

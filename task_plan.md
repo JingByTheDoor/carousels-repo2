@@ -60,6 +60,7 @@ Bootstrap this repository under the B.L.A.S.T. protocol and evolve the v1 planni
 - [ ] Validate the localhost bridge against a live plugin auto-mode run
 - [x] Expand style selection beyond the curated first-pass recipes
 - [x] Add a multi-family style library grounded in `Alder_1`, `typography`, and `CP_3` references
+- [x] Expand the style library to cover the lower portrait black-profile family from the approved Figma file
 
 ### Phase 4: Stylize
 - [ ] Refine payload formatting

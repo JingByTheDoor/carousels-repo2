@@ -41,7 +41,7 @@ Normalize manual or Google Sheets input into the canonical schema in `gemini.md`
 - Empty status is treated as `queued`.
 - `output_modes` is stored as a comma-separated string in Sheets and normalized to a list internally.
 - `aspect_ratio` defaults to `portrait_1080x1350`.
-- `reference_style` defaults to `alder_1`.
+- `reference_style` defaults to `auto`.
 - `language` is optional; if blank, planning/render metadata may infer it.
 - `process_next_job.py` must write both `.tmp/jobs/<job_id>.json` and `.tmp/render-jobs/<job_id>.render.json`.
 

@@ -45,6 +45,10 @@
   - `1:46201`
   - `1:46184`
   - `1:46190`
+- Expanded the approved reference pool again to cover the missing portrait black-profile family:
+  - `1:9052`
+  - `1:9076`
+  - `1:9176`
 - Updated render-payload generation so the selected recipe now controls:
   - style family
   - style recipe
@@ -52,6 +56,8 @@
   - style tokens
   - typography tokens
 - Updated the plugin renderer to branch visually by recipe instead of rendering every job with the same curated mix.
+- Added a new portrait black-profile recipe grounded in the lower section of the Figma file so the style engine now covers the distinct portrait family as well.
+- Expanded the default reference pool and design-reference log mappings so the new portrait family can be selected and traced without manual node overrides.
 - Extended the plugin UI with:
   - `Poll Next Job`
   - `Start Auto Mode`
@@ -103,6 +109,8 @@
 - `node --check .\figma_plugin\code.js` still passed after moving bridge networking into the plugin controller.
 - `python -m compileall tools` passed after the style-library integration.
 - `node --check .\figma_plugin\code.js` passed after the multi-family renderer changes.
+- `node --check .\figma_plugin\code.js` passed after adding the portrait black-profile family.
+- `.venv\Scripts\python.exe tools\plan_carousel.py --job-id style-force-sadekov --topic "3 reasons clear lessons convert better" --reference-style sadekov` generated `reference_sadekov_black_profile / sadekov_black_profile_minimal_v1`.
 - `.venv\Scripts\python tools\plan_carousel.py --job-id style-smoke-short ...` generated `reference_typography_signal / typography_signal_glow_v1`.
 - `.venv\Scripts\python tools\plan_carousel.py --job-id style-smoke-cp ... --reference-style cp_3` generated `reference_cp_minimal_split / cp_split_minimal_statement_v1`.
 - `.venv\Scripts\python tools\build_render_payload.py --job-id sheet-row-2` still passed after the selector changes.
@@ -115,4 +123,5 @@
 - The local finalize step exists, but it still needs one live plugin run for end-to-end confirmation.
 - The localhost bridge now exists, but it still needs one live auto-mode plugin pass for end-to-end confirmation.
 - The style engine now supports multiple recipe families and exact per-recipe reference logging.
+- The style engine now covers the distinct slide archetypes from the approved Figma file, including the lower portrait black-profile family.
 - PNG export automation is still not implemented in the local toolchain.

@@ -124,12 +124,18 @@ def write_plugin_render_payload(output_path: Path, payload: PluginRenderPayload)
 
 def _build_render_slide(record: CarouselOutput, slide, language: str, style_recipe: str) -> RenderSlideSpec:
     if slide.slide_role == "hook":
-        headline_short = _shorten_headline(slide.headline, language, hard_limit=42)
-        display = headline_short if len(slide.headline) > 42 else slide.headline
-        safe_area = "cover_balanced" if style_recipe in {"typography_signal_glow_v1", "cp_split_minimal_statement_v1"} else "cover_tall_text"
+        hook_limit = 44 if style_recipe == "sadekov_black_profile_minimal_v1" else 42
+        headline_short = _shorten_headline(slide.headline, language, hard_limit=hook_limit)
+        display = headline_short if len(slide.headline) > hook_limit else slide.headline
+        safe_area = (
+            "cover_balanced"
+            if style_recipe in {"typography_signal_glow_v1", "cp_split_minimal_statement_v1", "sadekov_black_profile_minimal_v1"}
+            else "cover_tall_text"
+        )
         accent_motif = {
             "typography_signal_glow_v1": "signal_footer_lines",
             "cp_split_minimal_statement_v1": "device_card_mock",
+            "sadekov_black_profile_minimal_v1": "profile_header_arrow",
         }.get(style_recipe, "geometric_cluster")
         return RenderSlideSpec(
             slide_number=slide.slide_number,
@@ -149,7 +155,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             text_density=_hook_density(slide.headline),
             visual_priority="headline",
             safe_area_profile=safe_area,
-            max_headline_lines=5 if style_recipe == "cp_split_minimal_statement_v1" else 6,
+            max_headline_lines=4 if style_recipe == "sadekov_black_profile_minimal_v1" else 5 if style_recipe == "cp_split_minimal_statement_v1" else 6,
             max_body_lines=0,
             can_truncate_body=False,
             emphasis_words=_extract_emphasis_words(slide.headline, language),
@@ -160,6 +166,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
         cta_source = slide.body or record.normalized_input.cta_text or ""
         headline_short = _shorten_headline(slide.headline, language, hard_limit=38)
         body_display, supporting_text = _build_cta_copy_segments(cta_source, slide.headline, language)
+        button_label = None if style_recipe == "sadekov_black_profile_minimal_v1" else _build_cta_button_label(language)
         return RenderSlideSpec(
             slide_number=slide.slide_number,
             slide_role=slide.slide_role,
@@ -174,29 +181,37 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             body_short=body_display,
             body_display=body_display,
             supporting_text=supporting_text,
-            button_label=_build_cta_button_label(language),
+            button_label=button_label,
             text_density=_cta_density(slide.headline, cta_source),
             visual_priority="cta",
             safe_area_profile="cta_center_stack",
             max_headline_lines=4,
-            max_body_lines=4,
+            max_body_lines=3 if style_recipe == "sadekov_black_profile_minimal_v1" else 4,
             can_truncate_body=True,
             emphasis_words=_extract_emphasis_words(slide.headline, language),
-            accent_motif="cta_signal_lines" if style_recipe != "cp_split_minimal_statement_v1" else "device_card_mock",
+            accent_motif=(
+                "profile_header_footer"
+                if style_recipe == "sadekov_black_profile_minimal_v1"
+                else "cta_signal_lines"
+                if style_recipe != "cp_split_minimal_statement_v1"
+                else "device_card_mock"
+            ),
         )
 
     body_text = slide.body or ""
     layout_variant = _body_layout_variant(slide.slide_number, body_text, style_recipe)
     layout_preference = _layout_preference_for_variant(layout_variant)
     text_density = _body_density(slide.headline, body_text)
-    headline_short = _shorten_headline(slide.headline, language, hard_limit=30)
-    body_short = _shorten_body(body_text, language, hard_limit=_body_hard_limit(layout_variant, text_density))
+    headline_limit = 48 if style_recipe == "sadekov_black_profile_minimal_v1" else 30
+    body_limit = 92 if style_recipe == "sadekov_black_profile_minimal_v1" else _body_hard_limit(layout_variant, text_density)
+    headline_short = _shorten_headline(slide.headline, language, hard_limit=headline_limit)
+    body_short = _shorten_body(body_text, language, hard_limit=body_limit)
     headline_display = (
         headline_short
-        if text_density == "high" or layout_variant == "body_mask_band_left"
+        if style_recipe == "sadekov_black_profile_minimal_v1" or text_density == "high" or layout_variant == "body_mask_band_left"
         else slide.headline
     )
-    body_display = body_short if text_density != "low" else body_text
+    body_display = body_short if style_recipe == "sadekov_black_profile_minimal_v1" or text_density != "low" else body_text
 
     return RenderSlideSpec(
         slide_number=slide.slide_number,
@@ -216,8 +231,8 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
         text_density=text_density,
         visual_priority="headline" if text_density != "high" else "body",
         safe_area_profile=_safe_area_profile(layout_variant),
-        max_headline_lines=3,
-        max_body_lines=_max_body_lines(layout_variant, text_density),
+        max_headline_lines=3 if style_recipe == "sadekov_black_profile_minimal_v1" else 3,
+        max_body_lines=5 if style_recipe == "sadekov_black_profile_minimal_v1" else _max_body_lines(layout_variant, text_density),
         can_truncate_body=True,
         emphasis_words=_extract_emphasis_words(f"{slide.headline} {body_text}", language),
         accent_motif=_body_accent_motif(slide.slide_number, body_text, style_recipe),
@@ -289,6 +304,8 @@ def _body_hard_limit(layout_variant: str, text_density: TextDensity) -> int:
 
 
 def _body_layout_variant(slide_number: int, body: str, style_recipe: str) -> str:
+    if style_recipe == "sadekov_black_profile_minimal_v1":
+        return "body_editorial_bullet"
     if style_recipe == "typography_signal_glow_v1":
         return "body_spotlight_panel" if slide_number in {3, 5} else "body_editorial_bullet"
     if style_recipe == "cp_split_minimal_statement_v1":
@@ -306,6 +323,8 @@ def _body_layout_variant(slide_number: int, body: str, style_recipe: str) -> str
 
 
 def _body_accent_motif(slide_number: int, body: str, style_recipe: str) -> str:
+    if style_recipe == "sadekov_black_profile_minimal_v1":
+        return "profile_header_footer"
     if style_recipe == "typography_signal_glow_v1":
         return "signal_glow_panel" if slide_number in {3, 5} else "signal_footer_lines"
     if style_recipe == "cp_split_minimal_statement_v1":

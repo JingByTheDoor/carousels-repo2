@@ -56,14 +56,23 @@ That command now writes both:
 ## Style families
 The render payload can now choose among multiple reference-driven families:
 - `reference_mix_alder_portrait`
+- `reference_alder_split_media`
+- `reference_alder_text_only`
 - `reference_typography_signal`
 - `reference_cp_minimal_split`
+- `reference_cp_longform_split`
+- `reference_cp_gallery_wall`
+- `reference_sadekov_black_profile`
 
 You can also force a family when testing:
 ```powershell
 .venv\Scripts\python tools\plan_carousel.py --topic "4 principles of clear interfaces" --reference-style cp_3
 .venv\Scripts\python tools\plan_carousel.py --topic "Why consistency matters in branding" --reference-style typography_signal
 .venv\Scripts\python tools\plan_carousel.py --topic "Why systems beat hacks" --reference-style alder_forced
+.venv\Scripts\python tools\plan_carousel.py --topic "How to simplify a complex workflow" --reference-style cp_longform
+.venv\Scripts\python tools\plan_carousel.py --topic "Why clear dashboards convert better" --reference-style cp_gallery
+.venv\Scripts\python tools\plan_carousel.py --topic "5 lessons from better onboarding" --reference-style alder_split_left
+.venv\Scripts\python tools\plan_carousel.py --topic "3 reasons clear teaching wins" --reference-style sadekov
 ```
 
 ## Queue processing
@@ -112,4 +121,4 @@ That command now plans the content and writes the plugin render payload in one p
 ## Current limitations
 - PNG export automation is still not implemented in the local toolchain.
 - The plugin bridge still depends on a live Figma desktop session with the development plugin running.
-- The style engine now supports multiple recipe families, but it is still a curated library rather than a full automatic harvest of every example frame in the reference file.
+- The style engine now covers the unique slide archetypes from the approved reference file, but recipe selection is still deterministic and curated rather than a free-form recombination of every layer in the file.

@@ -42,6 +42,11 @@ Render approved carousel payloads inside Figma without relying on Codex or chat-
   - Dark stage with soft magenta/gold glow quadrants
   - Centered or stacked large type
   - Footer signal lines for engagement cues
+- Black profile portrait references: `1:9052`, `1:9076`, `1:9176`
+  - Pure black portrait stage
+  - Profile header block with avatar/name/subtitle
+  - Minimal footer rail and centered handle
+  - Sparse editorial text and CTA treatment
 - Body references: `1:46232`, `1:46239`
   - Light editorial background
   - Poppins heading/body mix

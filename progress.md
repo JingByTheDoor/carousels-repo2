@@ -32,6 +32,9 @@
 - Added Python project scaffolding, environment contract, and initial queue/planning tools.
 - Created a local `.venv` and installed the project in editable mode.
 - Added clean CLI handling for missing configuration values.
+- Updated `.gitignore` to exclude Google service-account JSON files.
+- Created a new target Figma file for rendered output:
+  - `https://www.figma.com/design/SL9uqVFWC8oEDjn2th47Im`
 
 ### Errors
 - `rg --files` returned no tracked files because the repository was empty. No corrective action required.
@@ -51,8 +54,12 @@
 - `.venv\Scripts\python tools\plan_carousel.py --help` succeeded.
 - `.venv\Scripts\python tools\ensure_queue_sheet.py` failed cleanly with missing `GOOGLE_SERVICE_ACCOUNT_JSON`.
 - `.venv\Scripts\python tools\check_figma_access.py` failed cleanly with missing `FIGMA_ACCESS_TOKEN`.
+- `.venv\Scripts\python tools\process_next_job.py` succeeded and generated `.tmp/jobs/sheet-row-2.json`.
+- Figma draft file creation via MCP succeeded.
+- Figma slide rendering via MCP was blocked by the Starter plan tool-call rate limit before frames could be written.
 
 ### Current Status
 - Blueprint is approved.
 - Tooling has been scaffolded and is ready for local verification.
-- Waiting on `.env` configuration for live API handshakes.
+- Google Sheets and OpenAI planning are working.
+- Figma rendering is partially blocked by the current MCP rate limit on the connected Starter plan.

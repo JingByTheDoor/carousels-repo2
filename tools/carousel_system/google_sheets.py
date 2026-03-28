@@ -115,9 +115,22 @@ class GoogleSheetsQueue:
         return rows
 
     def find_next_pending_row(self) -> QueueRow | None:
+        return self.find_first_row_by_status({"", "queued"})
+
+    def find_first_row_by_status(self, statuses: set[str]) -> QueueRow | None:
+        normalized_statuses = {status.strip().lower() for status in statuses}
         for row in self.read_queue_rows():
             status = row.values.get("status", "").strip().lower()
-            if status in {"", "queued"}:
+            if status in normalized_statuses:
+                return row
+        return None
+
+    def find_row_by_job_id(self, job_id: str) -> QueueRow | None:
+        normalized = job_id.strip()
+        if not normalized:
+            return None
+        for row in self.read_queue_rows():
+            if (row.values.get("job_id") or "").strip() == normalized:
                 return row
         return None
 

@@ -9,7 +9,9 @@ Render approved carousel payloads inside Figma without relying on Codex or chat-
 - The finalize step applies the plugin result back into the canonical job artifact and Google Sheet.
 
 ## Current handoff model
-- Input to the plugin: `.tmp/render-jobs/<job_id>.render.json`
+- Input to the plugin:
+  - manual: `.tmp/render-jobs/<job_id>.render.json`
+  - auto: localhost bridge response from `tools/render_server.py`
 - Current payload schema: `figma_plugin_payload_v2`
 - Each slide payload now includes render-aware fields such as:
   - `headline_display`
@@ -20,8 +22,12 @@ Render approved carousel payloads inside Figma without relying on Codex or chat-
   - `button_label`
   - `text_density`
   - `safe_area_profile`
-- Output from the plugin: downloaded `figma_plugin_result_v1` JSON
-- Finalization tool: `tools/apply_render_result.py`
+- Output from the plugin:
+  - manual: downloaded `figma_plugin_result_v1` JSON
+  - auto: `POST /render-result` to the localhost bridge
+- Finalization tool:
+  - manual: `tools/apply_render_result.py`
+  - auto: bridge-owned finalization inside `tools/render_server.py`
 
 ## Visual grounding
 - Cover reference: `1:46227`
@@ -46,6 +52,22 @@ Render approved carousel payloads inside Figma without relying on Codex or chat-
 - The plugin should return file/page/node metadata in a result JSON the Python layer can apply.
 - The plugin may approximate the approved references through curated style tokens and layout recipes, but it must log the approved node IDs that informed the payload.
 
+## Local bridge contract
+- Bridge endpoint: `http://localhost:8765`
+- `GET /health`
+  - returns server health and bind address
+- `GET /next-job`
+  - returns `204` when no jobs are available
+  - otherwise returns `{ job_id, row_number, payload }`
+  - prioritizes `planned` rows, then plans the next `queued` row on demand
+- `POST /render-result`
+  - accepts `figma_plugin_result_v1`
+  - writes `.tmp/render-results/<job_id>.render-result.json`
+  - finalizes the canonical job artifact and Google Sheet row
+- `POST /render-error`
+  - accepts `{ job_id, error }`
+  - marks the job and sheet row as `error`
+
 ## Follow-up path
-- Current implementation: file upload or paste into a local plugin UI.
-- Next improvement: replace file upload with a localhost fetch/post bridge so the plugin can pull the next job automatically.
+- Current implementation: manual file import plus localhost fetch/post bridge.
+- Next improvement: add exported-image automation after a successful Figma render.

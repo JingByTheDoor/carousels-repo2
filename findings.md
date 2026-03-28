@@ -56,6 +56,7 @@
 - The Python layer must communicate rendering intent through versioned JSON payloads instead of chat/session memory.
 - Raw `headline + body + layout_variant` is not enough for reliable rendering; the payload needs display-safe text variants and truncation metadata.
 - Live plugin rendering still requires a human to open Figma and run the local plugin.
+- The local bridge path can remove manual JSON upload/download, but it still depends on a live Figma desktop session with the development plugin running.
 - Figma `fileKey` access from plugins depends on private-plugin API availability; the plugin tolerates `null` when unavailable.
 
 ## Open Questions

@@ -21,9 +21,11 @@ This repository follows the B.L.A.S.T. protocol and A.N.T. 3-layer architecture 
 - `tools/` stores atomic, testable Python scripts only.
 - `.tmp/` stores intermediate and disposable artifacts only.
 - `figma_plugin/` stores the local Figma renderer that consumes plugin payloads and emits plugin result files.
+- `tools/render_server.py` is the local bridge between the queue/planning layer and the live Figma plugin session.
 - Environment secrets belong in `.env`, never in source files.
 - A task is not complete until the payload reaches its final destination.
 - The local Python layer must be able to produce both the canonical job artifact and the dedicated plugin render payload before any Figma render begins.
+- The preferred local automation path is: queue/planner -> localhost bridge -> Figma plugin -> result finalization.
 
 ## Schema Governance
 - Canonical input/output schemas live in `gemini.md`.

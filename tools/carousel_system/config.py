@@ -27,6 +27,8 @@ class Settings:
     google_worksheet_name: str
     figma_access_token: str | None
     figma_reference_file_key: str
+    render_server_host: str
+    render_server_port: int
 
 
 def _optional_path(raw_value: str | None) -> Path | None:
@@ -52,6 +54,8 @@ def load_settings(
         google_worksheet_name=os.getenv("GOOGLE_SHEETS_WORKSHEET_NAME", DEFAULT_WORKSHEET_NAME),
         figma_access_token=os.getenv("FIGMA_ACCESS_TOKEN"),
         figma_reference_file_key=os.getenv("FIGMA_REFERENCE_FILE_KEY", DEFAULT_REFERENCE_FILE_KEY),
+        render_server_host=os.getenv("RENDER_SERVER_HOST", "127.0.0.1"),
+        render_server_port=int(os.getenv("RENDER_SERVER_PORT", "8765")),
     )
 
     if require_openai and not settings.openai_api_key:

@@ -55,7 +55,9 @@ Bootstrap this repository under the B.L.A.S.T. protocol and evolve the v1 planni
 - [x] Build canonical plugin render payload generation
 - [x] Scaffold a local Figma plugin renderer
 - [x] Build a local render-result finalizer
+- [x] Build a localhost plugin bridge for auto-poll render handoff
 - [ ] Validate the plugin against a live manual Figma run
+- [ ] Validate the localhost bridge against a live plugin auto-mode run
 - [ ] Expand style selection beyond the curated first-pass recipes
 
 ### Phase 4: Stylize
@@ -71,4 +73,4 @@ Bootstrap this repository under the B.L.A.S.T. protocol and evolve the v1 planni
 ## Current Blockers
 - The local plugin renderer still needs a live manual Figma run for end-to-end verification.
 - PNG export automation is still not implemented.
-- The plugin handoff is file-based; localhost or cloud-triggered orchestration is still pending.
+- The localhost bridge now exists, but it still needs one live auto-mode verification pass inside Figma.

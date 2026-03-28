@@ -19,12 +19,13 @@ This folder contains the local renderer that replaces the chat-bound Figma MCP r
    - `tools/process_next_job.py`
    - or `tools/plan_carousel.py`
 2. Open the plugin in Figma.
-3. Upload or paste `.tmp/render-jobs/<job_id>.render.json`.
-   The preferred payload format is `figma_plugin_payload_v2`.
-4. Click `Render Carousel`.
-5. Download the resulting `*.render-result.json`.
-6. Apply that result locally:
+3. Choose one of two handoff modes:
+   - Manual: upload or paste `.tmp/render-jobs/<job_id>.render.json`
+   - Local bridge: point the plugin at `http://localhost:8765` and use `Poll Next Job` or `Start Auto Mode`
+4. Click `Render in Figma` for manual mode, or let `Poll Next Job` / `Start Auto Mode` trigger the render in bridge mode.
+5. For manual mode, download the resulting `*.render-result.json` and apply it locally:
    - `tools/apply_render_result.py --job-id <job_id> --result-file <downloaded file>`
+6. For bridge mode, the plugin posts the result back automatically and the Python layer finalizes the job.
 
 ## Current scope
 - Renders 7 portrait slides at `1080x1350`
@@ -38,6 +39,6 @@ This folder contains the local renderer that replaces the chat-bound Figma MCP r
 - Writes a result JSON with page and slide node IDs
 
 ## Known limitations
-- The plugin currently uses a file-based handoff, not a localhost job server.
+- Auto mode still depends on Figma desktop staying open with the development plugin running.
 - PNG export is not automated yet.
 - The style engine is a curated first pass, not a full reference-file harvesting system.

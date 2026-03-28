@@ -18,7 +18,8 @@ This repo turns a `topic` or `script` into a validated 7-slide Instagram carouse
   - a canonical job artifact in `.tmp/jobs/`
   - a Figma plugin render payload in `.tmp/render-jobs/`
 - The local Figma plugin in [figma_plugin](C:/Users/User/OneDrive%20-%20Board%20of%20Education%20of%20SD%2039%20(Vancouver)/Documents/Carousels/carousels-repo2/figma_plugin) consumes the render payload and creates the slides inside Figma.
-- A local finalize step writes the plugin render result back into the job artifact and Google Sheet.
+- The local bridge server in `tools/render_server.py` can now serve the next job directly to the plugin and accept render results back over `http://localhost:8765`.
+- A local finalize step still exists for manual result files, but the bridge path can now complete the Google Sheet update automatically.
 
 ## Setup
 1. Copy `.env.example` to `.env`.
@@ -73,6 +74,22 @@ That command now plans the content and writes the plugin render payload in one p
 .venv\Scripts\python tools\apply_render_result.py --job-id <job_id> --result-file <path-to-result-json>
 ```
 
+## Auto render bridge
+1. Start the bridge:
+
+```powershell
+.venv\Scripts\python tools\render_server.py
+```
+
+2. Keep Figma open and run the local plugin.
+3. In the plugin UI, leave the bridge URL at `http://localhost:8765`.
+4. Use `Poll Next Job` to process one row, or `Start Auto Mode` to keep polling.
+5. The bridge will:
+   - serve the next `planned` row first
+   - fall back to `queued` rows by planning them on demand
+   - write render results into `.tmp/render-results/`
+   - finalize the job artifact and Google Sheet automatically
+
 ## Rebuild render payloads for existing jobs
 ```powershell
 .venv\Scripts\python tools\build_render_payload.py --job-id <job_id>
@@ -80,5 +97,5 @@ That command now plans the content and writes the plugin render payload in one p
 
 ## Current limitations
 - PNG export automation is still not implemented in the local toolchain.
-- The plugin renderer is file-based for now. It does not yet fetch jobs automatically from a local server.
+- The plugin bridge still depends on a live Figma desktop session with the development plugin running.
 - The richer style engine is still a curated first pass grounded in the approved Figma references, not a full harvested library of every example frame.

@@ -258,7 +258,7 @@ Status: `Approved and implemented`
 - If only `topic` is provided, the system is expected to generate a complete 7-slide content plan before layout.
 - If `script` is provided, the system restructures it into the 7-slide format instead of discarding it.
 - `planned` means the content payload and plugin render payload exist and are waiting for the Figma plugin render step.
-- The plugin render path is file-based in the current implementation.
+- The plugin render path supports both manual file handoff and a localhost bridge handoff in the current implementation.
 - Input language should be preserved when possible; if no language is supplied, the system infers one for rendering metadata.
 - The plugin payload must carry render-aware display text and truncation metadata so the renderer does not infer layout-critical text decisions from raw copy alone.
 
@@ -274,3 +274,4 @@ Status: `Approved and implemented`
 - Added canonical schema for plugin render payloads and plugin render results.
 - Expanded the Google Sheets queue columns to track language, style selection, prompt version, and plugin handoff files.
 - Upgraded the plugin payload contract to `figma_plugin_payload_v2` with render-aware slide metadata such as short/display variants, density, safe-area profile, and CTA button/support text.
+- Added a localhost bridge path so the Figma plugin can fetch the next job and post back render results without manual file transfer.

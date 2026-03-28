@@ -35,6 +35,14 @@
   - `code.js`
   - `ui.html`
   - `README.md`
+- Added a localhost render bridge in `tools/render_server.py`.
+- Added shared bridge/finalization helpers in `tools/carousel_system/render_bridge.py`.
+- Extended the plugin UI with:
+  - `Poll Next Job`
+  - `Start Auto Mode`
+  - automatic `POST /render-result`
+  - automatic `POST /render-error`
+- Updated the plugin manifest to allow development-time access to `http://localhost:8765`.
 - Updated `README.md`, `gemini.md`, `claude.md`, and architecture SOPs for the new plugin render path.
 - Upgraded the plugin render payload from `figma_plugin_payload_v1` to `figma_plugin_payload_v2`.
 - Added render-aware slide fields including:
@@ -53,6 +61,8 @@
 - A delegated worker was interrupted during plugin scaffolding, so the final plugin implementation was completed locally.
 - The first live plugin attempt failed in Figma because its runtime rejected object spread syntax in `figma_plugin/code.js`.
 - The first payload contract was too thin for reliable layout decisions, which caused weak text fitting on the rendered slides.
+- The first localhost bridge pass still needed explicit CORS and `OPTIONS` handling because the plugin UI uses browser-style `fetch()` requests.
+- Figma Desktop rejected `devAllowedDomains` using `http://127.0.0.1:8765`, so the plugin bridge now standardizes on `http://localhost:8765`.
 
 ### Test / Verification
 - `python -m compileall tools` passed.
@@ -66,10 +76,13 @@
 - `Get-Content .\figma_plugin\manifest.json | ConvertFrom-Json` passed.
 - `.venv\Scripts\python tools\plan_carousel.py --help` passed.
 - `.venv\Scripts\python tools\apply_render_result.py --help` passed.
+- `Get-Content .\figma_plugin\manifest.json | ConvertFrom-Json` passed after adding `networkAccess` and `documentAccess`.
+- A temporary bridge boot on port `8766` returned `GET /health -> {"status":"ok","host":"127.0.0.1","port":8766}`.
 - Live end-to-end plugin rendering inside Figma is not yet verified in this turn.
 
 ### Current Status
 - Google Sheets, OpenAI planning, and plugin render-payload generation are working.
 - The repo now has a local Figma plugin render path that can replace the chat-bound MCP render step.
 - The local finalize step exists, but it still needs one live plugin run for end-to-end confirmation.
+- The localhost bridge now exists, but it still needs one live auto-mode plugin pass for end-to-end confirmation.
 - PNG export automation is still not implemented in the local toolchain.

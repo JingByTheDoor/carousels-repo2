@@ -68,6 +68,8 @@
 - Figma `fileKey` access from plugins depends on private-plugin API availability; the plugin tolerates `null` when unavailable.
 - Figma Desktop’s plugin webview treats localhost fetches like browser requests, so the bridge must send CORS headers even on `204 No Content` and should advertise `Access-Control-Allow-Private-Network: true`.
 - Using the plugin iframe for localhost bridge traffic is brittle; the better integration point is the plugin controller in `code.js`, which can make the bridge requests and send structured results back to the UI.
+- A legacy default of `reference_style=alder_1` made older jobs look like the new selector was broken, because they still carried an old explicit style preference even after the style engine changed.
+- Planned rows must be rehydrated from the current code path; otherwise stale `.render.json` payloads can mask style-engine changes.
 
 ## Open Questions
 - Which Google account or Google Cloud project will own the Sheets credentials long term?

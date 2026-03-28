@@ -82,6 +82,8 @@
 - The plugin UI bridge requests were moved out of the iframe and into `figma_plugin/code.js` so localhost polling/result posting now uses the Figma plugin runtime instead of browser-style iframe `fetch()`.
 - The manifest now allows `http://localhost:8765` in both `allowedDomains` and `devAllowedDomains`, with explicit reasoning, in case the runtime ignores `devAllowedDomains` for localhost fetches.
 - After enabling `documentAccess: dynamic-page`, the renderer had to stop assigning `figma.currentPage` directly and switch to `await figma.setCurrentPageAsync(page)`.
+- The original `reference_style` default of `alder_1` was unintentionally pinning legacy jobs to the old family, so the default was changed to `auto` and `alder` is now only selected through explicit force values such as `alder_forced`.
+- Planned rows now rebuild their render payloads from the current code path instead of trusting stale `.render.json` files.
 
 ### Test / Verification
 - `python -m compileall tools` passed.
@@ -104,6 +106,7 @@
 - `.venv\Scripts\python tools\plan_carousel.py --job-id style-smoke-short ...` generated `reference_typography_signal / typography_signal_glow_v1`.
 - `.venv\Scripts\python tools\plan_carousel.py --job-id style-smoke-cp ... --reference-style cp_3` generated `reference_cp_minimal_split / cp_split_minimal_statement_v1`.
 - `.venv\Scripts\python tools\build_render_payload.py --job-id sheet-row-2` still passed after the selector changes.
+- A direct selector check against `.tmp\\jobs\\sheet-row-2.json` now resolves to `reference_typography_signal / typography_signal_glow_v1`.
 - Live end-to-end plugin rendering inside Figma is not yet verified in this turn.
 
 ### Current Status

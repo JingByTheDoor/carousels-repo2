@@ -35,7 +35,7 @@ class CarouselInput(BaseModel):
     language: str | None = None
     aspect_ratio: Literal["square_1080", "portrait_1080x1350"] = "portrait_1080x1350"
     output_modes: list[Literal["figma", "png"]] = Field(default_factory=lambda: ["figma", "png"])
-    reference_style: str = "alder_1"
+    reference_style: str = "auto"
     reference_file_key: str
     reference_node_ids: list[str] = Field(default_factory=lambda: DEFAULT_REFERENCE_NODE_IDS.copy())
     notes: str | None = None

@@ -110,30 +110,27 @@ def hydrate_planned_row(settings: Settings, queue: GoogleSheetsQueue, row: Queue
         return plan_row_to_render_item(settings, queue, row)
 
     record = CarouselOutput.model_validate_json(job_path.read_text(encoding="utf-8"))
-    if render_payload_path.exists():
-        payload = PluginRenderPayload.model_validate_json(render_payload_path.read_text(encoding="utf-8"))
-    else:
-        payload = build_plugin_render_payload(record, source_artifact_path=job_path)
-        record.language = payload.language or infer_language(record)
-        record.style_family = payload.style_family
-        record.style_recipe = payload.style_recipe
-        record.design_reference_log = [
-            reference for reference in record.design_reference_log if reference.node_id in set(payload.reference_node_ids)
-        ]
-        record.render_artifact = build_render_artifact(render_payload_path, payload)
-        write_output_record(job_path, record)
-        write_plugin_render_payload(render_payload_path, payload)
-        queue.update_row(
-            row.row_number,
-            {
-                "language": payload.language,
-                "style_family": payload.style_family,
-                "style_recipe": payload.style_recipe,
-                "prompt_version": record.prompt_version,
-                "reference_nodes_used": ",".join(payload.reference_node_ids),
-                "render_payload_path": str(render_payload_path),
-            },
-        )
+    payload = build_plugin_render_payload(record, source_artifact_path=job_path)
+    record.language = payload.language or infer_language(record)
+    record.style_family = payload.style_family
+    record.style_recipe = payload.style_recipe
+    record.design_reference_log = [
+        reference for reference in record.design_reference_log if reference.node_id in set(payload.reference_node_ids)
+    ]
+    record.render_artifact = build_render_artifact(render_payload_path, payload)
+    write_output_record(job_path, record)
+    write_plugin_render_payload(render_payload_path, payload)
+    queue.update_row(
+        row.row_number,
+        {
+            "language": payload.language,
+            "style_family": payload.style_family,
+            "style_recipe": payload.style_recipe,
+            "prompt_version": record.prompt_version,
+            "reference_nodes_used": ",".join(payload.reference_node_ids),
+            "render_payload_path": str(render_payload_path),
+        },
+    )
 
     return RenderQueueItem(
         row_number=row.row_number,

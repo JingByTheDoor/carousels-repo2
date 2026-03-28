@@ -134,6 +134,8 @@ STYLE_RECIPES: dict[str, StyleRecipeSpec] = {
 
 def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpec:
     preference = (record.normalized_input.reference_style or "").strip().lower()
+    if preference in {"alder_forced", "alder_locked", "reference_mix_alder_portrait"}:
+        return ALDER_DENSE_RECIPE if language == "ru" else ALDER_RECIPE
     if preference in {"typography", "typography_signal", "signal"}:
         return TYPOGRAPHY_SIGNAL_RECIPE
     if preference in {"cp_3", "cp3", "minimal", "cp_split"}:
@@ -155,10 +157,7 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
     if cta_length <= 96 and average_body <= 118 and signature % 3 == 0:
         return TYPOGRAPHY_SIGNAL_RECIPE
 
-    if average_body <= 118 and signature % 5 in {0, 1}:
-        return CP_SPLIT_RECIPE
-
-    return ALDER_RECIPE
+    return CP_SPLIT_RECIPE if signature % 2 == 0 else TYPOGRAPHY_SIGNAL_RECIPE
 
 
 def _content_signature(record: CarouselOutput) -> int:

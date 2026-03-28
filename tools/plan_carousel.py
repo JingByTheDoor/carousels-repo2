@@ -32,7 +32,7 @@ def parse_args() -> argparse.Namespace:
         choices=["square_1080", "portrait_1080x1350"],
     )
     parser.add_argument("--output-modes", default="figma,png")
-    parser.add_argument("--reference-style", default="alder_1")
+    parser.add_argument("--reference-style", default="auto")
     parser.add_argument("--notes")
     parser.add_argument("--output-path")
     parser.add_argument("--render-payload-path")

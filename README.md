@@ -63,6 +63,7 @@ You can also force a family when testing:
 ```powershell
 .venv\Scripts\python tools\plan_carousel.py --topic "4 principles of clear interfaces" --reference-style cp_3
 .venv\Scripts\python tools\plan_carousel.py --topic "Why consistency matters in branding" --reference-style typography_signal
+.venv\Scripts\python tools\plan_carousel.py --topic "Why systems beat hacks" --reference-style alder_forced
 ```
 
 ## Queue processing

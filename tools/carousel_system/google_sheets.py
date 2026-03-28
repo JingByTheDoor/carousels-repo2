@@ -172,7 +172,7 @@ class GoogleSheetsQueue:
             "language": row.values.get("language"),
             "aspect_ratio": row.values.get("aspect_ratio") or "portrait_1080x1350",
             "output_modes": output_modes or ["figma", "png"],
-            "reference_style": row.values.get("reference_style") or "alder_1",
+            "reference_style": row.values.get("reference_style") or "auto",
             "reference_file_key": self.settings.figma_reference_file_key,
             "notes": row.values.get("notes"),
         }

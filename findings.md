@@ -48,7 +48,7 @@
 - Intermediate artifacts belong in `.tmp/`.
 - The local Python layer currently stops at a `planned` payload; Figma frame creation remains an agent-side MCP action.
 - Live Link verification requires user-provided `.env` credentials before Google Sheets or Figma REST checks can succeed.
-- The connected Figma Starter plan can rate-limit MCP write calls, which may block slide rendering even when authentication works.
+- Upgrading the connected Figma account from Starter/View to Pro/Developer removed the MCP write-call blocker and allowed slide rendering.
 
 ## Open Questions
 - Which Google account or Google Cloud project will own the Sheets credentials?

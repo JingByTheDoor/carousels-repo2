@@ -56,10 +56,13 @@
 - `.venv\Scripts\python tools\check_figma_access.py` failed cleanly with missing `FIGMA_ACCESS_TOKEN`.
 - `.venv\Scripts\python tools\process_next_job.py` succeeded and generated `.tmp/jobs/sheet-row-2.json`.
 - Figma draft file creation via MCP succeeded.
-- Figma slide rendering via MCP was blocked by the Starter plan tool-call rate limit before frames could be written.
+- Figma slide rendering via MCP succeeded after the connected Figma account was upgraded to a Pro plan with a Developer seat.
+- Rendered 7 portrait slides into the Figma file on page `sheet-row-2`.
+- Updated the payload artifact and Google Sheet row with the final Figma URL and slide node IDs.
 
 ### Current Status
 - Blueprint is approved.
 - Tooling has been scaffolded and is ready for local verification.
 - Google Sheets and OpenAI planning are working.
-- Figma rendering is partially blocked by the current MCP rate limit on the connected Starter plan.
+- Figma rendering through MCP is working.
+- PNG export automation is still not implemented in the local toolchain.

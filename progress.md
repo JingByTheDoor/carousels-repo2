@@ -59,6 +59,9 @@
 - Figma slide rendering via MCP succeeded after the connected Figma account was upgraded to a Pro plan with a Developer seat.
 - Rendered 7 portrait slides into the Figma file on page `sheet-row-2`.
 - Updated the payload artifact and Google Sheet row with the final Figma URL and slide node IDs.
+- Ran a second iteration for row 2 with Russian-language input and rendered it into a separate Figma file:
+  - `https://www.figma.com/design/bWHLe5SR3P7FeRFEUfcOqZ`
+- Updated the canonical payload artifact and Google Sheet row to point to the latest Russian render.
 
 ### Current Status
 - Blueprint is approved.

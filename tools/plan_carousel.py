@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 from uuid import uuid4
 
@@ -8,7 +9,13 @@ from carousel_system.cli import run
 from carousel_system.config import ROOT_DIR, load_settings
 from carousel_system.models import CarouselInput
 from carousel_system.payload import build_output_record, write_output_record
-from carousel_system.planner import generate_carousel_plan
+from carousel_system.planner import PROMPT_VERSION, generate_carousel_plan
+from carousel_system.render_payload import (
+    build_plugin_render_payload,
+    build_render_artifact,
+    infer_language,
+    write_plugin_render_payload,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -18,6 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--script")
     parser.add_argument("--script-file")
     parser.add_argument("--cta-text")
+    parser.add_argument("--language")
     parser.add_argument(
         "--aspect-ratio",
         default="portrait_1080x1350",
@@ -27,6 +35,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--reference-style", default="alder_1")
     parser.add_argument("--notes")
     parser.add_argument("--output-path")
+    parser.add_argument("--render-payload-path")
     return parser.parse_args()
 
 
@@ -43,6 +52,11 @@ def main() -> int:
         if args.output_path
         else ROOT_DIR / ".tmp" / "jobs" / f"{args.job_id}.json"
     )
+    render_payload_path = (
+        Path(args.render_payload_path)
+        if args.render_payload_path
+        else ROOT_DIR / ".tmp" / "render-jobs" / f"{args.job_id}.render.json"
+    )
 
     job = CarouselInput(
         job_id=args.job_id,
@@ -50,6 +64,7 @@ def main() -> int:
         topic=args.topic,
         script=script_text,
         cta_text=args.cta_text,
+        language=args.language,
         aspect_ratio=args.aspect_ratio,
         output_modes=[mode.strip() for mode in args.output_modes.split(",") if mode.strip()],
         reference_style=args.reference_style,
@@ -58,9 +73,23 @@ def main() -> int:
     )
 
     plan = generate_carousel_plan(settings, job)
-    record = build_output_record(job, plan)
+    record = build_output_record(job, plan, prompt_version=PROMPT_VERSION, language=job.language)
+    render_payload = build_plugin_render_payload(record, source_artifact_path=output_path)
+    record.language = render_payload.language or infer_language(record)
+    record.style_family = render_payload.style_family
+    record.style_recipe = render_payload.style_recipe
+    record.render_artifact = build_render_artifact(render_payload_path, render_payload)
     write_output_record(output_path, record)
-    print(output_path)
+    write_plugin_render_payload(render_payload_path, render_payload)
+    print(
+        json.dumps(
+            {
+                "job_artifact": str(output_path),
+                "render_payload": str(render_payload_path),
+            },
+            indent=2,
+        )
+    )
     return 0
 
 

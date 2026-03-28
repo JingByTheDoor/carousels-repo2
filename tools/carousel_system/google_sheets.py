@@ -25,6 +25,12 @@ QUEUE_HEADERS = [
     "export_paths",
     "reference_nodes_used",
     "error",
+    "language",
+    "style_family",
+    "style_recipe",
+    "prompt_version",
+    "render_payload_path",
+    "render_result_path",
 ]
 
 
@@ -87,12 +93,13 @@ class GoogleSheetsQueue:
         ).execute()
 
     def read_queue_rows(self) -> list[QueueRow]:
+        end_column = _column_letter(len(QUEUE_HEADERS))
         response = (
             self.service.spreadsheets()
             .values()
             .get(
                 spreadsheetId=self.settings.google_spreadsheet_id,
-                range=f"{self.settings.google_worksheet_name}!A:M",
+                range=f"{self.settings.google_worksheet_name}!A:{end_column}",
             )
             .execute()
         )
@@ -149,6 +156,7 @@ class GoogleSheetsQueue:
             "topic": row.values.get("topic"),
             "script": row.values.get("script"),
             "cta_text": row.values.get("cta_text"),
+            "language": row.values.get("language"),
             "aspect_ratio": row.values.get("aspect_ratio") or "portrait_1080x1350",
             "output_modes": output_modes or ["figma", "png"],
             "reference_style": row.values.get("reference_style") or "alder_1",

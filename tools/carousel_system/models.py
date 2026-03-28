@@ -6,6 +6,13 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 DEFAULT_REFERENCE_NODE_IDS = ["1:46227", "1:46232", "1:46239", "1:46288", "1:46485"]
+DEFAULT_PROMPT_VERSION = "baseline_v2"
+DEFAULT_STYLE_FAMILY = "reference_mix_alder_portrait"
+DEFAULT_STYLE_RECIPE = "alder_portrait_editorial_mix_v1"
+DEFAULT_RENDER_SCHEMA_VERSION = "figma_plugin_payload_v1"
+DEFAULT_RENDER_BACKEND = "figma_plugin_file_import"
+
+JobStatus = Literal["queued", "planning", "planned", "rendering", "complete", "error"]
 
 
 class CarouselInput(BaseModel):
@@ -14,6 +21,7 @@ class CarouselInput(BaseModel):
     topic: str | None = None
     script: str | None = None
     cta_text: str | None = None
+    language: str | None = None
     aspect_ratio: Literal["square_1080", "portrait_1080x1350"] = "portrait_1080x1350"
     output_modes: list[Literal["figma", "png"]] = Field(default_factory=lambda: ["figma", "png"])
     reference_style: str = "alder_1"
@@ -21,13 +29,18 @@ class CarouselInput(BaseModel):
     reference_node_ids: list[str] = Field(default_factory=lambda: DEFAULT_REFERENCE_NODE_IDS.copy())
     notes: str | None = None
 
-    @field_validator("topic", "script", "cta_text", "notes", mode="before")
+    @field_validator("topic", "script", "cta_text", "notes", "language", mode="before")
     @classmethod
     def _strip_optional_strings(cls, value: str | None) -> str | None:
         if value is None:
             return None
         stripped = value.strip()
         return stripped or None
+
+    @field_validator("language", mode="after")
+    @classmethod
+    def _normalize_language(cls, value: str | None) -> str | None:
+        return value.lower() if value else None
 
     @model_validator(mode="after")
     def _validate_input(self) -> "CarouselInput":
@@ -101,12 +114,112 @@ class SourceSync(BaseModel):
     row_number: int | None = None
 
 
+class RenderArtifact(BaseModel):
+    schema_version: str = DEFAULT_RENDER_SCHEMA_VERSION
+    backend: Literal["figma_plugin_file_import"] = DEFAULT_RENDER_BACKEND
+    path: str | None = None
+    page_name: str | None = None
+    style_family: str | None = None
+    style_recipe: str | None = None
+    language: str | None = None
+    result_path: str | None = None
+
+
+class StyleTokens(BaseModel):
+    light_background: str
+    dark_background: str
+    text_dark: str
+    text_light: str
+    accent_blue: str
+    accent_magenta: str
+    accent_gold: str
+    accent_orange: str
+    accent_purple: str
+    accent_navy: str
+
+
+class TypographyTokens(BaseModel):
+    cover_family: str
+    cover_style: str
+    body_heading_family: str
+    body_heading_style: str
+    body_family: str
+    body_style: str
+    cta_heading_family: str
+    cta_heading_style: str
+    cta_body_family: str
+    cta_body_style: str
+
+
+class RenderCanvasSpec(BaseModel):
+    width: int = 1080
+    height: int = 1350
+    slide_gap: int = 120
+
+
+class RenderSlideSpec(BaseModel):
+    slide_number: int
+    slide_role: Literal["hook", "info", "cta"]
+    design_role: Literal["cover", "body", "cta"]
+    layout_variant: Literal[
+        "cover_black_hero",
+        "body_editorial_bullet",
+        "body_mask_band_left",
+        "body_spotlight_panel",
+        "cta_dark_glow",
+    ]
+    text_align: Literal["left", "center"] = "left"
+    headline: str = Field(min_length=1)
+    body: str | None = None
+    accent_motif: str | None = None
+
+
+class PluginRenderPayload(BaseModel):
+    schema_version: str = DEFAULT_RENDER_SCHEMA_VERSION
+    backend: Literal["figma_plugin_file_import"] = DEFAULT_RENDER_BACKEND
+    job_id: str
+    page_name: str
+    prompt_version: str = DEFAULT_PROMPT_VERSION
+    language: str = "unknown"
+    style_family: str = DEFAULT_STYLE_FAMILY
+    style_recipe: str = DEFAULT_STYLE_RECIPE
+    source_artifact_path: str
+    reference_file_key: str
+    reference_node_ids: list[str]
+    canvas: RenderCanvasSpec = Field(default_factory=RenderCanvasSpec)
+    style_tokens: StyleTokens
+    typography: TypographyTokens
+    slides: list[RenderSlideSpec]
+
+    @model_validator(mode="after")
+    def _validate_slide_count(self) -> "PluginRenderPayload":
+        if len(self.slides) != 7:
+            raise ValueError("Plugin render payload must contain exactly 7 slides.")
+        return self
+
+
+class PluginRenderResult(BaseModel):
+    schema_version: Literal["figma_plugin_result_v1"] = "figma_plugin_result_v1"
+    job_id: str
+    page_name: str
+    page_id: str
+    file_key: str | None = None
+    file_url: str | None = None
+    slide_node_ids: list[str] = Field(default_factory=list)
+    rendered_at: str
+
+
 class CarouselOutput(BaseModel):
     job_id: str
-    status: Literal["queued", "processing", "planned", "complete", "error"]
+    status: JobStatus
     normalized_input: CarouselInput
+    prompt_version: str = DEFAULT_PROMPT_VERSION
+    language: str | None = None
+    style_family: str | None = None
+    style_recipe: str | None = None
     content_plan: list[SlidePlan]
     design_reference_log: list[DesignReferenceLog]
+    render_artifact: RenderArtifact = Field(default_factory=RenderArtifact)
     figma_output: FigmaOutput = Field(default_factory=FigmaOutput)
     exports: list[ExportArtifact] = Field(default_factory=list)
     source_sync: SourceSync = Field(default_factory=SourceSync)

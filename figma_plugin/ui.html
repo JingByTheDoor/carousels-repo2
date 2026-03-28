@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Carousel Render Importer</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: Inter, system-ui, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        padding: 18px;
+        background: #121212;
+        color: #f3f3f3;
+      }
+
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .card {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        padding: 14px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      h2 {
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.72);
+        margin-bottom: 8px;
+      }
+
+      p {
+        font-size: 12px;
+        line-height: 1.45;
+        color: rgba(255, 255, 255, 0.78);
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 220px;
+        resize: vertical;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.32);
+        color: inherit;
+        padding: 12px;
+        box-sizing: border-box;
+        font: 12px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+      }
+
+      input[type="file"] {
+        width: 100%;
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+      }
+
+      button {
+        appearance: none;
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      button.primary {
+        background: linear-gradient(135deg, #f7931a, #9e0e4c);
+        color: white;
+      }
+
+      button.secondary {
+        background: rgba(255, 255, 255, 0.08);
+        color: inherit;
+      }
+
+      .status {
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 12px;
+        line-height: 1.45;
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.84);
+      }
+
+      .status.error {
+        background: rgba(163, 24, 24, 0.22);
+        color: #ffd6d6;
+      }
+
+      .status.success {
+        background: rgba(23, 92, 55, 0.24);
+        color: #d6ffe7;
+      }
+
+      .meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        font-size: 12px;
+      }
+
+      .meta div {
+        padding: 8px 10px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stack">
+      <div class="card stack">
+        <h1>Carousel Render Importer</h1>
+        <p>Upload or paste a <code>figma_plugin_payload_v1</code> JSON file, then render the 7-slide carousel into the current Figma file.</p>
+      </div>
+
+      <div class="card stack">
+        <div>
+          <h2>Payload Source</h2>
+          <input id="fileInput" type="file" accept=".json,application/json" />
+        </div>
+        <textarea id="payloadInput" spellcheck="false" placeholder="Paste the .render.json payload here..."></textarea>
+        <div class="row">
+          <button id="renderButton" class="primary">Render in Figma</button>
+          <button id="formatButton" class="secondary">Format JSON</button>
+        </div>
+      </div>
+
+      <div id="status" class="status">Waiting for payload.</div>
+
+      <div id="resultCard" class="card stack hidden">
+        <h2>Render Result</h2>
+        <div id="resultMeta" class="meta"></div>
+        <textarea id="resultOutput" spellcheck="false" readonly></textarea>
+        <div class="row">
+          <button id="copyResultButton" class="secondary">Copy Result JSON</button>
+          <button id="downloadResultButton" class="primary">Download Result JSON</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const fileInput = document.getElementById("fileInput");
+      const payloadInput = document.getElementById("payloadInput");
+      const renderButton = document.getElementById("renderButton");
+      const formatButton = document.getElementById("formatButton");
+      const statusNode = document.getElementById("status");
+      const resultCard = document.getElementById("resultCard");
+      const resultMeta = document.getElementById("resultMeta");
+      const resultOutput = document.getElementById("resultOutput");
+      const copyResultButton = document.getElementById("copyResultButton");
+      const downloadResultButton = document.getElementById("downloadResultButton");
+
+      let latestResult = null;
+
+      function setStatus(text, variant) {
+        statusNode.textContent = text;
+        statusNode.className = "status";
+        if (variant) {
+          statusNode.classList.add(variant);
+        }
+      }
+
+      async function readFile(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result || ""));
+          reader.onerror = () => reject(reader.error || new Error("Unable to read file."));
+          reader.readAsText(file);
+        });
+      }
+
+      function parsePayload() {
+        const raw = payloadInput.value.trim();
+        if (!raw) {
+          throw new Error("Paste or upload a render payload first.");
+        }
+        const parsed = JSON.parse(raw);
+        if (parsed.schema_version !== "figma_plugin_payload_v1") {
+          throw new Error("Expected schema_version figma_plugin_payload_v1.");
+        }
+        if (!Array.isArray(parsed.slides) || parsed.slides.length !== 7) {
+          throw new Error("Payload must contain exactly 7 slides.");
+        }
+        return parsed;
+      }
+
+      function renderMeta(result) {
+        resultMeta.innerHTML = "";
+        const items = [
+          ["Job", result.job_id || ""],
+          ["Page", result.page_name || ""],
+          ["Slides", String((result.slide_node_ids || []).length)],
+          ["File Key", result.file_key || "Draft / unavailable"],
+        ];
+        for (const [label, value] of items) {
+          const div = document.createElement("div");
+          div.innerHTML = `<strong>${label}</strong><br>${value}`;
+          resultMeta.appendChild(div);
+        }
+      }
+
+      function updateResult(result) {
+        latestResult = result;
+        resultCard.classList.remove("hidden");
+        renderMeta(result);
+        resultOutput.value = JSON.stringify(result, null, 2);
+      }
+
+      function downloadText(filename, text) {
+        const blob = new Blob([text], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = filename;
+        anchor.click();
+        URL.revokeObjectURL(url);
+      }
+
+      fileInput.addEventListener("change", async (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) {
+          return;
+        }
+        try {
+          const text = await readFile(file);
+          const parsed = JSON.parse(text);
+          payloadInput.value = JSON.stringify(parsed, null, 2);
+          setStatus(`Loaded ${file.name}. Ready to render.`, "");
+        } catch (error) {
+          setStatus(error.message || String(error), "error");
+        }
+      });
+
+      formatButton.addEventListener("click", () => {
+        try {
+          const parsed = parsePayload();
+          payloadInput.value = JSON.stringify(parsed, null, 2);
+          setStatus("Payload formatted and validated locally.", "");
+        } catch (error) {
+          setStatus(error.message || String(error), "error");
+        }
+      });
+
+      renderButton.addEventListener("click", () => {
+        try {
+          const payload = parsePayload();
+          resultCard.classList.add("hidden");
+          latestResult = null;
+          setStatus(`Rendering ${payload.job_id} into the current Figma file...`, "");
+          parent.postMessage({ pluginMessage: { type: "render-payload", payload } }, "*");
+        } catch (error) {
+          setStatus(error.message || String(error), "error");
+        }
+      });
+
+      copyResultButton.addEventListener("click", async () => {
+        if (!latestResult) {
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(JSON.stringify(latestResult, null, 2));
+          setStatus("Render result copied to the clipboard.", "success");
+        } catch (error) {
+          setStatus(error.message || String(error), "error");
+        }
+      });
+
+      downloadResultButton.addEventListener("click", () => {
+        if (!latestResult) {
+          return;
+        }
+        const filename = `${latestResult.job_id || "carousel-render"}.render-result.json`;
+        downloadText(filename, JSON.stringify(latestResult, null, 2));
+        setStatus("Render result downloaded.", "success");
+      });
+
+      window.onmessage = (event) => {
+        const message = event.data.pluginMessage;
+        if (!message) {
+          return;
+        }
+        if (message.type === "render-complete") {
+          updateResult(message.result);
+          setStatus("Render complete. Download the result JSON and apply it locally.", "success");
+        }
+        if (message.type === "status") {
+          setStatus(message.message || "Working...", "");
+        }
+        if (message.type === "render-error") {
+          setStatus(message.message || "Render failed.", "error");
+        }
+      };
+    </script>
+  </body>
+</html>

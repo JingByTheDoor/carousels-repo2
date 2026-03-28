@@ -13,15 +13,17 @@ This repository follows the B.L.A.S.T. protocol and A.N.T. 3-layer architecture 
 - Every generated carousel must preserve the fixed 7-slide structure.
 - The system must log the exact Figma reference nodes used for each output.
 - The system should reuse the palette and visual language of the approved reference family instead of inventing a new style.
+- The planning step and the rendering step must communicate through versioned JSON contracts, not hidden chat/session state.
 
 ## Architectural Invariants
 - `architecture/` stores technical SOPs and edge-case policy.
 - Navigation decisions route between SOPs and deterministic tools.
 - `tools/` stores atomic, testable Python scripts only.
 - `.tmp/` stores intermediate and disposable artifacts only.
+- `figma_plugin/` stores the local Figma renderer that consumes plugin payloads and emits plugin result files.
 - Environment secrets belong in `.env`, never in source files.
 - A task is not complete until the payload reaches its final destination.
-- The local Python layer may produce a `planned` payload before the final Figma MCP render step completes.
+- The local Python layer must be able to produce both the canonical job artifact and the dedicated plugin render payload before any Figma render begins.
 
 ## Schema Governance
 - Canonical input/output schemas live in `gemini.md`.

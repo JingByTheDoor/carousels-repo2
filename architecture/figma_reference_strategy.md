@@ -16,9 +16,10 @@ Keep outputs visually anchored to the approved example file instead of inventing
 ## Rules
 - Every output must log the exact reference nodes it used.
 - Portrait outputs use `1:46485` for layout direction and the `Alder_1` family for palette and typography.
-- The system may mix approved nodes only when needed to satisfy the requested aspect ratio.
+- The current style family `reference_mix_alder_portrait` is a curated mix grounded in those approved nodes.
+- The system may vary slide layouts only within approved recipes documented in the plugin render payload.
 - If a new reference node is adopted, update `gemini.md`, `findings.md`, and this SOP first.
 
 ## Current implementation boundary
-- Deterministic Python tools produce content and reference payloads.
-- The Figma MCP render step consumes that payload and writes the actual frames into Figma.
+- Deterministic Python tools produce content, style metadata, and plugin render payloads.
+- The local Figma plugin consumes that payload and writes the actual frames into Figma.

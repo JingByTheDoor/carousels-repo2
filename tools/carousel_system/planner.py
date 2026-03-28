@@ -6,18 +6,22 @@ from carousel_system.config import Settings
 from carousel_system.models import CarouselInput, CarouselPlanResponse
 
 
+PROMPT_VERSION = "baseline_v2"
+
 SYSTEM_PROMPT = """You are planning Instagram carousel copy.
 
 Return a JSON object that matches the supplied schema.
 
 Rules:
 - Produce exactly 7 slides.
-- Slide 1 is a hook with a strong headline.
-- Slides 2 through 6 are informational.
+- Slide 1 must be a strong hook, not a neutral title.
+- Slides 2 through 6 must each communicate one distinct informational point.
 - Slide 7 is a CTA.
 - If a script is provided, preserve its substance while restructuring it.
 - If only a topic is provided, infer the full carousel content.
-- Keep copy concise, useful, and clean enough for a visual carousel.
+- Preserve the input language unless the user explicitly asked for another language.
+- Keep copy concise, specific, and visually usable on slides.
+- Avoid bland filler, vague advice, and repeated points.
 - Do not use hashtags.
 - Do not use markdown.
 - Do not use emojis.
@@ -31,11 +35,13 @@ def build_user_prompt(job: CarouselInput) -> str:
     script = job.script or ""
     cta_text = job.cta_text or ""
     notes = job.notes or ""
+    language = job.language or "infer_from_input"
     return f"""Create a carousel plan using this input:
 
 job_id: {job.job_id}
 aspect_ratio: {job.aspect_ratio}
 reference_style: {job.reference_style}
+language: {language}
 topic: {topic}
 script: {script}
 cta_text: {cta_text}

@@ -4,7 +4,7 @@
 - Repository state at bootstrap: effectively empty except for `.git/`.
 - No existing B.L.A.S.T. memory files were present.
 - No implementation files, SOPs, or tools were found.
-- Bootstrap scaffold now exists and contains only memory files plus empty `architecture/`, `tools/`, and `.tmp/` directories.
+- Bootstrap scaffold now exists and contains memory files, SOPs, tools, `.tmp/`, and a local `figma_plugin/` renderer.
 
 ## Discovery Answers
 - Desired outcome: automate creation of Instagram carousels.
@@ -14,7 +14,7 @@
   - Slides 2-6: informational content
   - Slide 7: call to action
 - Workflow direction: simple input model of `topic/script in -> carousel out`.
-- Integrations named so far: Figma MCP and Google Sheets.
+- Integrations named so far: Figma, Google Sheets, OpenAI.
 - Design guidance: use template carousels as examples/reference.
 - Delivery target: editable Figma output and exported image output.
 - Styling rule: reuse the palette and styles from the examples and explicitly report which references were used.
@@ -31,6 +31,12 @@
 - Secondary CTA reference identified: `typography slide 2` node `1:46288`
 - Secondary portrait reference identified: node `1:46485`
 - Portrait outputs should borrow layout direction from `1:46485` while preserving `Alder_1` palette and typography choices.
+- The current plugin renderer is a curated mix of those references:
+  - Black dramatic cover from `1:46227`
+  - Light editorial body slides from `1:46232`
+  - Alternating mask-band body direction from `1:46239`
+  - Dark CTA glow treatment from `1:46288`
+  - Portrait framing from `1:46485`
 
 ## Research
 - Official Google Sheets Python quickstart:
@@ -41,17 +47,19 @@
   - https://developers.google.com/workspace/sheets/api/guides/libraries
 - Official Google Workspace Python samples:
   - https://github.com/googleworkspace/python-samples
+- Official Figma plugin API docs:
+  - https://developers.figma.com/docs/plugins/api/figma/
 
 ## Constraints
-- Do not write scripts in `tools/` until discovery is complete, the data schema is defined, and the blueprint is approved.
 - Business logic must be deterministic and encoded in SOPs plus atomic tools.
 - Intermediate artifacts belong in `.tmp/`.
-- The local Python layer currently stops at a `planned` payload; Figma frame creation remains an agent-side MCP action.
-- Live Link verification requires user-provided `.env` credentials before Google Sheets or Figma REST checks can succeed.
-- Upgrading the connected Figma account from Starter/View to Pro/Developer removed the MCP write-call blocker and allowed slide rendering.
+- The Python layer must communicate rendering intent through versioned JSON payloads instead of chat/session memory.
+- Live plugin rendering still requires a human to open Figma and run the local plugin.
+- Figma `fileKey` access from plugins depends on private-plugin API availability; the plugin tolerates `null` when unavailable.
 
 ## Open Questions
-- Which Google account or Google Cloud project will own the Sheets credentials?
+- Which Google account or Google Cloud project will own the Sheets credentials long term?
+- Should the next automation step be localhost plugin orchestration or direct image export?
 
 ## Notes
-- The user prompt references both `claude.md` and `gemini.md` for project law. This bootstrap treats `claude.md` as the constitution for rules and invariants, and `gemini.md` as the canonical schema and maintenance log.
+- The user prompt references both `claude.md` and `gemini.md` for project law. This repository treats `claude.md` as the constitution for rules and invariants, and `gemini.md` as the canonical schema and maintenance log.

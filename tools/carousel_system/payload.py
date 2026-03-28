@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from carousel_system.models import (
+    DEFAULT_PROMPT_VERSION,
     CarouselInput,
     CarouselOutput,
     CarouselPlanResponse,
@@ -40,11 +41,15 @@ def build_output_record(
     plan: CarouselPlanResponse,
     *,
     source_sync: SourceSync | None = None,
+    prompt_version: str = DEFAULT_PROMPT_VERSION,
+    language: str | None = None,
 ) -> CarouselOutput:
     return CarouselOutput(
         job_id=job.job_id,
         status="planned",
         normalized_input=job,
+        prompt_version=prompt_version,
+        language=language,
         content_plan=plan.slides,
         design_reference_log=build_design_reference_log(job),
         source_sync=source_sync or SourceSync(),

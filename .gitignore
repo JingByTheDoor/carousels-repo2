@@ -5,3 +5,4 @@ __pycache__/
 *.egg-info/
 service-account*.json
 .tmp/jobs/
+.tmp/render-jobs/

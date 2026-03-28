@@ -11,7 +11,10 @@ Convert a topic or script into a validated 7-slide carousel plan.
 ## Planning rules
 - If the user provides only a topic, generate the full carousel copy.
 - If the user provides a script, preserve its substance and restructure it into the fixed 7-slide format.
+- Keep the output in the same language as the input unless an explicit language override is provided.
 - Copy must stay concise enough for Instagram slide layouts.
+- Prefer strong hooks over neutral headings.
+- Avoid generic filler phrasing.
 - Use a direct, educational tone by default.
 - Do not add hashtags, markdown, or emojis.
 - CTA should ask for one clear action.

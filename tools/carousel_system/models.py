@@ -9,10 +9,21 @@ DEFAULT_REFERENCE_NODE_IDS = ["1:46227", "1:46232", "1:46239", "1:46288", "1:464
 DEFAULT_PROMPT_VERSION = "baseline_v2"
 DEFAULT_STYLE_FAMILY = "reference_mix_alder_portrait"
 DEFAULT_STYLE_RECIPE = "alder_portrait_editorial_mix_v1"
-DEFAULT_RENDER_SCHEMA_VERSION = "figma_plugin_payload_v1"
+DEFAULT_RENDER_SCHEMA_VERSION = "figma_plugin_payload_v2"
 DEFAULT_RENDER_BACKEND = "figma_plugin_file_import"
 
 JobStatus = Literal["queued", "planning", "planned", "rendering", "complete", "error"]
+TextDensity = Literal["low", "medium", "high"]
+LayoutPreference = Literal["hero", "editorial", "mask_left", "spotlight", "cta"]
+VisualPriority = Literal["headline", "body", "cta"]
+SafeAreaProfile = Literal[
+    "cover_tall_text",
+    "cover_balanced",
+    "body_editorial_dense",
+    "body_mask_right_column",
+    "body_spotlight_dense",
+    "cta_center_stack",
+]
 
 
 class CarouselInput(BaseModel):
@@ -168,10 +179,48 @@ class RenderSlideSpec(BaseModel):
         "body_spotlight_panel",
         "cta_dark_glow",
     ]
+    layout_preference: LayoutPreference
     text_align: Literal["left", "center"] = "left"
     headline: str = Field(min_length=1)
+    headline_short: str | None = None
+    headline_display: str = Field(min_length=1)
     body: str | None = None
+    body_short: str | None = None
+    body_display: str | None = None
+    supporting_text: str | None = None
+    button_label: str | None = None
+    text_density: TextDensity
+    visual_priority: VisualPriority
+    safe_area_profile: SafeAreaProfile
+    max_headline_lines: int = Field(ge=1)
+    max_body_lines: int = Field(ge=0)
+    can_truncate_body: bool = False
+    emphasis_words: list[str] = Field(default_factory=list)
     accent_motif: str | None = None
+
+    @field_validator(
+        "headline_short",
+        "headline_display",
+        "body",
+        "body_short",
+        "body_display",
+        "supporting_text",
+        "button_label",
+        mode="before",
+    )
+    @classmethod
+    def _normalize_optional_render_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(value.strip().split())
+        return cleaned or None
+
+    @field_validator("emphasis_words", mode="before")
+    @classmethod
+    def _normalize_emphasis_words(cls, value: list[str] | None) -> list[str]:
+        if not value:
+            return []
+        return [" ".join(item.strip().split()) for item in value if item and item.strip()]
 
 
 class PluginRenderPayload(BaseModel):

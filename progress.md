@@ -36,13 +36,32 @@
   - `ui.html`
   - `README.md`
 - Updated `README.md`, `gemini.md`, `claude.md`, and architecture SOPs for the new plugin render path.
+- Upgraded the plugin render payload from `figma_plugin_payload_v1` to `figma_plugin_payload_v2`.
+- Added render-aware slide fields including:
+  - `headline_short`
+  - `headline_display`
+  - `body_short`
+  - `body_display`
+  - `supporting_text`
+  - `button_label`
+  - `text_density`
+  - `safe_area_profile`
+- Updated the plugin renderer to consume those display-safe fields instead of always rendering the raw headline/body text.
+- Regenerated `.tmp\\render-jobs\\sheet-row-2.render.json` as a v2 payload for the Russian test case.
 
 ### Errors
 - A delegated worker was interrupted during plugin scaffolding, so the final plugin implementation was completed locally.
+- The first live plugin attempt failed in Figma because its runtime rejected object spread syntax in `figma_plugin/code.js`.
+- The first payload contract was too thin for reliable layout decisions, which caused weak text fitting on the rendered slides.
 
 ### Test / Verification
 - `python -m compileall tools` passed.
-- `.venv\Scripts\python tools\build_render_payload.py --job-id sheet-row-2` passed and wrote `.tmp/render-jobs/sheet-row-2.render.json`.
+- `node --check .\figma_plugin\code.js` passed.
+- `rg -n "\.\.\." .\figma_plugin\code.js` confirmed the unsupported object spread syntax was removed after the runtime error.
+- `.venv\Scripts\python tools\build_render_payload.py --job-path .tmp\jobs\sheet-row-2.verify.json --render-payload-path .tmp\render-jobs\sheet-row-2.verify.render.json` passed.
+- `PluginRenderPayload.model_validate_json(...)` passed against `.tmp\render-jobs\sheet-row-2.verify.render.json`.
+- `.venv\Scripts\python tools\build_render_payload.py --job-id sheet-row-2` passed after the v2 payload changes and rewrote `.tmp\render-jobs\sheet-row-2.render.json`.
+- `PluginRenderPayload.model_validate_json(...)` passed against the regenerated `figma_plugin_payload_v2` file.
 - `.venv\Scripts\python tools\ensure_queue_sheet.py` passed and updated the queue header row to the expanded schema.
 - `Get-Content .\figma_plugin\manifest.json | ConvertFrom-Json` passed.
 - `.venv\Scripts\python tools\plan_carousel.py --help` passed.

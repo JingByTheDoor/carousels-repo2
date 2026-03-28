@@ -53,7 +53,7 @@ function normalizePayload(payload) {
   if (!payload || typeof payload !== "object") {
     throw new Error("Missing render payload.");
   }
-  if (payload.schema_version !== "figma_plugin_payload_v1") {
+  if (payload.schema_version !== "figma_plugin_payload_v1" && payload.schema_version !== "figma_plugin_payload_v2") {
     throw new Error("Unsupported payload schema version.");
   }
   if (!Array.isArray(payload.slides) || payload.slides.length !== 7) {
@@ -63,12 +63,27 @@ function normalizePayload(payload) {
     throw new Error("Render payload is missing job_id.");
   }
 
-  return {
-    ...payload,
-    canvas: { ...DEFAULT_CANVAS, ...(payload.canvas || {}) },
-    style_tokens: { ...DEFAULT_TOKENS, ...(payload.style_tokens || {}) },
-    typography: { ...DEFAULT_TYPOGRAPHY, ...(payload.typography || {}) }
-  };
+  return Object.assign({}, payload, {
+    canvas: Object.assign({}, DEFAULT_CANVAS, payload.canvas || {}),
+    style_tokens: Object.assign({}, DEFAULT_TOKENS, payload.style_tokens || {}),
+    typography: Object.assign({}, DEFAULT_TYPOGRAPHY, payload.typography || {}),
+    slides: payload.slides.map(normalizeSlide)
+  });
+}
+
+function normalizeSlide(slide) {
+  const bodyText = typeof slide.body === "string" ? slide.body : null;
+  return Object.assign({}, slide, {
+    headline_short: cleanText(slide.headline_short),
+    headline_display: cleanText(slide.headline_display) || cleanText(slide.headline),
+    body: bodyText,
+    body_short: cleanText(slide.body_short),
+    body_display: cleanText(slide.body_display) || bodyText,
+    supporting_text: cleanText(slide.supporting_text),
+    button_label: cleanText(slide.button_label),
+    max_headline_lines: typeof slide.max_headline_lines === "number" ? slide.max_headline_lines : 4,
+    max_body_lines: typeof slide.max_body_lines === "number" ? slide.max_body_lines : 6
+  });
 }
 
 async function renderCarousel(payload) {
@@ -134,9 +149,9 @@ async function renderCoverSlide(frame, slide, payload) {
 
   const cluster = figma.createFrame();
   cluster.name = "Geometric Cluster";
-  cluster.resize(980, 420);
-  cluster.x = 70;
-  cluster.y = 790;
+  cluster.resize(860, 330);
+  cluster.x = 110;
+  cluster.y = 950;
   cluster.fills = [];
   cluster.strokes = [];
   cluster.clipsContent = false;
@@ -144,27 +159,27 @@ async function renderCoverSlide(frame, slide, payload) {
 
   const triangle = figma.createPolygon();
   triangle.pointCount = 3;
-  triangle.resize(310, 310);
+  triangle.resize(250, 250);
   triangle.rotation = 180;
   triangle.x = 0;
-  triangle.y = 80;
+  triangle.y = 58;
   triangle.fills = [solidPaint(tokens.accent_orange)];
   triangle.effects = [dropShadow("#000000", 0.18, 0, 14, 26)];
   cluster.appendChild(triangle);
 
   const nestedSquare = figma.createRectangle();
-  nestedSquare.resize(338, 338);
+  nestedSquare.resize(286, 286);
   nestedSquare.cornerRadius = 30;
-  nestedSquare.x = 310;
-  nestedSquare.y = 80;
+  nestedSquare.x = 238;
+  nestedSquare.y = 54;
   nestedSquare.fills = [solidPaint(tokens.accent_purple)];
   cluster.appendChild(nestedSquare);
   appendNestedSquares(cluster, nestedSquare, tokens);
 
   const circle = figma.createEllipse();
-  circle.resize(360, 360);
-  circle.x = 610;
-  circle.y = 78;
+  circle.resize(300, 300);
+  circle.x = 500;
+  circle.y = 46;
   circle.fills = [solidPaint(tokens.accent_blue)];
   circle.effects = [dropShadow("#000000", 0.16, 0, 12, 24)];
   cluster.appendChild(circle);
@@ -172,17 +187,17 @@ async function renderCoverSlide(frame, slide, payload) {
   appendTriangleSprinkle(cluster, tokens.text_light);
 
   await createTextBlock(frame, {
-    text: slide.headline,
+    text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.cover_family,
     fontStyle: payload.typography.cover_style,
     fallbackStyle: "Bold",
-    x: 68,
-    y: 150,
-    width: 930,
-    maxHeight: 520,
-    maxSize: 154,
-    minSize: 86,
-    lineHeight: 1.0,
+    x: 56,
+    y: 86,
+    width: 950,
+    maxHeight: 760,
+    maxSize: 132,
+    minSize: 44,
+    lineHeight: 0.96,
     color: tokens.text_light,
     alignHorizontal: "LEFT"
   });
@@ -202,33 +217,33 @@ async function renderEditorialBodySlide(frame, slide, payload) {
   frame.appendChild(dot);
 
   await createTextBlock(frame, {
-    text: slide.headline,
+    text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
-    x: 138,
-    y: 92,
-    width: 820,
+    x: 124,
+    y: 84,
+    width: 850,
     maxHeight: 190,
-    maxSize: 74,
-    minSize: 48,
-    lineHeight: 1.1,
+    maxSize: 64,
+    minSize: 34,
+    lineHeight: 1.06,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
 
   await createTextBlock(frame, {
-    text: slide.body || "",
+    text: slide.body_display || slide.body || "",
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
-    x: 108,
-    y: 320,
-    width: 870,
-    maxHeight: 670,
-    maxSize: 42,
-    minSize: 28,
-    lineHeight: 1.45,
+    x: 96,
+    y: 276,
+    width: 888,
+    maxHeight: 760,
+    maxSize: 34,
+    minSize: 20,
+    lineHeight: 1.34,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
@@ -239,7 +254,7 @@ async function renderMaskBandBodySlide(frame, slide, payload) {
   setSolidFill(frame, tokens.light_background);
 
   const band = figma.createRectangle();
-  band.resize(320, 1350);
+  band.resize(250, 1350);
   band.x = 0;
   band.y = 0;
   band.fills = [solidPaint(tokens.text_dark)];
@@ -247,11 +262,11 @@ async function renderMaskBandBodySlide(frame, slide, payload) {
 
   for (let index = 0; index < 3; index += 1) {
     const slot = figma.createEllipse();
-    slot.resize(96, 96);
-    slot.x = 88;
-    slot.y = 850 + index * 120;
+    slot.resize(70, 70);
+    slot.x = 92;
+    slot.y = 928 + index * 94;
     slot.strokes = [solidPaint(tokens.text_light, 0.65)];
-    slot.strokeWeight = 8;
+    slot.strokeWeight = 6;
     slot.fills = [solidPaint(tokens.light_background)];
     frame.appendChild(slot);
   }
@@ -259,33 +274,33 @@ async function renderMaskBandBodySlide(frame, slide, payload) {
   await appendSlideNumberChip(frame, slide.slide_number, tokens);
 
   await createTextBlock(frame, {
-    text: slide.headline,
+    text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
-    x: 382,
-    y: 120,
-    width: 600,
-    maxHeight: 230,
-    maxSize: 72,
-    minSize: 48,
-    lineHeight: 1.08,
+    x: 310,
+    y: 96,
+    width: 690,
+    maxHeight: 200,
+    maxSize: 62,
+    minSize: 34,
+    lineHeight: 1.04,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
 
   await createTextBlock(frame, {
-    text: slide.body || "",
+    text: slide.body_display || slide.body || "",
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
-    x: 382,
-    y: 390,
-    width: 600,
-    maxHeight: 760,
-    maxSize: 40,
-    minSize: 27,
-    lineHeight: 1.42,
+    x: 310,
+    y: 290,
+    width: 690,
+    maxHeight: 830,
+    maxSize: 34,
+    minSize: 20,
+    lineHeight: 1.34,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
@@ -316,33 +331,33 @@ async function renderSpotlightBodySlide(frame, slide, payload) {
   await appendSlideNumberChip(frame, slide.slide_number, tokens);
 
   await createTextBlock(frame, {
-    text: slide.headline,
+    text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
     x: 88,
-    y: 118,
+    y: 96,
     width: 860,
     maxHeight: 220,
-    maxSize: 72,
-    minSize: 48,
-    lineHeight: 1.08,
+    maxSize: 62,
+    minSize: 34,
+    lineHeight: 1.04,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
 
   await createTextBlock(frame, {
-    text: slide.body || "",
+    text: slide.body_display || slide.body || "",
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: 88,
-    y: 372,
+    y: 286,
     width: 860,
-    maxHeight: 450,
-    maxSize: 40,
-    minSize: 28,
-    lineHeight: 1.4,
+    maxHeight: 500,
+    maxSize: 34,
+    minSize: 20,
+    lineHeight: 1.34,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
@@ -353,11 +368,11 @@ async function renderSpotlightBodySlide(frame, slide, payload) {
     fontStyle: "Semi Bold",
     fallbackStyle: "Bold",
     x: 126,
-    y: 1008,
+    y: 1016,
     width: 828,
     maxHeight: 74,
-    maxSize: 34,
-    minSize: 24,
+    maxSize: 28,
+    minSize: 18,
     lineHeight: 1.1,
     color: tokens.text_light,
     alignHorizontal: "LEFT"
@@ -372,58 +387,76 @@ async function renderCtaSlide(frame, slide, payload) {
   appendGlow(frame, 770, 140, 320, tokens.accent_magenta, 0.24);
 
   await createTextBlock(frame, {
-    text: slide.headline,
+    text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
-    x: 110,
-    y: 320,
-    width: 860,
-    maxHeight: 210,
-    maxSize: 98,
-    minSize: 58,
-    lineHeight: 1.02,
+    x: 100,
+    y: 228,
+    width: 880,
+    maxHeight: 300,
+    maxSize: 84,
+    minSize: 34,
+    lineHeight: 1.0,
     color: tokens.text_light,
     alignHorizontal: "CENTER"
   });
 
-  if (slide.body) {
+  if (slide.body_display || slide.body) {
     await createTextBlock(frame, {
-      text: slide.body,
+      text: slide.body_display || slide.body,
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
-      x: 110,
-      y: 560,
-      width: 860,
-      maxHeight: 160,
-      maxSize: 42,
-      minSize: 28,
-      lineHeight: 1.3,
+      x: 124,
+      y: 540,
+      width: 832,
+      maxHeight: 180,
+      maxSize: 34,
+      minSize: 20,
+      lineHeight: 1.22,
+      color: tokens.text_light,
+      alignHorizontal: "CENTER"
+    });
+  }
+
+  if (slide.supporting_text) {
+    await createTextBlock(frame, {
+      text: slide.supporting_text,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 180,
+      y: 704,
+      width: 720,
+      maxHeight: 80,
+      maxSize: 24,
+      minSize: 16,
+      lineHeight: 1.18,
       color: tokens.text_light,
       alignHorizontal: "CENTER"
     });
   }
 
   const pill = figma.createRectangle();
-  pill.resize(420, 94);
-  pill.x = 330;
-  pill.y = 770;
+  pill.resize(360, 82);
+  pill.x = 360;
+  pill.y = 804;
   pill.cornerRadius = 999;
   pill.fills = [solidPaint(tokens.text_light)];
   frame.appendChild(pill);
 
   await createTextBlock(frame, {
-    text: "Open the next step",
+    text: slide.button_label || "Open the next step",
     fontFamily: "Inter",
     fontStyle: "Bold",
     fallbackStyle: "Bold",
-    x: 350,
-    y: 795,
-    width: 380,
-    maxHeight: 48,
-    maxSize: 30,
-    minSize: 22,
+    x: 382,
+    y: 827,
+    width: 316,
+    maxHeight: 38,
+    maxSize: 24,
+    minSize: 16,
     lineHeight: 1.0,
     color: tokens.text_dark,
     alignHorizontal: "CENTER"
@@ -531,6 +564,14 @@ function appendGlow(frame, x, y, size, hex, opacity) {
   frame.appendChild(glow);
 }
 
+function cleanText(value) {
+  if (typeof value !== "string") {
+    return null;
+  }
+  var trimmed = value.trim().replace(/\s+/g, " ");
+  return trimmed ? trimmed : null;
+}
+
 async function appendFooterSignal(frame, label, x, y, align) {
   const vertical = figma.createRectangle();
   vertical.resize(4, 110);
@@ -596,6 +637,13 @@ async function createTextBlock(parent, options) {
       break;
     }
     fontSize -= 2;
+  }
+
+  while (node.height > options.maxHeight && fontSize > 14) {
+    fontSize -= 2;
+    node.fontSize = fontSize;
+    node.lineHeight = { unit: "PIXELS", value: Math.round(fontSize * lineHeight) };
+    node.resize(options.width, 100);
   }
 
   node.x = options.x;

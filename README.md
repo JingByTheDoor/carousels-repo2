@@ -10,6 +10,7 @@ This repo turns a `topic` or `script` into a validated 7-slide Instagram carouse
   - slides 2-6 informational content
   - slide 7 CTA
 - Plugin-ready render payload generation
+- Render-aware plugin payload generation with display-safe text variants
 - Figma reference logging for every generated payload
 
 ## Current render architecture
@@ -63,6 +64,7 @@ That command now plans the content and writes the plugin render payload in one p
 1. Import the plugin from [figma_plugin/manifest.json](C:/Users/User/OneDrive%20-%20Board%20of%20Education%20of%20SD%2039%20(Vancouver)/Documents/Carousels/carousels-repo2/figma_plugin/manifest.json) into Figma as a local plugin.
 2. Run the plugin inside your target Figma file.
 3. Upload or paste the `.tmp/render-jobs/<job_id>.render.json` payload.
+   The current payload schema is `figma_plugin_payload_v2`, which includes `headline_display`, `body_display`, CTA button labels, and safe-area metadata.
 4. Render the carousel into a new page.
 5. Download the result JSON from the plugin UI.
 6. Apply the result locally:

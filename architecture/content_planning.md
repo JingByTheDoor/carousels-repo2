@@ -18,6 +18,7 @@ Convert a topic or script into a validated 7-slide carousel plan.
 - Use a direct, educational tone by default.
 - Do not add hashtags, markdown, or emojis.
 - CTA should ask for one clear action.
+- After planning, the render-payload builder must derive display-safe variants for the renderer instead of passing only raw headline/body text.
 
 ## Validation
 - There must be exactly 7 slides.

@@ -54,6 +54,7 @@
 - Business logic must be deterministic and encoded in SOPs plus atomic tools.
 - Intermediate artifacts belong in `.tmp/`.
 - The Python layer must communicate rendering intent through versioned JSON payloads instead of chat/session memory.
+- Raw `headline + body + layout_variant` is not enough for reliable rendering; the payload needs display-safe text variants and truncation metadata.
 - Live plugin rendering still requires a human to open Figma and run the local plugin.
 - Figma `fileKey` access from plugins depends on private-plugin API availability; the plugin tolerates `null` when unavailable.
 

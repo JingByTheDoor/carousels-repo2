@@ -20,6 +20,7 @@ This folder contains the local renderer that replaces the chat-bound Figma MCP r
    - or `tools/plan_carousel.py`
 2. Open the plugin in Figma.
 3. Upload or paste `.tmp/render-jobs/<job_id>.render.json`.
+   The preferred payload format is `figma_plugin_payload_v2`.
 4. Click `Render Carousel`.
 5. Download the resulting `*.render-result.json`.
 6. Apply that result locally:
@@ -27,6 +28,7 @@ This folder contains the local renderer that replaces the chat-bound Figma MCP r
 
 ## Current scope
 - Renders 7 portrait slides at `1080x1350`
+- Consumes render-aware slide metadata such as display-safe headline/body variants and CTA button/support text
 - Uses curated layouts derived from the approved reference nodes:
   - `1:46227`
   - `1:46232`

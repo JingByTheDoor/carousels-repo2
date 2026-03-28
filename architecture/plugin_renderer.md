@@ -10,6 +10,16 @@ Render approved carousel payloads inside Figma without relying on Codex or chat-
 
 ## Current handoff model
 - Input to the plugin: `.tmp/render-jobs/<job_id>.render.json`
+- Current payload schema: `figma_plugin_payload_v2`
+- Each slide payload now includes render-aware fields such as:
+  - `headline_display`
+  - `body_display`
+  - `headline_short`
+  - `body_short`
+  - `supporting_text`
+  - `button_label`
+  - `text_density`
+  - `safe_area_profile`
 - Output from the plugin: downloaded `figma_plugin_result_v1` JSON
 - Finalization tool: `tools/apply_render_result.py`
 

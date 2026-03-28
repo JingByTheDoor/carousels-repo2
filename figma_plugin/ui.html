@@ -137,7 +137,7 @@
     <div class="stack">
       <div class="card stack">
         <h1>Carousel Render Importer</h1>
-        <p>Upload or paste a <code>figma_plugin_payload_v1</code> JSON file, then render the 7-slide carousel into the current Figma file.</p>
+        <p>Upload or paste a <code>figma_plugin_payload_v2</code> JSON file, then render the 7-slide carousel into the current Figma file.</p>
       </div>
 
       <div class="card stack">
@@ -202,8 +202,8 @@
           throw new Error("Paste or upload a render payload first.");
         }
         const parsed = JSON.parse(raw);
-        if (parsed.schema_version !== "figma_plugin_payload_v1") {
-          throw new Error("Expected schema_version figma_plugin_payload_v1.");
+        if (parsed.schema_version !== "figma_plugin_payload_v1" && parsed.schema_version !== "figma_plugin_payload_v2") {
+          throw new Error("Expected schema_version figma_plugin_payload_v1 or figma_plugin_payload_v2.");
         }
         if (!Array.isArray(parsed.slides) || parsed.slides.length !== 7) {
           throw new Error("Payload must contain exactly 7 slides.");

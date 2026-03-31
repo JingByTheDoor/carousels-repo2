@@ -371,6 +371,7 @@ Status: `Approved and implemented`
 - The planned image layer should default to stock-first with AI fallback, not AI-first.
 - `pexels` is the preferred first stock provider for the local renderer workflow; `unsplash` is a weaker default because its API guidelines require hotlinking returned URLs and attribution handling that does not fit Figma import as cleanly.
 - The currently implemented image acquisition path is `Pexels` only. `ai` and `hybrid` modes exist in the schema, but AI fallback is not implemented yet.
+- The render bridge now defaults to `sheets_first` queue priority so pending studio rounds do not silently override Google Sheets rows during auto-rendering.
 
 ## Maintenance Log
 

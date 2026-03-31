@@ -160,12 +160,15 @@ That command now plans the content and writes the plugin render payload in one p
 3. In the plugin UI, leave the bridge URL at `http://localhost:8765`.
 4. Use `Poll Next Job` to process one row, or `Start Auto Mode` to keep polling.
 5. The bridge will:
+   - serve Google Sheets rows first by default
+   - fall back to pending studio variants after the sheet queue is empty
    - serve the next `planned` row first
    - fall back to `queued` rows by planning them on demand
    - write render results into `.tmp/render-results/`
    - finalize the job artifact and Google Sheet automatically
 
 The studio launcher can start this bridge for you automatically, so you do not need a second terminal in the normal review flow.
+If you explicitly want the old behavior, set `RENDER_QUEUE_PRIORITY=studio_first`.
 
 When the local Figma plugin is open in auto mode, studio-generated variants are picked up by the same bridge and pushed through the real renderer. The studio then updates each variant card with:
 - `render_status`

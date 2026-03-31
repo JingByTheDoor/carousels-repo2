@@ -96,24 +96,20 @@ def plan_row_to_render_item(settings: Settings, queue: GoogleSheetsQueue, row: Q
 
 
 def acquire_next_render_item(settings: Settings, queue: GoogleSheetsQueue) -> RenderQueueItem | None:
-    studio_variant = acquire_next_studio_render_variant()
-    if studio_variant:
-        job_path = Path(studio_variant.job_artifact_path)
-        render_payload_path = Path(studio_variant.render_payload_path)
-        record = CarouselOutput.model_validate_json(job_path.read_text(encoding="utf-8"))
-        payload = PluginRenderPayload.model_validate_json(render_payload_path.read_text(encoding="utf-8"))
-        mark_variant_rendering(studio_variant.job_id)
-        record.status = "rendering"
-        write_output_record(job_path, record)
-        return RenderQueueItem(
-            row_number=None,
-            job_id=studio_variant.job_id,
-            job_path=job_path,
-            render_payload_path=render_payload_path,
-            record=record,
-            payload=payload,
-        )
+    priority = (settings.render_queue_priority or "sheets_first").strip().lower()
+    if priority == "studio_first":
+        item = _acquire_studio_render_item()
+        if item:
+            return item
+        return _acquire_sheet_render_item(settings, queue)
 
+    item = _acquire_sheet_render_item(settings, queue)
+    if item:
+        return item
+    return _acquire_studio_render_item()
+
+
+def _acquire_sheet_render_item(settings: Settings, queue: GoogleSheetsQueue) -> RenderQueueItem | None:
     queue.ensure_queue_sheet()
     row = queue.find_first_row_by_status({"planned"})
     if row:
@@ -128,6 +124,28 @@ def acquire_next_render_item(settings: Settings, queue: GoogleSheetsQueue) -> Re
     item = plan_row_to_render_item(settings, queue, row)
     queue.update_row(row.row_number, {"status": "rendering", "error": ""})
     return item
+
+
+def _acquire_studio_render_item() -> RenderQueueItem | None:
+    studio_variant = acquire_next_studio_render_variant()
+    if studio_variant is None:
+        return None
+
+    job_path = Path(studio_variant.job_artifact_path)
+    render_payload_path = Path(studio_variant.render_payload_path)
+    record = CarouselOutput.model_validate_json(job_path.read_text(encoding="utf-8"))
+    payload = PluginRenderPayload.model_validate_json(render_payload_path.read_text(encoding="utf-8"))
+    mark_variant_rendering(studio_variant.job_id)
+    record.status = "rendering"
+    write_output_record(job_path, record)
+    return RenderQueueItem(
+        row_number=None,
+        job_id=studio_variant.job_id,
+        job_path=job_path,
+        render_payload_path=render_payload_path,
+        record=record,
+        payload=payload,
+    )
 
 
 def hydrate_planned_row(settings: Settings, queue: GoogleSheetsQueue, row: QueueRow) -> RenderQueueItem:

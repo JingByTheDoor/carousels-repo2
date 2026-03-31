@@ -30,6 +30,7 @@ class Settings:
     figma_reference_file_key: str
     render_server_host: str
     render_server_port: int
+    render_queue_priority: str
 
 
 def _optional_path(raw_value: str | None) -> Path | None:
@@ -58,6 +59,7 @@ def load_settings(
         figma_reference_file_key=os.getenv("FIGMA_REFERENCE_FILE_KEY", DEFAULT_REFERENCE_FILE_KEY),
         render_server_host=os.getenv("RENDER_SERVER_HOST", "localhost"),
         render_server_port=int(os.getenv("RENDER_SERVER_PORT", "8765")),
+        render_queue_priority=os.getenv("RENDER_QUEUE_PRIORITY", "sheets_first"),
     )
 
     if require_openai and not settings.openai_api_key:

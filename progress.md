@@ -235,6 +235,10 @@
   - `node --check figma_plugin\\code.js`
   - `python tools\\fetch_images_for_job.py --job-id sheet-row-2`
   - regenerated payload still contains `slides[0].image_slot = cover_media` with a valid `image_strategy` object
+- Fixed render-bridge queue priority:
+  - default behavior is now `sheets_first`
+  - studio variants are only consumed after the sheet queue is empty unless `RENDER_QUEUE_PRIORITY=studio_first`
+  - this prevents old pending studio rounds from silently overriding Google Sheets rows during auto-rendering
 
 ### Current Status
 - Google Sheets, OpenAI planning, and plugin render-payload generation are working.

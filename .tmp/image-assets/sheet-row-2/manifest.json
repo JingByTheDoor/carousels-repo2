@@ -3,7 +3,7 @@
   "image_strategy": {
     "mode": "none",
     "provider": null,
-    "reason": "Auto image mode chose stock-first, but PEXELS_API_KEY is missing."
+    "reason": "reference_cp_longform_split is currently treated as a text-led family."
   },
   "image_assets": []
 }

@@ -182,3 +182,4 @@
   - cache selected Pexels images locally under `.tmp/image-assets/`
   - record image strategy and chosen assets inside the canonical job artifact
 - The first renderer-side image pass should stay on cover slides only. That gives immediate value for the media-friendly families without destabilizing the body layouts that were already tuned for readability.
+- Studio-first bridge priority is confusing when the user is working from Google Sheets, because old pending studio variants can render before the visible sheet row and make it look like the sheet input was ignored.

@@ -29,6 +29,16 @@ DEFAULT_REFERENCE_NODE_IDS = [
     "1:14767",
     "1:14775",
     "1:14788",
+    "local:01-long-title",
+    "local:02-title",
+    "local:03-copy",
+    "local:05-call-to-action",
+    "local:light-1",
+    "local:light-2",
+    "local:light-6",
+    "local:title-01",
+    "local:twitter-post-default",
+    "local:twitter-post-soft",
 ]
 DEFAULT_PROMPT_VERSION = "baseline_v2"
 DEFAULT_STYLE_FAMILY = "reference_mix_alder_portrait"
@@ -271,6 +281,22 @@ class PluginRenderPayload(BaseModel):
         return self
 
 
+class PluginPreviewImage(BaseModel):
+    slide_number: int
+    mime_type: Literal["image/png"] = "image/png"
+    data_base64: str | None = None
+    path: str | None = None
+    url: str | None = None
+
+    @field_validator("data_base64", "path", "url", mode="before")
+    @classmethod
+    def _normalize_optional_preview_strings(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = value.strip()
+        return cleaned or None
+
+
 class PluginRenderResult(BaseModel):
     schema_version: Literal["figma_plugin_result_v1"] = "figma_plugin_result_v1"
     job_id: str
@@ -279,6 +305,7 @@ class PluginRenderResult(BaseModel):
     file_key: str | None = None
     file_url: str | None = None
     slide_node_ids: list[str] = Field(default_factory=list)
+    preview_images: list[PluginPreviewImage] = Field(default_factory=list)
     rendered_at: str
 
 

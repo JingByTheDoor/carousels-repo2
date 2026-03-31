@@ -54,6 +54,17 @@
   - `1:14767` white editorial comparison layout
   - `1:14775` dark image-bottom cover layout
   - `1:14788` white CTA with footer signals
+- Approved local example references identified:
+  - `local:01-long-title`
+  - `local:02-title`
+  - `local:03-copy`
+  - `local:05-call-to-action`
+  - `local:light-1`
+  - `local:light-2`
+  - `local:light-6`
+  - `local:title-01`
+  - `local:twitter-post-default`
+  - `local:twitter-post-soft`
 - Portrait outputs now have two approved directions:
   - `1:46485` for the original portrait layout direction used by the upper families
   - `1:9052` / `1:9076` / `1:9176` for the black-profile portrait family
@@ -76,6 +87,30 @@
   - `reference_sadekov_black_profile`
   - `reference_sadekov_white_profile`
   - `reference_typography_editorial_light`
+  - `reference_creator_mono_minimal`
+  - `reference_light_grain_glow`
+  - `reference_retro_swipe_creator`
+  - `reference_twitter_card_soft`
+- A local `Examples of carousels/` folder now exists with 113 grouped example names.
+- A conservative local coverage audit now exists:
+  - `covered`: 11 groups
+  - `duplicate`: 16 groups
+  - `missing or unmapped`: 86 groups
+- The newly harvested local families now cover:
+  - `01 – Long Title`
+  - `02 – Title`
+  - `03 – Copy`
+  - `05 – Call to Action`
+  - `Light_1`
+  - `Title (01)`
+  - `Twitter Post - Default`
+- Large uncovered clusters in the local examples folder include:
+  - `11 3`
+  - `Light_*` beyond the currently grouped aliases
+  - `TwitterPost_*` beyond the currently grouped tweet-card aliases
+  - `Carousel4`, `Carousel5`, `Carousel6`, `Carousel8`
+  - `Frame 1`, `Frame 15` through `Frame 21`, `Frame 34303` through `Frame 34309`
+- The local coverage audit is intentionally conservative: a group is only marked `duplicate` when it is a high-confidence export alias of an already harvested family. Everything else stays `missing` until explicitly mapped.
 
 ## Research
 - Official Google Sheets Python quickstart:
@@ -101,6 +136,23 @@
 - Using the plugin iframe for localhost bridge traffic is brittle; the better integration point is the plugin controller in `code.js`, which can make the bridge requests and send structured results back to the UI.
 - A legacy default of `reference_style=alder_1` made older jobs look like the new selector was broken, because they still carried an old explicit style preference even after the style engine changed.
 - Planned rows must be rehydrated from the current code path; otherwise stale `.render.json` payloads can mask style-engine changes.
+- Local example filenames alone are not enough to safely infer family equivalence, so coverage auditing needs explicit mappings instead of filename guesswork.
+- Local exported example families can now be treated as approved references through `local:` IDs instead of pretending every new reference is a Figma node.
+
+## Render Readability Findings
+- The first pass of the newly harvested local families underused the available portrait canvas, especially on info slides.
+- `reference_creator_mono_minimal` was structurally correct but too timid:
+  - headline scale was too polite for a poster-like layout
+  - body copy sat too low and too small relative to the amount of white space
+- `reference_light_grain_glow` was the weakest structural match on the first pass:
+  - the ghost number became visually louder than the content
+  - the info slides needed an explicit headline block instead of one small text paragraph
+- `reference_retro_swipe_creator` had a distinct look but low reading energy:
+  - body copy disappeared into the open sage field
+  - the footer/button treatment was stronger than the informational content above it
+- `reference_twitter_card_soft` worked conceptually, but the first pass rendered the tweet card too small inside the frame, making the whole slide feel like a thumbnail instead of the main composition.
+- Over-aggressive payload shortening caused some local-family lines to lose meaningful ending words before the renderer even tried to fit them.
+- Truncation needs to avoid trailing connectors such as `and`, `for`, `и`, or `для`; shortened copy should end on a complete phrase.
 
 ## Open Questions
 - Which Google account or Google Cloud project will own the Sheets credentials long term?
@@ -108,3 +160,12 @@
 
 ## Notes
 - The user prompt references both `claude.md` and `gemini.md` for project law. This repository treats `claude.md` as the constitution for rules and invariants, and `gemini.md` as the canonical schema and maintenance log.
+- The cleanest UX path is not to force Google Sheets to be the primary control surface. A local review studio above the planner/style engine is a better fit for rapid variant testing and rating.
+- For a fast ideation loop, the studio should own:
+  - variant generation
+  - rating capture
+  - next-round regeneration
+  - preview display, starting as payload metadata and upgrading to real rendered slide thumbnails when the plugin bridge completes a variant
+- Google Sheets remains useful as backend queue/storage, but it is a poor primary interface for "show me one, I rate it, then show me another."
+- The bridge can now acquire studio variants before Google Sheets rows, which lets the studio behave like the primary UX without breaking the canonical job/render artifact flow.
+- Returning preview PNGs from the Figma plugin result is a cleaner fit than trying to fake browser previews forever; the studio can now present actual rendered slide thumbnails while still using the same canonical render-result contract.

@@ -254,6 +254,131 @@ TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE = StyleRecipeSpec(
     ),
 )
 
+CREATOR_MONO_RECIPE = StyleRecipeSpec(
+    style_family="reference_creator_mono_minimal",
+    style_recipe="creator_mono_minimal_v1",
+    reference_node_ids=(
+        "local:01-long-title",
+        "local:02-title",
+        "local:03-copy",
+        "local:05-call-to-action",
+    ),
+    style_tokens=StyleTokens(
+        light_background="#FFFFFF",
+        dark_background="#111111",
+        text_dark="#101010",
+        text_light="#FFFFFF",
+        accent_blue="#C8D3E1",
+        accent_magenta="#D88989",
+        accent_gold="#D0B089",
+        accent_orange="#111111",
+        accent_purple="#EDEDED",
+        accent_navy="#2B2B2B",
+    ),
+    typography=TypographyTokens(
+        cover_family="Inter",
+        cover_style="Black",
+        body_heading_family="Inter",
+        body_heading_style="Black",
+        body_family="Inter",
+        body_style="Regular",
+        cta_heading_family="Inter",
+        cta_heading_style="Black",
+        cta_body_family="Inter",
+        cta_body_style="Regular",
+    ),
+)
+
+LIGHT_GRAIN_GLOW_RECIPE = StyleRecipeSpec(
+    style_family="reference_light_grain_glow",
+    style_recipe="light_grain_glow_v1",
+    reference_node_ids=("local:light-1", "local:light-2", "local:light-6"),
+    style_tokens=StyleTokens(
+        light_background="#F7F5FF",
+        dark_background="#232742",
+        text_dark="#24252C",
+        text_light="#FFFFFF",
+        accent_blue="#8A8DFF",
+        accent_magenta="#D26BFF",
+        accent_gold="#CBD6FF",
+        accent_orange="#76F48A",
+        accent_purple="#6A60FF",
+        accent_navy="#343C72",
+    ),
+    typography=TypographyTokens(
+        cover_family="Inter",
+        cover_style="Bold",
+        body_heading_family="Inter",
+        body_heading_style="Bold",
+        body_family="Inter",
+        body_style="Regular",
+        cta_heading_family="Inter",
+        cta_heading_style="Bold",
+        cta_body_family="Inter",
+        cta_body_style="Regular",
+    ),
+)
+
+RETRO_SWIPE_RECIPE = StyleRecipeSpec(
+    style_family="reference_retro_swipe_creator",
+    style_recipe="retro_swipe_creator_v1",
+    reference_node_ids=("local:title-01",),
+    style_tokens=StyleTokens(
+        light_background="#9DAF86",
+        dark_background="#6B7759",
+        text_dark="#1F241C",
+        text_light="#FFF6E8",
+        accent_blue="#DDE3CF",
+        accent_magenta="#8A9670",
+        accent_gold="#FFD48A",
+        accent_orange="#F0C46B",
+        accent_purple="#C8D2B8",
+        accent_navy="#33402D",
+    ),
+    typography=TypographyTokens(
+        cover_family="Montserrat",
+        cover_style="Bold",
+        body_heading_family="Montserrat",
+        body_heading_style="Bold",
+        body_family="Inter",
+        body_style="Regular",
+        cta_heading_family="Montserrat",
+        cta_heading_style="Bold",
+        cta_body_family="Inter",
+        cta_body_style="Regular",
+    ),
+)
+
+TWITTER_CARD_SOFT_RECIPE = StyleRecipeSpec(
+    style_family="reference_twitter_card_soft",
+    style_recipe="twitter_card_soft_v1",
+    reference_node_ids=("local:twitter-post-default", "local:twitter-post-soft"),
+    style_tokens=StyleTokens(
+        light_background="#F7F9FC",
+        dark_background="#1F2633",
+        text_dark="#1E1F26",
+        text_light="#FFFFFF",
+        accent_blue="#3AA4FF",
+        accent_magenta="#F1C0A8",
+        accent_gold="#F1D58B",
+        accent_orange="#FFB566",
+        accent_purple="#B7D6FF",
+        accent_navy="#607B9C",
+    ),
+    typography=TypographyTokens(
+        cover_family="Inter",
+        cover_style="Bold",
+        body_heading_family="Inter",
+        body_heading_style="Bold",
+        body_family="Inter",
+        body_style="Regular",
+        cta_heading_family="Inter",
+        cta_heading_style="Bold",
+        cta_body_family="Inter",
+        cta_body_style="Regular",
+    ),
+)
+
 STYLE_RECIPES: dict[str, StyleRecipeSpec] = {
     ALDER_RECIPE.style_recipe: ALDER_RECIPE,
     ALDER_DENSE_RECIPE.style_recipe: ALDER_DENSE_RECIPE,
@@ -267,6 +392,10 @@ STYLE_RECIPES: dict[str, StyleRecipeSpec] = {
     SADEKOV_BLACK_PROFILE_RECIPE.style_recipe: SADEKOV_BLACK_PROFILE_RECIPE,
     SADEKOV_WHITE_PROFILE_RECIPE.style_recipe: SADEKOV_WHITE_PROFILE_RECIPE,
     TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE.style_recipe: TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE,
+    CREATOR_MONO_RECIPE.style_recipe: CREATOR_MONO_RECIPE,
+    LIGHT_GRAIN_GLOW_RECIPE.style_recipe: LIGHT_GRAIN_GLOW_RECIPE,
+    RETRO_SWIPE_RECIPE.style_recipe: RETRO_SWIPE_RECIPE,
+    TWITTER_CARD_SOFT_RECIPE.style_recipe: TWITTER_CARD_SOFT_RECIPE,
 }
 
 
@@ -294,6 +423,14 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
         return SADEKOV_WHITE_PROFILE_RECIPE
     if preference in {"typography_light", "typography_editorial", "reference_typography_editorial_light"}:
         return TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE
+    if preference in {"creator_mono", "mono_minimal", "minimal_creator", "long_title", "reference_creator_mono_minimal"}:
+        return CREATOR_MONO_RECIPE
+    if preference in {"light_glow", "light_grain", "soft_light", "reference_light_grain_glow"}:
+        return LIGHT_GRAIN_GLOW_RECIPE
+    if preference in {"retro_swipe", "title01", "swipe_creator", "reference_retro_swipe_creator"}:
+        return RETRO_SWIPE_RECIPE
+    if preference in {"twitter_card", "tweet", "twitter_post", "reference_twitter_card_soft"}:
+        return TWITTER_CARD_SOFT_RECIPE
 
     body_lengths = [len(slide.body or "") for slide in record.content_plan if slide.slide_role == "info"]
     average_body = sum(body_lengths) / len(body_lengths) if body_lengths else 0
@@ -314,6 +451,7 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
             CP_LONGFORM_RECIPE,
             TYPOGRAPHY_SIGNAL_RECIPE,
             TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE,
+            CREATOR_MONO_RECIPE,
         ]
         return candidates[signature % len(candidates)]
 
@@ -326,6 +464,8 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
             ALDER_SPLIT_LEFT_RECIPE,
             CP_LONGFORM_RECIPE,
             SADEKOV_BLACK_PROFILE_RECIPE,
+            LIGHT_GRAIN_GLOW_RECIPE,
+            CREATOR_MONO_RECIPE,
         ]
         return candidates[signature % len(candidates)]
 
@@ -338,6 +478,10 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
         SADEKOV_WHITE_PROFILE_RECIPE,
         ALDER_SPLIT_RIGHT_RECIPE,
         ALDER_SPLIT_LEFT_RECIPE,
+        CREATOR_MONO_RECIPE,
+        LIGHT_GRAIN_GLOW_RECIPE,
+        RETRO_SWIPE_RECIPE,
+        TWITTER_CARD_SOFT_RECIPE,
     ]
     return candidates[signature % len(candidates)]
 

@@ -53,6 +53,37 @@ That command now writes both:
 - `.tmp/jobs/<job_id>.json`
 - `.tmp/render-jobs/<job_id>.render.json`
 
+## Review Studio
+If you want a fast review loop instead of working directly in the Google Sheet, use the local studio.
+
+One command:
+```powershell
+.\.venv\Scripts\python.exe tools\start_studio.py
+```
+
+That launcher:
+- starts the browser review app at `http://127.0.0.1:3000`
+- starts the render bridge too, unless you pass `--no-render-bridge`
+
+Inside the studio you can:
+- enter a topic or script
+- generate a round of variants
+- vary style, copy length, or both
+- rate variants as `love`, `good`, or `bad`
+- generate the next round from those ratings
+- let the Figma plugin auto-render the generated variants through the localhost bridge
+- see real rendered slide thumbnails appear in the studio as variants finish rendering
+
+Studio artifacts:
+- `.tmp/studio/rounds/<round_id>.json`
+- `.tmp/jobs/<job_id>.json`
+- `.tmp/render-jobs/<job_id>.render.json`
+
+If you only want the review app without the bridge:
+```powershell
+.\.venv\Scripts\python.exe tools\studio_server.py
+```
+
 ## Style families
 The render payload can now choose among multiple reference-driven families:
 - `reference_mix_alder_portrait`
@@ -65,6 +96,10 @@ The render payload can now choose among multiple reference-driven families:
 - `reference_sadekov_black_profile`
 - `reference_sadekov_white_profile`
 - `reference_typography_editorial_light`
+- `reference_creator_mono_minimal`
+- `reference_light_grain_glow`
+- `reference_retro_swipe_creator`
+- `reference_twitter_card_soft`
 
 You can also force a family when testing:
 ```powershell
@@ -77,6 +112,10 @@ You can also force a family when testing:
 .venv\Scripts\python tools\plan_carousel.py --topic "3 reasons clear teaching wins" --reference-style sadekov
 .venv\Scripts\python tools\plan_carousel.py --topic "Why a clear offer converts faster" --reference-style sadekov_light
 .venv\Scripts\python tools\plan_carousel.py --topic "How to explain a product comparison clearly" --reference-style typography_light
+.venv\Scripts\python tools\plan_carousel.py --topic "Why clear hooks beat clever hooks" --reference-style creator_mono
+.venv\Scripts\python tools\plan_carousel.py --topic "4 ways to make educational content feel lighter" --reference-style light_glow
+.venv\Scripts\python tools\plan_carousel.py --topic "Why consistency compounds on social media" --reference-style retro_swipe
+.venv\Scripts\python tools\plan_carousel.py --topic "3 reasons tweet-sized ideas spread faster" --reference-style twitter_card
 ```
 
 ## Queue processing
@@ -117,12 +156,37 @@ That command now plans the content and writes the plugin render payload in one p
    - write render results into `.tmp/render-results/`
    - finalize the job artifact and Google Sheet automatically
 
+The studio launcher can start this bridge for you automatically, so you do not need a second terminal in the normal review flow.
+
+When the local Figma plugin is open in auto mode, studio-generated variants are picked up by the same bridge and pushed through the real renderer. The studio then updates each variant card with:
+- `render_status`
+- `figma_url`
+- `render_result_path`
+- exported slide thumbnail previews from the plugin result
+
 ## Rebuild render payloads for existing jobs
 ```powershell
 .venv\Scripts\python tools\build_render_payload.py --job-id <job_id>
 ```
 
+## Style coverage audit
+Use this when new local examples are added and you want to verify whether the style engine actually covers them:
+
+```powershell
+.venv\Scripts\python tools\audit_style_coverage.py
+```
+
+That command writes:
+- `.tmp/style_coverage_manifest.json`
+- `style_coverage.md`
+
+The audit is intentionally conservative:
+- `covered` means a named local example family is explicitly mapped into the current style engine
+- `duplicate` means a local export is a high-confidence alias of a covered family
+- `missing` means the local group exists but is not yet mapped confidently into the engine
+
 ## Current limitations
 - PNG export automation is still not implemented in the local toolchain.
 - The plugin bridge still depends on a live Figma desktop session with the development plugin running.
-- The style engine now covers the distinct slide archetypes in the approved reference file, including the lower black-profile and white-profile portrait sets plus the alternate light typography set. Selection is still deterministic and curated rather than a free-form recombination of every layer in the file.
+- The studio can now show real rendered thumbnails after the plugin finishes a variant, but it still falls back to payload-driven preview state before a render exists.
+- The style engine now covers the harvested Figma families plus the first local-example batch: mono minimal creator slides, light grain/glow slides, retro swipe creator slides, and soft tweet-card slides. It still does not cover every local example family in `Examples of carousels/`.

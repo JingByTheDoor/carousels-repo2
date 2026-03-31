@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from base64 import b64decode
 from pathlib import Path
 
 from carousel_system.config import ROOT_DIR, Settings
@@ -14,6 +15,13 @@ from carousel_system.render_payload import (
     infer_language,
     write_plugin_render_payload,
 )
+from carousel_system.studio import (
+    STUDIO_PREVIEWS_DIR,
+    acquire_next_studio_render_variant,
+    mark_variant_rendering,
+    sync_variant_render_error,
+    sync_variant_render_result,
+)
 
 
 RENDER_RESULTS_DIR = ROOT_DIR / ".tmp" / "render-results"
@@ -21,7 +29,7 @@ RENDER_RESULTS_DIR = ROOT_DIR / ".tmp" / "render-results"
 
 @dataclass(frozen=True)
 class RenderQueueItem:
-    row_number: int
+    row_number: int | None
     job_id: str
     job_path: Path
     render_payload_path: Path
@@ -85,6 +93,24 @@ def plan_row_to_render_item(settings: Settings, queue: GoogleSheetsQueue, row: Q
 
 
 def acquire_next_render_item(settings: Settings, queue: GoogleSheetsQueue) -> RenderQueueItem | None:
+    studio_variant = acquire_next_studio_render_variant()
+    if studio_variant:
+        job_path = Path(studio_variant.job_artifact_path)
+        render_payload_path = Path(studio_variant.render_payload_path)
+        record = CarouselOutput.model_validate_json(job_path.read_text(encoding="utf-8"))
+        payload = PluginRenderPayload.model_validate_json(render_payload_path.read_text(encoding="utf-8"))
+        mark_variant_rendering(studio_variant.job_id)
+        record.status = "rendering"
+        write_output_record(job_path, record)
+        return RenderQueueItem(
+            row_number=None,
+            job_id=studio_variant.job_id,
+            job_path=job_path,
+            render_payload_path=render_payload_path,
+            record=record,
+            payload=payload,
+        )
+
     queue.ensure_queue_sheet()
     row = queue.find_first_row_by_status({"planned"})
     if row:
@@ -143,6 +169,7 @@ def hydrate_planned_row(settings: Settings, queue: GoogleSheetsQueue, row: Queue
 
 
 def save_render_result(result: PluginRenderResult) -> Path:
+    _save_preview_images(result)
     result_path = RENDER_RESULTS_DIR / f"{result.job_id}.render-result.json"
     result_path.parent.mkdir(parents=True, exist_ok=True)
     result_path.write_text(result.model_dump_json(indent=2), encoding="utf-8")
@@ -190,6 +217,14 @@ def apply_render_result(
             },
         )
 
+    preview_paths = [Path(preview.path) for preview in result.preview_images if preview.path]
+    sync_variant_render_result(
+        job_id,
+        result,
+        render_result_path=result_path,
+        preview_image_paths=preview_paths,
+    )
+
     return job_path
 
 
@@ -215,6 +250,7 @@ def record_render_error(settings: Settings, queue: GoogleSheetsQueue | None, *, 
         row = queue.find_row_by_job_id(job_id)
         if row:
             queue.update_row(row.row_number, {"status": "error", "error": error_text})
+    sync_variant_render_error(job_id, error_text)
 
 
 def _resolve_job_path(job_id: str, raw_path: str | None) -> Path:
@@ -231,3 +267,21 @@ def _resolve_render_payload_path(job_id: str, raw_path: str | None) -> Path:
         if path.exists():
             return path
     return ROOT_DIR / ".tmp" / "render-jobs" / f"{job_id}.render.json"
+
+
+def _save_preview_images(result: PluginRenderResult) -> None:
+    preview_dir = STUDIO_PREVIEWS_DIR / result.job_id
+    for preview in result.preview_images:
+        if not preview.data_base64:
+            continue
+        preview_dir.mkdir(parents=True, exist_ok=True)
+        preview_path = preview_dir / f"slide-{str(preview.slide_number).zfill(2)}.png"
+        preview_path.write_bytes(b64decode(preview.data_base64))
+        preview.path = str(preview_path)
+        preview.url = _preview_url_from_path(preview_path)
+        preview.data_base64 = None
+
+
+def _preview_url_from_path(path: Path) -> str:
+    relative = path.resolve().relative_to(STUDIO_PREVIEWS_DIR.parent.resolve())
+    return f"/studio-output/{relative.as_posix()}"

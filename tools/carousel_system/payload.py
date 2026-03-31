@@ -36,6 +36,16 @@ REFERENCE_NODE_DETAILS = {
     "1:14767": ("typography light editorial", "body"),
     "1:14775": ("typography light dark-cover", "cover"),
     "1:14788": ("typography light cta", "cta"),
+    "local:01-long-title": ("01 – Long Title", "cover"),
+    "local:02-title": ("02 – Title", "body"),
+    "local:03-copy": ("03 – Copy", "body"),
+    "local:05-call-to-action": ("05 – Call to Action", "cta"),
+    "local:light-1": ("Light_1", "cover"),
+    "local:light-2": ("Light_2", "body"),
+    "local:light-6": ("Light_6", "cta"),
+    "local:title-01": ("Title (01)", "cta"),
+    "local:twitter-post-default": ("Twitter Post - Default", "body"),
+    "local:twitter-post-soft": ("TwitterPost_02", "cover"),
 }
 
 
@@ -43,9 +53,10 @@ def build_design_reference_log(job: CarouselInput) -> list[DesignReferenceLog]:
     references: list[DesignReferenceLog] = []
     for node_id in job.reference_node_ids:
         node_name, usage = REFERENCE_NODE_DETAILS.get(node_id, ("Unknown", "palette"))
+        file_key = "local_examples" if node_id.startswith("local:") else job.reference_file_key
         references.append(
             DesignReferenceLog(
-                file_key=job.reference_file_key,
+                file_key=file_key,
                 node_id=node_id,
                 node_name=node_name,
                 usage=usage,

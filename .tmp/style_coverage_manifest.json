@@ -1,0 +1,1579 @@
+{
+  "examples_dir": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\Examples of carousels",
+  "summary": {
+    "total_groups": 113,
+    "covered_groups": 11,
+    "duplicate_groups": 16,
+    "missing_groups": 86
+  },
+  "groups": [
+    {
+      "group_name": "01 – Long Title",
+      "file_count": 9,
+      "sample_files": [
+        "01 – Long Title-1.png",
+        "01 – Long Title-2.png",
+        "01 – Long Title-3.png"
+      ],
+      "status": "covered",
+      "canonical_name": "creator_mono_minimal",
+      "style_families": [
+        "reference_creator_mono_minimal"
+      ],
+      "style_recipes": [
+        "creator_mono_minimal_v1"
+      ],
+      "notes": "Monochrome hook-export family now mapped into the minimal creator text recipe."
+    },
+    {
+      "group_name": "02 – Title",
+      "file_count": 14,
+      "sample_files": [
+        "02 – Title-1.png",
+        "02 – Title-10.png",
+        "02 – Title-11.png"
+      ],
+      "status": "covered",
+      "canonical_name": "creator_mono_minimal",
+      "style_families": [
+        "reference_creator_mono_minimal"
+      ],
+      "style_recipes": [
+        "creator_mono_minimal_v1"
+      ],
+      "notes": "Title-only exports now map to the same minimal creator family as the long-title and CTA slides."
+    },
+    {
+      "group_name": "03 – Copy",
+      "file_count": 4,
+      "sample_files": [
+        "03 – Copy-1.png",
+        "03 – Copy-2.png",
+        "03 – Copy-3.png"
+      ],
+      "status": "covered",
+      "canonical_name": "creator_mono_minimal",
+      "style_families": [
+        "reference_creator_mono_minimal"
+      ],
+      "style_recipes": [
+        "creator_mono_minimal_v1"
+      ],
+      "notes": "Soft rose copy exports are now absorbed by the minimal creator family."
+    },
+    {
+      "group_name": "05 – Call to Action",
+      "file_count": 9,
+      "sample_files": [
+        "05 – Call to Action-1.png",
+        "05 – Call to Action-2.png",
+        "05 – Call to Action-3.png"
+      ],
+      "status": "covered",
+      "canonical_name": "creator_mono_minimal",
+      "style_families": [
+        "reference_creator_mono_minimal"
+      ],
+      "style_recipes": [
+        "creator_mono_minimal_v1"
+      ],
+      "notes": "CTA exports now map to the same minimal creator family."
+    },
+    {
+      "group_name": "1",
+      "file_count": 5,
+      "sample_files": [
+        "1-1.jpg",
+        "1-2.jpg",
+        "1-3.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "1",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "104",
+      "file_count": 1,
+      "sample_files": [
+        "104.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "104",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "105",
+      "file_count": 1,
+      "sample_files": [
+        "105.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "105",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "106",
+      "file_count": 4,
+      "sample_files": [
+        "106-1.jpg",
+        "106-2.jpg",
+        "106-3.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "106",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "108",
+      "file_count": 1,
+      "sample_files": [
+        "108.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "108",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "109",
+      "file_count": 1,
+      "sample_files": [
+        "109.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "109",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "11 3",
+      "file_count": 15,
+      "sample_files": [
+        "11 3-1.png",
+        "11 3-10.png",
+        "11 3-11.png"
+      ],
+      "status": "missing",
+      "canonical_name": "11 3",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "112",
+      "file_count": 1,
+      "sample_files": [
+        "112.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "112",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "113",
+      "file_count": 1,
+      "sample_files": [
+        "113.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "113",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "116",
+      "file_count": 1,
+      "sample_files": [
+        "116.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "116",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "117",
+      "file_count": 1,
+      "sample_files": [
+        "117.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "117",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "120",
+      "file_count": 1,
+      "sample_files": [
+        "120.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "120",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "121",
+      "file_count": 1,
+      "sample_files": [
+        "121.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "121",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "123",
+      "file_count": 1,
+      "sample_files": [
+        "123.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "123",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "124",
+      "file_count": 1,
+      "sample_files": [
+        "124.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "124",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "127",
+      "file_count": 1,
+      "sample_files": [
+        "127.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "127",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "128",
+      "file_count": 1,
+      "sample_files": [
+        "128.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "128",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "131",
+      "file_count": 1,
+      "sample_files": [
+        "131.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "131",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "132",
+      "file_count": 1,
+      "sample_files": [
+        "132.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "132",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "135",
+      "file_count": 1,
+      "sample_files": [
+        "135.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "135",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "136",
+      "file_count": 1,
+      "sample_files": [
+        "136.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "136",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "139",
+      "file_count": 1,
+      "sample_files": [
+        "139.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "139",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "140",
+      "file_count": 1,
+      "sample_files": [
+        "140.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "140",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "142",
+      "file_count": 1,
+      "sample_files": [
+        "142.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "142",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "143",
+      "file_count": 1,
+      "sample_files": [
+        "143.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "143",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "146",
+      "file_count": 1,
+      "sample_files": [
+        "146.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "146",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "147",
+      "file_count": 1,
+      "sample_files": [
+        "147.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "147",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "148",
+      "file_count": 4,
+      "sample_files": [
+        "148-1.jpg",
+        "148-2.jpg",
+        "148-3.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "148",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "149",
+      "file_count": 4,
+      "sample_files": [
+        "149-1.jpg",
+        "149-2.jpg",
+        "149-3.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "149",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "150",
+      "file_count": 5,
+      "sample_files": [
+        "150-1.jpg",
+        "150-2.jpg",
+        "150-3.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "150",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "151",
+      "file_count": 5,
+      "sample_files": [
+        "151-1.jpg",
+        "151-2.jpg",
+        "151-3.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "151",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "154",
+      "file_count": 1,
+      "sample_files": [
+        "154.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "154",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "155",
+      "file_count": 1,
+      "sample_files": [
+        "155.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "155",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "158",
+      "file_count": 1,
+      "sample_files": [
+        "158.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "158",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "159",
+      "file_count": 1,
+      "sample_files": [
+        "159.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "159",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "1971245110",
+      "file_count": 1,
+      "sample_files": [
+        "1971245110.png"
+      ],
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_black_profile_cover_export",
+      "style_families": [
+        "reference_sadekov_black_profile"
+      ],
+      "style_recipes": [
+        "sadekov_black_profile_minimal_v1"
+      ],
+      "notes": "Exported black-profile cover slide already mapped to node 1:9052."
+    },
+    {
+      "group_name": "1971245111",
+      "file_count": 1,
+      "sample_files": [
+        "1971245111.png"
+      ],
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_black_profile_body_export",
+      "style_families": [
+        "reference_sadekov_black_profile"
+      ],
+      "style_recipes": [
+        "sadekov_black_profile_minimal_v1"
+      ],
+      "notes": "Exported black-profile body slide already mapped to node 1:9076."
+    },
+    {
+      "group_name": "1971245112",
+      "file_count": 1,
+      "sample_files": [
+        "1971245112.png"
+      ],
+      "status": "missing",
+      "canonical_name": "1971245112",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "1971245113",
+      "file_count": 1,
+      "sample_files": [
+        "1971245113.png"
+      ],
+      "status": "missing",
+      "canonical_name": "1971245113",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "1971245114",
+      "file_count": 1,
+      "sample_files": [
+        "1971245114.png"
+      ],
+      "status": "missing",
+      "canonical_name": "1971245114",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "1971245115",
+      "file_count": 1,
+      "sample_files": [
+        "1971245115.png"
+      ],
+      "status": "missing",
+      "canonical_name": "1971245115",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "1971245118",
+      "file_count": 1,
+      "sample_files": [
+        "1971245118.png"
+      ],
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_black_profile_cta_export",
+      "style_families": [
+        "reference_sadekov_black_profile"
+      ],
+      "style_recipes": [
+        "sadekov_black_profile_minimal_v1"
+      ],
+      "notes": "Exported black-profile CTA slide already mapped to node 1:9176."
+    },
+    {
+      "group_name": "1971245119",
+      "file_count": 1,
+      "sample_files": [
+        "1971245119.png"
+      ],
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_white_profile_cover_export",
+      "style_families": [
+        "reference_sadekov_white_profile"
+      ],
+      "style_recipes": [
+        "sadekov_white_profile_minimal_v1"
+      ],
+      "notes": "Exported white-profile cover slide already mapped to node 1:9064."
+    },
+    {
+      "group_name": "1971245120",
+      "file_count": 1,
+      "sample_files": [
+        "1971245120.png"
+      ],
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_white_profile_body_export",
+      "style_families": [
+        "reference_sadekov_white_profile"
+      ],
+      "style_recipes": [
+        "sadekov_white_profile_minimal_v1"
+      ],
+      "notes": "Exported white-profile body slide already mapped to node 1:9086."
+    },
+    {
+      "group_name": "1971245121",
+      "file_count": 1,
+      "sample_files": [
+        "1971245121.png"
+      ],
+      "status": "missing",
+      "canonical_name": "1971245121",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "1971245122",
+      "file_count": 1,
+      "sample_files": [
+        "1971245122.png"
+      ],
+      "status": "missing",
+      "canonical_name": "1971245122",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "1971245123",
+      "file_count": 1,
+      "sample_files": [
+        "1971245123.png"
+      ],
+      "status": "missing",
+      "canonical_name": "1971245123",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "1971245124",
+      "file_count": 1,
+      "sample_files": [
+        "1971245124.png"
+      ],
+      "status": "missing",
+      "canonical_name": "1971245124",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "1971245125",
+      "file_count": 1,
+      "sample_files": [
+        "1971245125.png"
+      ],
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_white_profile_cta_export",
+      "style_families": [
+        "reference_sadekov_white_profile"
+      ],
+      "style_recipes": [
+        "sadekov_white_profile_minimal_v1"
+      ],
+      "notes": "Exported white-profile CTA slide already mapped to node 1:9187."
+    },
+    {
+      "group_name": "1971245499",
+      "file_count": 1,
+      "sample_files": [
+        "1971245499.png"
+      ],
+      "status": "duplicate",
+      "canonical_name": "portrait_reference_1971245499",
+      "style_families": [
+        "reference_mix_alder_portrait",
+        "reference_alder_split_media",
+        "reference_alder_text_only",
+        "reference_typography_signal",
+        "reference_cp_minimal_split",
+        "reference_cp_longform_split",
+        "reference_cp_gallery_wall"
+      ],
+      "style_recipes": [],
+      "notes": "Single exported portrait layout reference already used as a shared sizing/layout anchor."
+    },
+    {
+      "group_name": "2",
+      "file_count": 5,
+      "sample_files": [
+        "2-1.jpg",
+        "2-2.jpg",
+        "2-3.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "2",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "28",
+      "file_count": 1,
+      "sample_files": [
+        "28.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "28",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "29",
+      "file_count": 1,
+      "sample_files": [
+        "29.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "29",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "32",
+      "file_count": 1,
+      "sample_files": [
+        "32.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "32",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "33",
+      "file_count": 1,
+      "sample_files": [
+        "33.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "33",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "36",
+      "file_count": 1,
+      "sample_files": [
+        "36.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "36",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "37",
+      "file_count": 1,
+      "sample_files": [
+        "37.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "37",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "40",
+      "file_count": 1,
+      "sample_files": [
+        "40.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "40",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "41",
+      "file_count": 1,
+      "sample_files": [
+        "41.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "41",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "44",
+      "file_count": 1,
+      "sample_files": [
+        "44.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "44",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "45",
+      "file_count": 1,
+      "sample_files": [
+        "45.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "45",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "5",
+      "file_count": 5,
+      "sample_files": [
+        "5-1.jpg",
+        "5-2.jpg",
+        "5-3.jpg"
+      ],
+      "status": "missing",
+      "canonical_name": "5",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Alder_1",
+      "file_count": 12,
+      "sample_files": [
+        "Alder_1-1.png",
+        "Alder_1-10.png",
+        "Alder_1-11.png"
+      ],
+      "status": "covered",
+      "canonical_name": "Alder_1",
+      "style_families": [
+        "reference_mix_alder_portrait",
+        "reference_alder_split_media",
+        "reference_alder_text_only"
+      ],
+      "style_recipes": [
+        "alder_portrait_editorial_mix_v1",
+        "alder_portrait_editorial_dense_v1",
+        "alder_split_media_right_v1",
+        "alder_split_media_left_v1",
+        "alder_text_only_air_v1"
+      ],
+      "notes": "Primary upper-file family already harvested into multiple Alder-driven recipes."
+    },
+    {
+      "group_name": "CP_3",
+      "file_count": 6,
+      "sample_files": [
+        "CP_3-1.png",
+        "CP_3-2.png",
+        "CP_3-3.png"
+      ],
+      "status": "covered",
+      "canonical_name": "CP_3",
+      "style_families": [
+        "reference_cp_minimal_split",
+        "reference_cp_longform_split",
+        "reference_cp_gallery_wall"
+      ],
+      "style_recipes": [
+        "cp_split_minimal_statement_v1",
+        "cp_split_longform_v1",
+        "cp_gallery_wall_v1"
+      ],
+      "notes": "Minimal split, longform split, and gallery variants are already implemented."
+    },
+    {
+      "group_name": "Carousel4",
+      "file_count": 7,
+      "sample_files": [
+        "Carousel4-1.png",
+        "Carousel4-2.png",
+        "Carousel4-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Carousel4",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Carousel5",
+      "file_count": 7,
+      "sample_files": [
+        "Carousel5-1.png",
+        "Carousel5-2.png",
+        "Carousel5-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Carousel5",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Carousel6",
+      "file_count": 16,
+      "sample_files": [
+        "Carousel6-1-1.png",
+        "Carousel6-1.png",
+        "Carousel6-2-1.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Carousel6",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Carousel8",
+      "file_count": 7,
+      "sample_files": [
+        "Carousel8-1.png",
+        "Carousel8-11.png",
+        "Carousel8-9-1.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Carousel8",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Carousel8-9bis",
+      "file_count": 1,
+      "sample_files": [
+        "Carousel8-9bis.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Carousel8-9bis",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Figma vs Sketch_ ",
+      "file_count": 1,
+      "sample_files": [
+        "Figma vs Sketch_ .png"
+      ],
+      "status": "missing",
+      "canonical_name": "Figma vs Sketch_ ",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 1",
+      "file_count": 8,
+      "sample_files": [
+        "Frame 1-1.png",
+        "Frame 1-2.png",
+        "Frame 1-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 1",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 15",
+      "file_count": 8,
+      "sample_files": [
+        "Frame 15-1.png",
+        "Frame 15-2.png",
+        "Frame 15-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 15",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 16",
+      "file_count": 5,
+      "sample_files": [
+        "Frame 16-1.png",
+        "Frame 16-2.png",
+        "Frame 16-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 16",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 17",
+      "file_count": 5,
+      "sample_files": [
+        "Frame 17-1.png",
+        "Frame 17-2.png",
+        "Frame 17-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 17",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 18",
+      "file_count": 5,
+      "sample_files": [
+        "Frame 18-1.png",
+        "Frame 18-2.png",
+        "Frame 18-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 18",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 19",
+      "file_count": 5,
+      "sample_files": [
+        "Frame 19-1.png",
+        "Frame 19-2.png",
+        "Frame 19-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 19",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 20",
+      "file_count": 5,
+      "sample_files": [
+        "Frame 20-1.png",
+        "Frame 20-2.png",
+        "Frame 20-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 20",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 21",
+      "file_count": 5,
+      "sample_files": [
+        "Frame 21-1.png",
+        "Frame 21-2.png",
+        "Frame 21-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 21",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 34034",
+      "file_count": 3,
+      "sample_files": [
+        "Frame 34034-1.png",
+        "Frame 34034-2.png",
+        "Frame 34034.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 34034",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 34303",
+      "file_count": 11,
+      "sample_files": [
+        "Frame 34303-1.png",
+        "Frame 34303-10.png",
+        "Frame 34303-2.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 34303",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 34304",
+      "file_count": 4,
+      "sample_files": [
+        "Frame 34304-1.png",
+        "Frame 34304-2.png",
+        "Frame 34304-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 34304",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 34305",
+      "file_count": 7,
+      "sample_files": [
+        "Frame 34305-1.png",
+        "Frame 34305-2.png",
+        "Frame 34305-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 34305",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 34306",
+      "file_count": 8,
+      "sample_files": [
+        "Frame 34306-1.png",
+        "Frame 34306-2.png",
+        "Frame 34306-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 34306",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 34307",
+      "file_count": 1,
+      "sample_files": [
+        "Frame 34307.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 34307",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 34308",
+      "file_count": 1,
+      "sample_files": [
+        "Frame 34308.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 34308",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 34309",
+      "file_count": 1,
+      "sample_files": [
+        "Frame 34309.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 34309",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Frame 6",
+      "file_count": 30,
+      "sample_files": [
+        "Frame 6-1.png",
+        "Frame 6-10.png",
+        "Frame 6-11.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Frame 6",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Light_1",
+      "file_count": 20,
+      "sample_files": [
+        "Light_1-1.jpg",
+        "Light_1-10.jpg",
+        "Light_1-11.jpg"
+      ],
+      "status": "covered",
+      "canonical_name": "light_grain_glow",
+      "style_families": [
+        "reference_light_grain_glow"
+      ],
+      "style_recipes": [
+        "light_grain_glow_v1"
+      ],
+      "notes": "Primary light-grain hero set is now mapped into the light glow family."
+    },
+    {
+      "group_name": "Light_2",
+      "file_count": 4,
+      "sample_files": [
+        "Light_2-1.jpg",
+        "Light_2-2.jpg",
+        "Light_2-3.jpg"
+      ],
+      "status": "duplicate",
+      "canonical_name": "light_grain_glow",
+      "style_families": [
+        "reference_light_grain_glow"
+      ],
+      "style_recipes": [
+        "light_grain_glow_v1"
+      ],
+      "notes": "Numbered light exports are treated as close aliases of the same grain-glow system."
+    },
+    {
+      "group_name": "Light_3",
+      "file_count": 4,
+      "sample_files": [
+        "Light_3-1.jpg",
+        "Light_3-2.jpg",
+        "Light_3-3.jpg"
+      ],
+      "status": "duplicate",
+      "canonical_name": "light_grain_glow",
+      "style_families": [
+        "reference_light_grain_glow"
+      ],
+      "style_recipes": [
+        "light_grain_glow_v1"
+      ],
+      "notes": "Grouped into the same light glow family as `Light_1` pending more granular harvest work."
+    },
+    {
+      "group_name": "Light_4",
+      "file_count": 4,
+      "sample_files": [
+        "Light_4-1.jpg",
+        "Light_4-2.jpg",
+        "Light_4-3.jpg"
+      ],
+      "status": "duplicate",
+      "canonical_name": "light_grain_glow",
+      "style_families": [
+        "reference_light_grain_glow"
+      ],
+      "style_recipes": [
+        "light_grain_glow_v1"
+      ],
+      "notes": "Grouped into the same light glow family as `Light_1` pending more granular harvest work."
+    },
+    {
+      "group_name": "Light_6",
+      "file_count": 4,
+      "sample_files": [
+        "Light_6-1.jpg",
+        "Light_6-2.jpg",
+        "Light_6-3.jpg"
+      ],
+      "status": "duplicate",
+      "canonical_name": "light_grain_glow",
+      "style_families": [
+        "reference_light_grain_glow"
+      ],
+      "style_recipes": [
+        "light_grain_glow_v1"
+      ],
+      "notes": "Profile-heavy light export treated as a high-confidence alias of the light glow family."
+    },
+    {
+      "group_name": "Profile Picture",
+      "file_count": 5,
+      "sample_files": [
+        "Profile Picture-1.png",
+        "Profile Picture-2.png",
+        "Profile Picture-3.png"
+      ],
+      "status": "missing",
+      "canonical_name": "Profile Picture",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "Title (01)",
+      "file_count": 15,
+      "sample_files": [
+        "Title (01)-1.jpg",
+        "Title (01)-10.jpg",
+        "Title (01)-11.jpg"
+      ],
+      "status": "covered",
+      "canonical_name": "retro_swipe_creator",
+      "style_families": [
+        "reference_retro_swipe_creator"
+      ],
+      "style_recipes": [
+        "retro_swipe_creator_v1"
+      ],
+      "notes": "Textured retro creator CTA set is now mapped into the swipe-button family."
+    },
+    {
+      "group_name": "Tweet",
+      "file_count": 3,
+      "sample_files": [
+        "Tweet-1.png",
+        "Tweet-2.png",
+        "Tweet.png"
+      ],
+      "status": "duplicate",
+      "canonical_name": "twitter_card_soft",
+      "style_families": [
+        "reference_twitter_card_soft"
+      ],
+      "style_recipes": [
+        "twitter_card_soft_v1"
+      ],
+      "notes": "Tweet exports are treated as aliases of the tweet-card family."
+    },
+    {
+      "group_name": "Twitter Post - Default",
+      "file_count": 1,
+      "sample_files": [
+        "Twitter Post - Default.png"
+      ],
+      "status": "covered",
+      "canonical_name": "twitter_card_soft",
+      "style_families": [
+        "reference_twitter_card_soft"
+      ],
+      "style_recipes": [
+        "twitter_card_soft_v1"
+      ],
+      "notes": "Flat tweet screenshot layout is now covered by the soft tweet-card renderer."
+    },
+    {
+      "group_name": "Twitter Post - Dim",
+      "file_count": 1,
+      "sample_files": [
+        "Twitter Post - Dim.png"
+      ],
+      "status": "duplicate",
+      "canonical_name": "twitter_card_soft",
+      "style_families": [
+        "reference_twitter_card_soft"
+      ],
+      "style_recipes": [
+        "twitter_card_soft_v1"
+      ],
+      "notes": "Theme variation of the same tweet-card structure."
+    },
+    {
+      "group_name": "Twitter Post - Lights Out",
+      "file_count": 1,
+      "sample_files": [
+        "Twitter Post - Lights Out.png"
+      ],
+      "status": "duplicate",
+      "canonical_name": "twitter_card_soft",
+      "style_families": [
+        "reference_twitter_card_soft"
+      ],
+      "style_recipes": [
+        "twitter_card_soft_v1"
+      ],
+      "notes": "Theme variation of the same tweet-card structure."
+    },
+    {
+      "group_name": "TwitterPost_01",
+      "file_count": 1,
+      "sample_files": [
+        "TwitterPost_01.png"
+      ],
+      "status": "missing",
+      "canonical_name": "TwitterPost_01",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "TwitterPost_02",
+      "file_count": 7,
+      "sample_files": [
+        "TwitterPost_02-1.png",
+        "TwitterPost_02-2.png",
+        "TwitterPost_02-3.png"
+      ],
+      "status": "duplicate",
+      "canonical_name": "twitter_card_soft",
+      "style_families": [
+        "reference_twitter_card_soft"
+      ],
+      "style_recipes": [
+        "twitter_card_soft_v1"
+      ],
+      "notes": "Soft-gradient tweet card export treated as a high-confidence alias of the covered tweet-card family."
+    },
+    {
+      "group_name": "TwitterPost_03",
+      "file_count": 1,
+      "sample_files": [
+        "TwitterPost_03.png"
+      ],
+      "status": "missing",
+      "canonical_name": "TwitterPost_03",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "TwitterPost_04",
+      "file_count": 1,
+      "sample_files": [
+        "TwitterPost_04.png"
+      ],
+      "status": "missing",
+      "canonical_name": "TwitterPost_04",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "TwitterPost_05",
+      "file_count": 1,
+      "sample_files": [
+        "TwitterPost_05.png"
+      ],
+      "status": "missing",
+      "canonical_name": "TwitterPost_05",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "TwitterPost_06",
+      "file_count": 1,
+      "sample_files": [
+        "TwitterPost_06.png"
+      ],
+      "status": "missing",
+      "canonical_name": "TwitterPost_06",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "TwitterPost_07",
+      "file_count": 1,
+      "sample_files": [
+        "TwitterPost_07.png"
+      ],
+      "status": "missing",
+      "canonical_name": "TwitterPost_07",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "TwitterPost_08",
+      "file_count": 28,
+      "sample_files": [
+        "TwitterPost_08-1.png",
+        "TwitterPost_08-10.png",
+        "TwitterPost_08-11.png"
+      ],
+      "status": "duplicate",
+      "canonical_name": "twitter_card_soft",
+      "style_families": [
+        "reference_twitter_card_soft"
+      ],
+      "style_recipes": [
+        "twitter_card_soft_v1"
+      ],
+      "notes": "Repeated soft-card tweet exports grouped into the same tweet-card family for now."
+    },
+    {
+      "group_name": "TwitterPost_09",
+      "file_count": 1,
+      "sample_files": [
+        "TwitterPost_09.png"
+      ],
+      "status": "missing",
+      "canonical_name": "TwitterPost_09",
+      "style_families": [],
+      "style_recipes": [],
+      "notes": "Present in local examples folder but not mapped into the current style engine."
+    },
+    {
+      "group_name": "typography slide 1",
+      "file_count": 10,
+      "sample_files": [
+        "typography slide 1-1.png",
+        "typography slide 1-2.png",
+        "typography slide 1-3.png"
+      ],
+      "status": "covered",
+      "canonical_name": "typography slide 1",
+      "style_families": [
+        "reference_typography_signal",
+        "reference_typography_editorial_light"
+      ],
+      "style_recipes": [
+        "typography_signal_glow_v1",
+        "typography_editorial_light_v1"
+      ],
+      "notes": "Dark centered-signal and light editorial directions are both mapped from this family."
+    },
+    {
+      "group_name": "typography slide 2",
+      "file_count": 1,
+      "sample_files": [
+        "typography slide 2.png"
+      ],
+      "status": "covered",
+      "canonical_name": "typography slide 2",
+      "style_families": [
+        "reference_typography_signal"
+      ],
+      "style_recipes": [
+        "typography_signal_glow_v1"
+      ],
+      "notes": "Used as the current CTA/end-card reference family."
+    }
+  ]
+}

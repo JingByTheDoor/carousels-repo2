@@ -54,6 +54,43 @@ RU_STOPWORDS = {
     "тех",
     "про",
 }
+TRAILING_CONNECTORS = {
+    "a",
+    "an",
+    "and",
+    "as",
+    "at",
+    "but",
+    "for",
+    "from",
+    "in",
+    "into",
+    "of",
+    "on",
+    "or",
+    "that",
+    "the",
+    "to",
+    "with",
+    "и",
+    "или",
+    "в",
+    "во",
+    "на",
+    "но",
+    "по",
+    "с",
+    "со",
+    "для",
+    "к",
+    "ко",
+    "от",
+    "из",
+    "у",
+    "а",
+    "что",
+    "чтобы",
+}
 
 
 def infer_language(record: CarouselOutput) -> str:
@@ -128,10 +165,29 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             hook_limit = 44
         elif style_recipe == "typography_editorial_light_v1":
             hook_limit = 52
+        elif style_recipe == "creator_mono_minimal_v1":
+            hook_limit = 68
+        elif style_recipe == "light_grain_glow_v1":
+            hook_limit = 62
+        elif style_recipe == "retro_swipe_creator_v1":
+            hook_limit = 60
+        elif style_recipe == "twitter_card_soft_v1":
+            hook_limit = 52
         else:
             hook_limit = 42
         headline_short = _shorten_headline(slide.headline, language, hard_limit=hook_limit)
-        display = headline_short if len(slide.headline) > hook_limit else slide.headline
+        display = (
+            slide.headline
+            if style_recipe in {
+                "creator_mono_minimal_v1",
+                "light_grain_glow_v1",
+                "retro_swipe_creator_v1",
+                "twitter_card_soft_v1",
+            }
+            else headline_short
+            if len(slide.headline) > hook_limit
+            else slide.headline
+        )
         safe_area = (
             "cover_balanced"
             if style_recipe in {
@@ -140,6 +196,10 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
                 "sadekov_black_profile_minimal_v1",
                 "sadekov_white_profile_minimal_v1",
                 "typography_editorial_light_v1",
+                "creator_mono_minimal_v1",
+                "light_grain_glow_v1",
+                "retro_swipe_creator_v1",
+                "twitter_card_soft_v1",
             }
             else "cover_tall_text"
         )
@@ -149,6 +209,10 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             "sadekov_black_profile_minimal_v1": "profile_header_arrow",
             "sadekov_white_profile_minimal_v1": "profile_header_arrow_light",
             "typography_editorial_light_v1": "editorial_corner_cards",
+            "creator_mono_minimal_v1": "creator_footer_minimal",
+            "light_grain_glow_v1": "grain_glow_corner",
+            "retro_swipe_creator_v1": "swipe_footer_button",
+            "twitter_card_soft_v1": "tweet_card_soft",
         }.get(style_recipe, "geometric_cluster")
         return RenderSlideSpec(
             slide_number=slide.slide_number,
@@ -171,6 +235,10 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             max_headline_lines=(
                 4
                 if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}
+                else 4
+                if style_recipe in {"light_grain_glow_v1", "retro_swipe_creator_v1", "twitter_card_soft_v1"}
+                else 5
+                if style_recipe == "creator_mono_minimal_v1"
                 else 5
                 if style_recipe in {"cp_split_minimal_statement_v1", "typography_editorial_light_v1"}
                 else 6
@@ -183,7 +251,16 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
 
     if slide.slide_role == "cta":
         cta_source = slide.body or record.normalized_input.cta_text or ""
-        headline_short = _shorten_headline(slide.headline, language, hard_limit=38)
+        cta_headline_limit = (
+            50
+            if style_recipe in {"creator_mono_minimal_v1", "retro_swipe_creator_v1"}
+            else 52
+            if style_recipe == "light_grain_glow_v1"
+            else 44
+            if style_recipe == "twitter_card_soft_v1"
+            else 38
+        )
+        headline_short = _shorten_headline(slide.headline, language, hard_limit=cta_headline_limit)
         body_display, supporting_text = _build_cta_copy_segments(cta_source, slide.headline, language)
         button_label = (
             None
@@ -191,6 +268,9 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
                 "sadekov_black_profile_minimal_v1",
                 "sadekov_white_profile_minimal_v1",
                 "typography_editorial_light_v1",
+                "creator_mono_minimal_v1",
+                "light_grain_glow_v1",
+                "twitter_card_soft_v1",
             }
             else _build_cta_button_label(language)
         )
@@ -203,7 +283,15 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             text_align="center",
             headline=slide.headline,
             headline_short=headline_short,
-            headline_display=headline_short or slide.headline,
+            headline_display=(
+                headline_short or slide.headline
+                if style_recipe in {
+                    "sadekov_black_profile_minimal_v1",
+                    "sadekov_white_profile_minimal_v1",
+                    "typography_editorial_light_v1",
+                }
+                else slide.headline
+            ),
             body=cta_source or None,
             body_short=body_display,
             body_display=body_display,
@@ -213,12 +301,30 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             visual_priority="cta",
             safe_area_profile="cta_center_stack",
             max_headline_lines=4,
-            max_body_lines=3 if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"} else 4,
+            max_body_lines=(
+                3
+                if style_recipe in {
+                    "sadekov_black_profile_minimal_v1",
+                    "sadekov_white_profile_minimal_v1",
+                    "creator_mono_minimal_v1",
+                    "retro_swipe_creator_v1",
+                    "twitter_card_soft_v1",
+                }
+                else 4
+            ),
             can_truncate_body=True,
             emphasis_words=_extract_emphasis_words(slide.headline, language),
             accent_motif=(
                 "profile_header_footer"
                 if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}
+                else "creator_footer_minimal"
+                if style_recipe == "creator_mono_minimal_v1"
+                else "grain_glow_corner"
+                if style_recipe == "light_grain_glow_v1"
+                else "swipe_footer_button"
+                if style_recipe == "retro_swipe_creator_v1"
+                else "tweet_card_soft"
+                if style_recipe == "twitter_card_soft_v1"
                 else "cta_signal_lines"
                 if style_recipe != "cp_split_minimal_statement_v1"
                 else "device_card_mock"
@@ -235,6 +341,18 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
     elif style_recipe == "typography_editorial_light_v1":
         headline_limit = 42
         body_limit = 110
+    elif style_recipe == "creator_mono_minimal_v1":
+        headline_limit = 54
+        body_limit = 124
+    elif style_recipe == "light_grain_glow_v1":
+        headline_limit = 54
+        body_limit = 96
+    elif style_recipe == "retro_swipe_creator_v1":
+        headline_limit = 42
+        body_limit = 104
+    elif style_recipe == "twitter_card_soft_v1":
+        headline_limit = 42
+        body_limit = 90
     else:
         headline_limit = 30
         body_limit = _body_hard_limit(layout_variant, text_density)
@@ -247,7 +365,16 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             "sadekov_white_profile_minimal_v1",
             "typography_editorial_light_v1",
         }
-        or text_density == "high"
+        or (
+            text_density == "high"
+            and style_recipe
+            not in {
+                "creator_mono_minimal_v1",
+                "light_grain_glow_v1",
+                "retro_swipe_creator_v1",
+                "twitter_card_soft_v1",
+            }
+        )
         or layout_variant == "body_mask_band_left"
         else slide.headline
     )
@@ -258,7 +385,16 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             "sadekov_white_profile_minimal_v1",
             "typography_editorial_light_v1",
         }
-        or text_density != "low"
+        or (
+            text_density == "high"
+            and style_recipe
+            not in {
+                "creator_mono_minimal_v1",
+                "light_grain_glow_v1",
+                "retro_swipe_creator_v1",
+                "twitter_card_soft_v1",
+            }
+        )
         else body_text
     )
 
@@ -284,6 +420,8 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
         max_body_lines=(
             5
             if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}
+            else 5
+            if style_recipe in {"creator_mono_minimal_v1", "light_grain_glow_v1", "retro_swipe_creator_v1", "twitter_card_soft_v1"}
             else 6
             if style_recipe == "typography_editorial_light_v1"
             else _max_body_lines(layout_variant, text_density)
@@ -359,7 +497,15 @@ def _body_hard_limit(layout_variant: str, text_density: TextDensity) -> int:
 
 
 def _body_layout_variant(slide_number: int, body: str, style_recipe: str) -> str:
-    if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1", "typography_editorial_light_v1"}:
+    if style_recipe in {
+        "sadekov_black_profile_minimal_v1",
+        "sadekov_white_profile_minimal_v1",
+        "typography_editorial_light_v1",
+        "creator_mono_minimal_v1",
+        "light_grain_glow_v1",
+        "retro_swipe_creator_v1",
+        "twitter_card_soft_v1",
+    }:
         return "body_editorial_bullet"
     if style_recipe == "typography_signal_glow_v1":
         return "body_spotlight_panel" if slide_number in {3, 5} else "body_editorial_bullet"
@@ -382,6 +528,14 @@ def _body_accent_motif(slide_number: int, body: str, style_recipe: str) -> str:
         return "profile_header_footer"
     if style_recipe == "typography_editorial_light_v1":
         return "editorial_corner_cards"
+    if style_recipe == "creator_mono_minimal_v1":
+        return "creator_footer_minimal"
+    if style_recipe == "light_grain_glow_v1":
+        return "grain_glow_corner"
+    if style_recipe == "retro_swipe_creator_v1":
+        return "swipe_footer_button"
+    if style_recipe == "twitter_card_soft_v1":
+        return "tweet_card_soft"
     if style_recipe == "typography_signal_glow_v1":
         return "signal_glow_panel" if slide_number in {3, 5} else "signal_footer_lines"
     if style_recipe == "cp_split_minimal_statement_v1":
@@ -467,7 +621,18 @@ def _truncate_to_limit(text: str, hard_limit: int) -> str:
     if len(text) <= hard_limit:
         return text
     cutoff = text[:hard_limit].rsplit(" ", 1)[0].strip()
-    return cutoff or text[:hard_limit].strip()
+    cleaned = _strip_trailing_connector(cutoff)
+    if cleaned:
+        return cleaned
+    fallback = text[:hard_limit].strip()
+    return _strip_trailing_connector(fallback) or fallback
+
+
+def _strip_trailing_connector(text: str) -> str:
+    words = text.split()
+    while len(words) > 2 and words[-1].strip(" .,!?:;").lower() in TRAILING_CONNECTORS:
+        words.pop()
+    return " ".join(words).strip()
 
 
 def _extract_emphasis_words(text: str, language: str) -> list[str]:

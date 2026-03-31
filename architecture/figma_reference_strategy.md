@@ -6,6 +6,11 @@ Keep outputs visually anchored to the approved example file instead of inventing
 ## Approved source file
 - File key: `SsqVEXMsFxp9WPbPIy9Sww`
 
+## Approved local example source
+- Folder: `Examples of carousels/`
+- Local exported example assets may be used as approved references when a style family is harvested from disk instead of a live Figma node.
+- Local reference IDs must use the prefix `local:` so they remain distinguishable from real Figma node IDs.
+
 ## Approved references
 - `1:46227` `Alder_1`: bold hook-cover direction
 - `1:46232` `Alder_1`: text-first body layout
@@ -30,9 +35,20 @@ Keep outputs visually anchored to the approved example file instead of inventing
 - `1:14767` `typography slide 1`: white editorial comparison layout
 - `1:14775` `typography slide 1`: dark image-bottom cover layout
 - `1:14788` `typography slide 1`: white centered CTA with footer signals
+- `local:01-long-title` `Examples of carousels/01 – Long Title`: monochrome hook layout with creator footer
+- `local:02-title` `Examples of carousels/02 – Title`: monochrome stacked-title body layout
+- `local:03-copy` `Examples of carousels/03 – Copy`: soft rose copy layout with creator footer
+- `local:05-call-to-action` `Examples of carousels/05 – Call to Action`: monochrome CTA layout with creator footer
+- `local:light-1` `Examples of carousels/Light_1`: grainy light-glow hero layout
+- `local:light-2` `Examples of carousels/Light_2`: grainy light-glow numbered/info layout
+- `local:light-6` `Examples of carousels/Light_6`: grainy light-glow profile slide
+- `local:title-01` `Examples of carousels/Title (01)`: textured retro creator CTA layout with swipe/follow button
+- `local:twitter-post-default` `Examples of carousels/Twitter Post - Default`: flat tweet screenshot layout
+- `local:twitter-post-soft` `Examples of carousels/TwitterPost_02`: tweet card on soft gradient background
 
 ## Rules
 - Every output must log the exact reference nodes it used.
+- When a style family comes from local exports instead of Figma, `reference_node_ids` and `design_reference_log.node_id` may carry approved `local:` IDs.
 - Portrait outputs may draw from either the `1:46485` portrait layout direction or the lower black-profile portrait family (`1:9052`, `1:9076`, `1:9176`), depending on the selected recipe.
 - The style engine must choose from named recipe families grounded in approved nodes, not invent ad hoc layouts per run.
 - The current approved style families are:
@@ -46,6 +62,10 @@ Keep outputs visually anchored to the approved example file instead of inventing
   - `reference_sadekov_black_profile`
   - `reference_sadekov_white_profile`
   - `reference_typography_editorial_light`
+  - `reference_creator_mono_minimal`
+  - `reference_light_grain_glow`
+  - `reference_retro_swipe_creator`
+  - `reference_twitter_card_soft`
 - The system may vary slide layouts only within approved recipes documented in the plugin render payload.
 - If a new reference node is adopted, update `gemini.md`, `findings.md`, and this SOP first.
 

@@ -16,7 +16,7 @@ Status: `Approved and implemented`
   "output_modes": ["figma", "png"],
   "reference_style": "auto",
   "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
-  "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46248", "1:46256", "1:46264", "1:46201", "1:46288", "1:46184", "1:46190", "1:46271", "1:46277", "1:46283", "1:46485", "1:9052", "1:9064", "1:9076", "1:9086", "1:9176", "1:9187", "1:14767", "1:14775", "1:14788"],
+  "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46248", "1:46256", "1:46264", "1:46201", "1:46288", "1:46184", "1:46190", "1:46271", "1:46277", "1:46283", "1:46485", "1:9052", "1:9064", "1:9076", "1:9086", "1:9176", "1:9187", "1:14767", "1:14775", "1:14788", "local:01-long-title", "local:02-title", "local:03-copy", "local:05-call-to-action", "local:light-1", "local:light-2", "local:light-6", "local:title-01", "local:twitter-post-default", "local:twitter-post-soft"],
   "notes": "string|null"
 }
 ```
@@ -37,7 +37,7 @@ Status: `Approved and implemented`
     "output_modes": ["figma", "png"],
     "reference_style": "auto",
     "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
-    "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46248", "1:46256", "1:46264", "1:46201", "1:46288", "1:46184", "1:46190", "1:46271", "1:46277", "1:46283", "1:46485", "1:9052", "1:9064", "1:9076", "1:9086", "1:9176", "1:9187", "1:14767", "1:14775", "1:14788"],
+    "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46248", "1:46256", "1:46264", "1:46201", "1:46288", "1:46184", "1:46190", "1:46271", "1:46277", "1:46283", "1:46485", "1:9052", "1:9064", "1:9076", "1:9086", "1:9176", "1:9187", "1:14767", "1:14775", "1:14788", "local:01-long-title", "local:02-title", "local:03-copy", "local:05-call-to-action", "local:light-1", "local:light-2", "local:light-6", "local:title-01", "local:twitter-post-default", "local:twitter-post-soft"],
     "notes": "string|null"
   },
   "prompt_version": "baseline_v2",
@@ -143,8 +143,8 @@ Status: `Approved and implemented`
   "page_name": "string",
   "prompt_version": "baseline_v2",
   "language": "string",
-  "style_family": "reference_mix_alder_portrait|reference_alder_split_media|reference_alder_text_only|reference_typography_signal|reference_cp_minimal_split|reference_cp_longform_split|reference_cp_gallery_wall|reference_sadekov_black_profile|reference_sadekov_white_profile|reference_typography_editorial_light",
-  "style_recipe": "alder_portrait_editorial_mix_v1|alder_portrait_editorial_dense_v1|alder_split_media_right_v1|alder_split_media_left_v1|alder_text_only_air_v1|typography_signal_glow_v1|cp_split_minimal_statement_v1|cp_split_longform_v1|cp_gallery_wall_v1|sadekov_black_profile_minimal_v1|sadekov_white_profile_minimal_v1|typography_editorial_light_v1",
+  "style_family": "reference_mix_alder_portrait|reference_alder_split_media|reference_alder_text_only|reference_typography_signal|reference_cp_minimal_split|reference_cp_longform_split|reference_cp_gallery_wall|reference_sadekov_black_profile|reference_sadekov_white_profile|reference_typography_editorial_light|reference_creator_mono_minimal|reference_light_grain_glow|reference_retro_swipe_creator|reference_twitter_card_soft",
+  "style_recipe": "alder_portrait_editorial_mix_v1|alder_portrait_editorial_dense_v1|alder_split_media_right_v1|alder_split_media_left_v1|alder_text_only_air_v1|typography_signal_glow_v1|cp_split_minimal_statement_v1|cp_split_longform_v1|cp_gallery_wall_v1|sadekov_black_profile_minimal_v1|sadekov_white_profile_minimal_v1|typography_editorial_light_v1|creator_mono_minimal_v1|light_grain_glow_v1|retro_swipe_creator_v1|twitter_card_soft_v1",
   "source_artifact_path": "string",
   "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
   "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46288", "1:46485"],
@@ -216,7 +216,65 @@ Status: `Approved and implemented`
   "file_key": "string|null",
   "file_url": "string|null",
   "slide_node_ids": ["string"],
+  "preview_images": [
+    {
+      "slide_number": "integer",
+      "mime_type": "image/png",
+      "data_base64": "string|null",
+      "path": "string|null",
+      "url": "string|null"
+    }
+  ],
   "rendered_at": "ISO-8601 string"
+}
+```
+
+### Studio Review Round Schema
+```json
+{
+  "round_id": "string",
+  "created_at": "ISO-8601 string",
+  "round_number": "integer",
+  "based_on_round_id": "string|null",
+  "request": {
+    "topic": "string|null",
+    "script": "string|null",
+    "cta_text": "string|null",
+    "language": "string|null",
+    "notes": "string|null",
+    "batch_mode": "vary_both|vary_style|vary_copy",
+    "variant_count": "integer",
+    "preferred_style": "string",
+    "style_pool": "all|core|local",
+    "base_copy_length": "tight|balanced|expanded|punchy"
+  },
+  "variants": [
+    {
+      "variant_id": "string",
+      "ordinal": "integer",
+      "job_id": "string",
+      "rating": "unrated|love|good|bad",
+      "rating_note": "string|null",
+      "copy_length": "tight|balanced|expanded|punchy",
+      "requested_style": "string",
+      "requested_style_label": "string",
+      "planner_notes": "string",
+      "prompt_version": "baseline_v2",
+      "language": "string",
+      "style_family": "string",
+      "style_recipe": "string",
+      "job_artifact_path": "string",
+      "render_payload_path": "string",
+      "render_status": "planned|rendering|complete|error",
+      "render_result_path": "string|null",
+      "figma_url": "string|null",
+      "preview_image_paths": ["string"],
+      "preview_image_urls": ["string"],
+      "rendered_at": "ISO-8601 string|null",
+      "error": "string|null",
+      "payload": "Plugin Render Payload Schema"
+    }
+  ]
 }
 ```
 
@@ -255,13 +313,18 @@ Status: `Approved and implemented`
 - V1 default reference style is `auto`.
 - V1 default aspect ratio is `portrait_1080x1350` unless explicitly overridden.
 - The system must always record the exact Figma reference nodes it used.
+- The system may also record approved `local:` reference IDs when a style family is grounded in local exported examples instead of live Figma nodes.
 - If only `topic` is provided, the system is expected to generate a complete 7-slide content plan before layout.
 - If `script` is provided, the system restructures it into the 7-slide format instead of discarding it.
 - `planned` means the content payload and plugin render payload exist and are waiting for the Figma plugin render step.
 - The plugin render path supports both manual file handoff and a localhost bridge handoff in the current implementation.
+- The plugin render result may include thumbnail previews for each slide; the bridge is responsible for moving those thumbnails out of inline base64 and into `.tmp/studio/previews/`.
 - Input language should be preserved when possible; if no language is supplied, the system infers one for rendering metadata.
 - The plugin payload must carry render-aware display text and truncation metadata so the renderer does not infer layout-critical text decisions from raw copy alone.
-- The style engine may choose among the approved families `reference_mix_alder_portrait`, `reference_alder_split_media`, `reference_alder_text_only`, `reference_typography_signal`, `reference_cp_minimal_split`, `reference_cp_longform_split`, `reference_cp_gallery_wall`, `reference_sadekov_black_profile`, `reference_sadekov_white_profile`, and `reference_typography_editorial_light` based on content density and a deterministic content signature.
+- The style engine may choose among the approved families `reference_mix_alder_portrait`, `reference_alder_split_media`, `reference_alder_text_only`, `reference_typography_signal`, `reference_cp_minimal_split`, `reference_cp_longform_split`, `reference_cp_gallery_wall`, `reference_sadekov_black_profile`, `reference_sadekov_white_profile`, `reference_typography_editorial_light`, `reference_creator_mono_minimal`, `reference_light_grain_glow`, `reference_retro_swipe_creator`, and `reference_twitter_card_soft` based on content density and a deterministic content signature.
+- The local review studio is allowed to generate review rounds outside Google Sheets, but each variant must still emit the canonical job artifact and render payload.
+- Studio ratings may influence the next round, but they must not overwrite prior round artifacts.
+- Studio variants may also track their render lifecycle and rendered outputs independently of Google Sheets.
 
 ## Maintenance Log
 
@@ -282,3 +345,16 @@ Status: `Approved and implemented`
 - Added `reference_sadekov_black_profile / sadekov_black_profile_minimal_v1` so the selector now covers the distinct portrait family in the source file instead of only the square families plus the single portrait layout reference.
 - Expanded the approved reference pool to include the lower white-profile family (`1:9064`, `1:9086`, `1:9187`) and the alternate light typography family (`1:14767`, `1:14775`, `1:14788`).
 - Added `reference_sadekov_white_profile / sadekov_white_profile_minimal_v1` and `reference_typography_editorial_light / typography_editorial_light_v1` so the selector now covers the remaining distinct archetypes in the provided file.
+- Approved local exported example assets as a second reference source using `local:` IDs so new families can be harvested from `Examples of carousels/` without pretending they are Figma nodes.
+
+### 2026-03-30
+- Added the local review studio schema for multi-variant rounds, per-variant ratings, and rating-driven next-round generation.
+- Approved review-specific fields:
+  - `batch_mode`
+  - `variant_count`
+  - `preferred_style`
+  - `style_pool`
+  - `base_copy_length`
+  - per-variant `rating`
+  - per-variant `rating_note`
+- Approved the local ideation path where the studio sits above the canonical job/payload artifacts rather than replacing them.

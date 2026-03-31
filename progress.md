@@ -67,6 +67,19 @@
 - Added two more missing reference-backed families:
   - `reference_sadekov_white_profile / sadekov_white_profile_minimal_v1`
   - `reference_typography_editorial_light / typography_editorial_light_v1`
+- Approved local exported references as a second source type using `local:` IDs.
+- Added four new locally harvested style families:
+  - `reference_creator_mono_minimal / creator_mono_minimal_v1`
+  - `reference_light_grain_glow / light_grain_glow_v1`
+  - `reference_retro_swipe_creator / retro_swipe_creator_v1`
+  - `reference_twitter_card_soft / twitter_card_soft_v1`
+- Added a deterministic local coverage-audit tool:
+  - `tools/audit_style_coverage.py`
+  - `tools/carousel_system/example_style_audit.py`
+- Generated persistent coverage artifacts from the local `Examples of carousels/` folder:
+  - `style_coverage.md`
+  - `.tmp/style_coverage_manifest.json`
+- Extended the local audit mappings so the first harvested local batches now move from `missing` into `covered` or `duplicate`.
 - Expanded the default reference pool and design-reference log mappings so the new portrait family can be selected and traced without manual node overrides.
 - Extended the plugin UI with:
   - `Poll Next Job`
@@ -127,7 +140,60 @@
 - `.venv\Scripts\python tools\plan_carousel.py --job-id style-smoke-cp ... --reference-style cp_3` generated `reference_cp_minimal_split / cp_split_minimal_statement_v1`.
 - `.venv\Scripts\python tools\build_render_payload.py --job-id sheet-row-2` still passed after the selector changes.
 - A direct selector check against `.tmp\\jobs\\sheet-row-2.json` now resolves to `reference_typography_signal / typography_signal_glow_v1`.
+- `.venv\Scripts\python.exe tools\audit_style_coverage.py` passed and generated `style_coverage.md` plus `.tmp\style_coverage_manifest.json`.
+- `node --check .\figma_plugin\code.js` passed after adding the local-example render families.
+- `.venv\Scripts\python.exe tools\plan_carousel.py --job-id style-force-creator-mono --topic "Why clear hooks beat clever hooks" --reference-style creator_mono` generated `reference_creator_mono_minimal / creator_mono_minimal_v1`.
+- `.venv\Scripts\python.exe tools\plan_carousel.py --job-id style-force-light-glow --topic "4 ways to make educational content feel lighter" --reference-style light_glow` generated `reference_light_grain_glow / light_grain_glow_v1`.
+- `.venv\Scripts\python.exe tools\plan_carousel.py --job-id style-force-retro-swipe --topic "Why consistency compounds on social media" --reference-style retro_swipe` generated `reference_retro_swipe_creator / retro_swipe_creator_v1`.
+- `.venv\Scripts\python.exe tools\plan_carousel.py --job-id style-force-twitter-card --topic "3 reasons tweet-sized ideas spread faster" --reference-style twitter_card` generated `reference_twitter_card_soft / twitter_card_soft_v1`.
+- Applied a readability pass to the four newly harvested local families:
+  - increased hook, title, and body scales
+  - widened text columns and raised the text blocks higher in the frame
+  - reworked `reference_light_grain_glow` info slides to use a real headline-plus-body composition
+  - enlarged the `reference_twitter_card_soft` card so it reads as the primary composition, not a floating thumbnail
+- Relaxed render-payload shortening for the new local families so full display text is preferred before truncation.
+- Added truncation cleanup so shortened copy no longer ends on dangling connectors such as `and` or `и`.
+- Regenerated the forced sample payloads after the readability pass:
+  - `.tmp\render-jobs\style-force-creator-mono.render.json`
+  - `.tmp\render-jobs\style-force-light-glow.render.json`
+  - `.tmp\render-jobs\style-force-retro-swipe.render.json`
+  - `.tmp\render-jobs\style-force-twitter-card.render.json`
+- Added a local review studio on top of the planner/style engine:
+  - `tools/carousel_system/studio.py`
+  - `tools/carousel_system/studio_web.py`
+  - `tools/studio_server.py`
+  - `tools/start_studio.py`
+  - `studio_assets/index.html`
+  - `studio_assets/app.js`
+  - `studio_assets/styles.css`
+- The studio now supports:
+  - multi-variant review rounds
+  - style variation
+  - copy-length variation
+  - per-variant ratings (`love`, `good`, `bad`)
+  - next-round generation biased by the best-rated variant
+- Fixed editable install packaging by constraining setuptools discovery to `tools/carousel_system`.
+- Verified the review studio stack with:
+  - `python -m compileall tools`
+  - `python -c "from carousel_system.studio_web import create_app; ..."`
+  - `python tools/studio_server.py --help`
+  - `python tools/start_studio.py --help`
+  - `fastapi.testclient` requests to `/api/bootstrap` and `/api/rounds/latest`
+  - a real review-round generation plus one rating-driven next round
+- The refreshed audit now reports `covered=11`, `duplicate=16`, `missing=86`.
 - Live end-to-end plugin rendering inside Figma is not yet verified in this turn.
+- Wired the review studio into the live render bridge:
+  - studio variants can now be acquired by `render_bridge.py` before Google Sheets jobs
+  - plugin render results can now carry `preview_images`
+  - preview PNGs are persisted into `.tmp/studio/previews/`
+  - studio round files now track `render_status`, `render_result_path`, `figma_url`, preview paths/URLs, and `rendered_at`
+- Updated the studio web app so it can show actual rendered thumbnails for completed variants instead of only payload-level previews.
+- Verified the new sync path with a local smoke test that:
+  - created a studio round
+  - acquired a pending studio variant
+  - marked it rendering
+  - applied a synthetic plugin render result with one PNG preview
+  - confirmed the round updated to `render_status=complete` with a persisted preview URL and Figma URL
 
 ### Current Status
 - Google Sheets, OpenAI planning, and plugin render-payload generation are working.
@@ -137,4 +203,5 @@
 - The style engine now supports multiple recipe families and exact per-recipe reference logging.
 - The style engine now covers the distinct slide archetypes from the approved Figma file, including the lower portrait black-profile family.
 - The style engine now covers the distinct slide archetypes from the approved Figma file, including the lower black-profile portrait family, the lower white-profile portrait family, and the alternate light typography set.
+- The repo now has an explicit local-example coverage audit, and the first local harvest batch has reduced unmapped groups from 102 to 86.
 - PNG export automation is still not implemented in the local toolchain.

@@ -194,6 +194,14 @@
   - marked it rendering
   - applied a synthetic plugin render result with one PNG preview
   - confirmed the round updated to `render_status=complete` with a persisted preview URL and Figma URL
+- Added a formal image-pipeline design SOP:
+  - `architecture/image_pipeline.md`
+  - `architecture/image_pipeline_sources.md`
+- Added a proposed vNext image schema extension in `gemini.md` without changing the currently implemented payload contract.
+- Locked the image recommendation for this repo to:
+  - stock-first
+  - `pexels` as default stock provider
+  - OpenAI image generation as fallback for abstract or stock-poor concepts
 
 ### Current Status
 - Google Sheets, OpenAI planning, and plugin render-payload generation are working.

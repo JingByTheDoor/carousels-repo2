@@ -169,3 +169,9 @@
 - Google Sheets remains useful as backend queue/storage, but it is a poor primary interface for "show me one, I rate it, then show me another."
 - The bridge can now acquire studio variants before Google Sheets rows, which lets the studio behave like the primary UX without breaking the canonical job/render artifact flow.
 - Returning preview PNGs from the Figma plugin result is a cleaner fit than trying to fake browser previews forever; the studio can now present actual rendered slide thumbnails while still using the same canonical render-result contract.
+- For this repo, stock-first is a better default than AI-first:
+  - educational/business carousels need trust more than novelty
+  - many style families only need one image slot
+  - AI imagery is better as fallback for abstract concepts, not the universal first choice
+- `pexels` is the strongest default stock provider for the planned image layer because Unsplash’s API rules require hotlinking and attribution handling that fit imported Figma assets poorly.
+- The planned AI-image fallback should target OpenAI’s current image API rather than a separate provider, because the repo already depends on OpenAI and the official API supports portrait-friendly generation and base64 output.

@@ -306,6 +306,65 @@ Status: `Approved and implemented`
 }
 ```
 
+## Planned Image Extension Schema
+Status: `Proposed, not implemented`
+
+### Planned Input Extension
+```json
+{
+  "image_mode": "auto|none|stock|ai|hybrid",
+  "image_source_preference": "pexels|unsplash|openai_gpt_image",
+  "allow_ai_fallback": "boolean",
+  "image_focus": "literal|abstract|brand_safe|mixed"
+}
+```
+
+### Planned Job Artifact Extension
+```json
+{
+  "image_strategy": {
+    "mode": "none|stock|ai|hybrid",
+    "provider": "pexels|unsplash|openai_gpt_image|null",
+    "reason": "string|null"
+  },
+  "image_assets": [
+    {
+      "slide_number": "integer",
+      "role": "hook|info|cta",
+      "source_mode": "stock|ai",
+      "provider": "pexels|unsplash|openai_gpt_image",
+      "query_or_prompt": "string",
+      "original_url": "string|null",
+      "local_path": "string|null",
+      "credit": "string|null"
+    }
+  ]
+}
+```
+
+### Planned Render Payload Extension
+```json
+{
+  "image_strategy": {
+    "mode": "none|stock|ai|hybrid",
+    "provider": "string|null"
+  },
+  "slides": [
+    {
+      "image_slot": "none|cover_media|body_media|cta_media",
+      "image_required": "boolean",
+      "image_treatment": "crop|mask|duotone|blur_glow|card_embed",
+      "image_asset": {
+        "provider": "string|null",
+        "local_path": "string|null",
+        "url": "string|null",
+        "credit": "string|null"
+      }
+    }
+  ]
+}
+```
+
 ## Rules
 - Schema definitions here are canonical.
 - Any schema change requires updating this file before implementation changes proceed.
@@ -325,6 +384,8 @@ Status: `Approved and implemented`
 - The local review studio is allowed to generate review rounds outside Google Sheets, but each variant must still emit the canonical job artifact and render payload.
 - Studio ratings may influence the next round, but they must not overwrite prior round artifacts.
 - Studio variants may also track their render lifecycle and rendered outputs independently of Google Sheets.
+- The planned image layer should default to stock-first with AI fallback, not AI-first.
+- `pexels` is the preferred first stock provider for the local renderer workflow; `unsplash` is a weaker default because its API guidelines require hotlinking returned URLs and attribution handling that does not fit Figma import as cleanly.
 
 ## Maintenance Log
 

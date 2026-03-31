@@ -190,3 +190,18 @@ The audit is intentionally conservative:
 - The plugin bridge still depends on a live Figma desktop session with the development plugin running.
 - The studio can now show real rendered thumbnails after the plugin finishes a variant, but it still falls back to payload-driven preview state before a render exists.
 - The style engine now covers the harvested Figma families plus the first local-example batch: mono minimal creator slides, light grain/glow slides, retro swipe creator slides, and soft tweet-card slides. It still does not cover every local example family in `Examples of carousels/`.
+
+## Planned image layer
+The next media recommendation for this repo is:
+- default strategy: `stock_first`
+- fallback: `ai_fallback`
+- stock provider: `pexels`
+- AI provider: OpenAI image generation
+
+Reason:
+- the current system is mainly text-led
+- most families only benefit from one strong image slot, usually the hook
+- stock is more trustworthy for business/education topics
+- AI should be used when stock search fails or the concept is abstract
+
+See [image_pipeline.md](/C:/Users/User/OneDrive%20-%20Board%20of%20Education%20of%20SD%2039%20(Vancouver)/Documents/Carousels/carousels-repo2/architecture/image_pipeline.md) for the full decision rules.

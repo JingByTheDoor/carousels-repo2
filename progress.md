@@ -239,6 +239,11 @@
   - default behavior is now `sheets_first`
   - studio variants are only consumed after the sheet queue is empty unless `RENDER_QUEUE_PRIORITY=studio_first`
   - this prevents old pending studio rounds from silently overriding Google Sheets rows during auto-rendering
+- Tuned cover-image readability in `figma_plugin/code.js`:
+  - reduced blur on `reference_twitter_card_soft`
+  - reduced blur on `reference_light_grain_glow`
+  - reduced blur and dark overlay intensity on `reference_typography_signal`
+  - slightly raised image opacity so the stock photo reads more clearly behind the cover composition
 
 ### Current Status
 - Google Sheets, OpenAI planning, and plugin render-payload generation are working.

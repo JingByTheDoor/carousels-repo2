@@ -183,3 +183,4 @@
   - record image strategy and chosen assets inside the canonical job artifact
 - The first renderer-side image pass should stay on cover slides only. That gives immediate value for the media-friendly families without destabilizing the body layouts that were already tuned for readability.
 - Studio-first bridge priority is confusing when the user is working from Google Sheets, because old pending studio variants can render before the visible sheet row and make it look like the sheet input was ignored.
+- The first cover-image treatment was too soft on image-enabled styles, especially `reference_twitter_card_soft`. The problem was not image selection but renderer treatment values: blur radius and overlay opacity were washing out the stock photo too aggressively.

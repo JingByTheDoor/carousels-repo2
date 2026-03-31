@@ -1078,10 +1078,10 @@ async function renderTypographySignalCoverSlide(frame, slide, payload) {
     y: 0,
     width: 1080,
     height: 1350,
-    opacity: 0.34,
+    opacity: 0.4,
     overlayHex: tokens.dark_background,
-    overlayOpacity: 0.44,
-    effects: [{ type: "LAYER_BLUR", radius: 18, visible: true }]
+    overlayOpacity: 0.38,
+    effects: [{ type: "LAYER_BLUR", radius: 10, visible: true }]
   });
   appendTypographyGlowBackdrop(frame, tokens);
   await createTextBlock(frame, {
@@ -1992,10 +1992,10 @@ async function renderLightGrainCoverSlide(frame, slide, payload) {
     y: 0,
     width: 1080,
     height: 1350,
-    opacity: 0.24,
+    opacity: 0.3,
     overlayHex: "#FFFFFF",
-    overlayOpacity: 0.08,
-    effects: [{ type: "LAYER_BLUR", radius: 14, visible: true }]
+    overlayOpacity: 0.05,
+    effects: [{ type: "LAYER_BLUR", radius: 8, visible: true }]
   });
 
   await createTextBlock(frame, {
@@ -2269,10 +2269,10 @@ async function renderTwitterCardCoverSlide(frame, slide, payload) {
     y: 0,
     width: 1080,
     height: 1350,
-    opacity: 0.2,
+    opacity: 0.28,
     overlayHex: "#FFFFFF",
-    overlayOpacity: 0.12,
-    effects: [{ type: "LAYER_BLUR", radius: 16, visible: true }]
+    overlayOpacity: 0.08,
+    effects: [{ type: "LAYER_BLUR", radius: 6, visible: true }]
   });
   await appendTweetCard(frame, 36, 154, 1008, 820, slide, tokens, payload, true);
 }

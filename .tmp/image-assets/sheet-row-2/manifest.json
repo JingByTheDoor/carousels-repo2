@@ -1,9 +1,23 @@
 {
   "job_id": "sheet-row-2",
   "image_strategy": {
-    "mode": "none",
-    "provider": null,
-    "reason": "reference_cp_longform_split is currently treated as a text-led family."
+    "mode": "stock",
+    "provider": "pexels",
+    "reason": "Attached 1 stock image asset via Pexels for reference_typography_signal."
   },
-  "image_assets": []
+  "image_assets": [
+    {
+      "slide_number": 1,
+      "role": "hook",
+      "source_mode": "stock",
+      "provider": "pexels",
+      "query_or_prompt": "why eating vegetables every day improves professional clean",
+      "original_url": "https://images.pexels.com/photos/9016633/pexels-photo-9016633.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+      "local_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\image-assets\\sheet-row-2\\slide-01-pexels-9016633.jpeg",
+      "credit": "Photo by Kevin Malik on Pexels",
+      "width": 4000,
+      "height": 6000,
+      "alt_text": "Hands washing fresh vegetables at a kitchen sink with carrots and bell pepper."
+    }
+  ]
 }

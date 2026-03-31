@@ -13,7 +13,8 @@
     "variant_count": 3,
     "preferred_style": "auto",
     "style_pool": "all",
-    "base_copy_length": "balanced"
+    "base_copy_length": "balanced",
+    "image_mode": "auto"
   },
   "variants": [
     {
@@ -32,6 +33,29 @@
       "style_recipe": "alder_split_media_left_v1",
       "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\studio-20260331-033924-bce89c-v1.json",
       "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\studio-20260331-033924-bce89c-v1.render.json",
+      "render_status": "complete",
+      "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\studio-20260331-033924-bce89c-v1.render-result.json",
+      "figma_url": null,
+      "preview_image_paths": [
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v1\\slide-01.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v1\\slide-02.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v1\\slide-03.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v1\\slide-04.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v1\\slide-05.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v1\\slide-06.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v1\\slide-07.png"
+      ],
+      "preview_image_urls": [
+        "/studio-output/previews/studio-20260331-033924-bce89c-v1/slide-01.png",
+        "/studio-output/previews/studio-20260331-033924-bce89c-v1/slide-02.png",
+        "/studio-output/previews/studio-20260331-033924-bce89c-v1/slide-03.png",
+        "/studio-output/previews/studio-20260331-033924-bce89c-v1/slide-04.png",
+        "/studio-output/previews/studio-20260331-033924-bce89c-v1/slide-05.png",
+        "/studio-output/previews/studio-20260331-033924-bce89c-v1/slide-06.png",
+        "/studio-output/previews/studio-20260331-033924-bce89c-v1/slide-07.png"
+      ],
+      "rendered_at": "2026-03-31T15:21:07.855Z",
+      "error": null,
       "payload": {
         "schema_version": "figma_plugin_payload_v2",
         "backend": "figma_plugin_file_import",
@@ -52,6 +76,10 @@
           "width": 1080,
           "height": 1350,
           "slide_gap": 120
+        },
+        "image_strategy": {
+          "mode": "none",
+          "provider": null
         },
         "style_tokens": {
           "light_background": "#F4F6F7",
@@ -104,7 +132,11 @@
               "Clear",
               "Hooks"
             ],
-            "accent_motif": "geometric_cluster"
+            "accent_motif": "geometric_cluster",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 2,
@@ -132,7 +164,11 @@
               "Attention",
               "instantly"
             ],
-            "accent_motif": "mask_reference_band"
+            "accent_motif": "mask_reference_band",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 3,
@@ -160,7 +196,11 @@
               "Confuse",
               "Readers"
             ],
-            "accent_motif": "spotlight_band"
+            "accent_motif": "spotlight_band",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 4,
@@ -188,7 +228,11 @@
               "Audiences",
               "boosting"
             ],
-            "accent_motif": "mask_reference_band"
+            "accent_motif": "mask_reference_band",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 5,
@@ -216,7 +260,11 @@
               "unfamiliar",
               "Audiences"
             ],
-            "accent_motif": "editorial_count_markers"
+            "accent_motif": "editorial_count_markers",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 6,
@@ -244,7 +292,11 @@
               "encouraging",
               "Simplicity"
             ],
-            "accent_motif": "spotlight_band"
+            "accent_motif": "spotlight_band",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 7,
@@ -272,7 +324,11 @@
               "carousel",
               "Follow"
             ],
-            "accent_motif": "cta_signal_lines"
+            "accent_motif": "cta_signal_lines",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           }
         ]
       }
@@ -293,6 +349,29 @@
       "style_recipe": "alder_text_only_air_v1",
       "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\studio-20260331-033924-bce89c-v2.json",
       "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\studio-20260331-033924-bce89c-v2.render.json",
+      "render_status": "complete",
+      "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\studio-20260331-033924-bce89c-v2.render-result.json",
+      "figma_url": null,
+      "preview_image_paths": [
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v2\\slide-01.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v2\\slide-02.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v2\\slide-03.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v2\\slide-04.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v2\\slide-05.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v2\\slide-06.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-033924-bce89c-v2\\slide-07.png"
+      ],
+      "preview_image_urls": [
+        "/studio-output/previews/studio-20260331-033924-bce89c-v2/slide-01.png",
+        "/studio-output/previews/studio-20260331-033924-bce89c-v2/slide-02.png",
+        "/studio-output/previews/studio-20260331-033924-bce89c-v2/slide-03.png",
+        "/studio-output/previews/studio-20260331-033924-bce89c-v2/slide-04.png",
+        "/studio-output/previews/studio-20260331-033924-bce89c-v2/slide-05.png",
+        "/studio-output/previews/studio-20260331-033924-bce89c-v2/slide-06.png",
+        "/studio-output/previews/studio-20260331-033924-bce89c-v2/slide-07.png"
+      ],
+      "rendered_at": "2026-03-31T15:21:41.327Z",
+      "error": null,
       "payload": {
         "schema_version": "figma_plugin_payload_v2",
         "backend": "figma_plugin_file_import",
@@ -313,6 +392,10 @@
           "width": 1080,
           "height": 1350,
           "slide_gap": 120
+        },
+        "image_strategy": {
+          "mode": "none",
+          "provider": null
         },
         "style_tokens": {
           "light_background": "#F4F6F7",
@@ -365,7 +448,11 @@
               "Clear",
               "Hooks"
             ],
-            "accent_motif": "geometric_cluster"
+            "accent_motif": "geometric_cluster",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 2,
@@ -393,7 +480,11 @@
               "Attention",
               "Capture"
             ],
-            "accent_motif": "mask_reference_band"
+            "accent_motif": "mask_reference_band",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 3,
@@ -421,7 +512,11 @@
               "audience",
               "Confuse"
             ],
-            "accent_motif": "spotlight_band"
+            "accent_motif": "spotlight_band",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 4,
@@ -449,7 +544,11 @@
               "transparency",
               "encouraging"
             ],
-            "accent_motif": "mask_reference_band"
+            "accent_motif": "mask_reference_band",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 5,
@@ -477,7 +576,11 @@
               "instantly",
               "Clarity"
             ],
-            "accent_motif": "editorial_count_markers"
+            "accent_motif": "editorial_count_markers",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 6,
@@ -505,7 +608,11 @@
               "language",
               "benefit"
             ],
-            "accent_motif": "spotlight_band"
+            "accent_motif": "spotlight_band",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 7,
@@ -533,7 +640,11 @@
               "carousel",
               "Follow"
             ],
-            "accent_motif": "cta_signal_lines"
+            "accent_motif": "cta_signal_lines",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           }
         ]
       }
@@ -554,6 +665,13 @@
       "style_recipe": "typography_signal_glow_v1",
       "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\studio-20260331-033924-bce89c-v3.json",
       "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\studio-20260331-033924-bce89c-v3.render.json",
+      "render_status": "planned",
+      "render_result_path": null,
+      "figma_url": null,
+      "preview_image_paths": [],
+      "preview_image_urls": [],
+      "rendered_at": null,
+      "error": null,
       "payload": {
         "schema_version": "figma_plugin_payload_v2",
         "backend": "figma_plugin_file_import",
@@ -574,6 +692,10 @@
           "width": 1080,
           "height": 1350,
           "slide_gap": 120
+        },
+        "image_strategy": {
+          "mode": "none",
+          "provider": null
         },
         "style_tokens": {
           "light_background": "#F4F6F7",
@@ -626,7 +748,11 @@
               "Clear",
               "Hooks"
             ],
-            "accent_motif": "signal_footer_lines"
+            "accent_motif": "signal_footer_lines",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 2,
@@ -654,7 +780,11 @@
               "communicates",
               "cleverness"
             ],
-            "accent_motif": "signal_footer_lines"
+            "accent_motif": "signal_footer_lines",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 3,
@@ -682,7 +812,11 @@
               "abstract",
               "interest"
             ],
-            "accent_motif": "signal_glow_panel"
+            "accent_motif": "signal_glow_panel",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 4,
@@ -710,7 +844,11 @@
               "remember",
               "Clarity"
             ],
-            "accent_motif": "signal_footer_lines"
+            "accent_motif": "signal_footer_lines",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 5,
@@ -738,7 +876,11 @@
               "Audiences",
               "Increase"
             ],
-            "accent_motif": "signal_glow_panel"
+            "accent_motif": "signal_glow_panel",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 6,
@@ -766,7 +908,11 @@
               "Simplicity",
               "cleverness"
             ],
-            "accent_motif": "signal_footer_lines"
+            "accent_motif": "signal_footer_lines",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 7,
@@ -794,7 +940,11 @@
               "Carousel",
               "Follow"
             ],
-            "accent_motif": "cta_signal_lines"
+            "accent_motif": "cta_signal_lines",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           }
         ]
       }

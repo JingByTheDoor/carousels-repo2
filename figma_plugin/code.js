@@ -217,6 +217,7 @@ function normalizePayload(payload) {
 
   return Object.assign({}, payload, {
     canvas: Object.assign({}, DEFAULT_CANVAS, payload.canvas || {}),
+    image_strategy: Object.assign({ mode: "none", provider: null }, payload.image_strategy || {}),
     style_tokens: Object.assign({}, DEFAULT_TOKENS, payload.style_tokens || {}),
     typography: Object.assign({}, DEFAULT_TYPOGRAPHY, payload.typography || {}),
     slides: payload.slides.map(normalizeSlide)
@@ -233,9 +234,32 @@ function normalizeSlide(slide) {
     body_display: cleanText(slide.body_display) || bodyText,
     supporting_text: cleanText(slide.supporting_text),
     button_label: cleanText(slide.button_label),
+    image_slot: cleanText(slide.image_slot) || "none",
+    image_required: Boolean(slide.image_required),
+    image_treatment: cleanText(slide.image_treatment) || "none",
+    image_asset: normalizeImageAsset(slide.image_asset),
     max_headline_lines: typeof slide.max_headline_lines === "number" ? slide.max_headline_lines : 4,
     max_body_lines: typeof slide.max_body_lines === "number" ? slide.max_body_lines : 6
   });
+}
+
+function normalizeImageAsset(asset) {
+  if (!asset || typeof asset !== "object") {
+    return null;
+  }
+  const url = cleanText(asset.url);
+  const localPath = cleanText(asset.local_path);
+  const credit = cleanText(asset.credit);
+  const provider = cleanText(asset.provider);
+  if (!url && !localPath) {
+    return null;
+  }
+  return {
+    provider,
+    url,
+    local_path: localPath,
+    credit
+  };
 }
 
 async function renderCarousel(payload) {
@@ -321,6 +345,11 @@ async function renderSlide(frame, slide, payload) {
 }
 
 async function renderCoverSlide(frame, slide, payload) {
+  if (isAlderSplitRight(payload) || isAlderSplitLeft(payload)) {
+    await renderAlderMediaCoverSlide(frame, slide, payload);
+    return;
+  }
+
   if (isCreatorMonoMinimal(payload)) {
     await renderCreatorMonoCoverSlide(frame, slide, payload);
     return;
@@ -1004,6 +1033,16 @@ async function renderCpGalleryCoverSlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   setSolidFill(frame, tokens.light_background);
   appendCpGalleryWall(frame, tokens);
+  await appendRemoteImageRect(frame, slide, {
+    x: 356,
+    y: 94,
+    width: 640,
+    height: 594,
+    cornerRadius: 30,
+    overlayHex: tokens.dark_background,
+    overlayOpacity: 0.1,
+    effects: [dropShadow("#111111", 0.12, 0, 20, 42)]
+  });
 
   const panel = figma.createRectangle();
   panel.resize(630, 470);
@@ -1034,6 +1073,16 @@ async function renderCpGalleryCoverSlide(frame, slide, payload) {
 async function renderTypographySignalCoverSlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   setSolidFill(frame, tokens.dark_background);
+  await appendRemoteImageRect(frame, slide, {
+    x: 0,
+    y: 0,
+    width: 1080,
+    height: 1350,
+    opacity: 0.34,
+    overlayHex: tokens.dark_background,
+    overlayOpacity: 0.44,
+    effects: [{ type: "LAYER_BLUR", radius: 18, visible: true }]
+  });
   appendTypographyGlowBackdrop(frame, tokens);
   await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
@@ -1069,6 +1118,51 @@ async function renderTypographySignalCoverSlide(frame, slide, payload) {
 
   await appendFooterSignal(frame, "Save", 820, 1120, "right");
   await appendFooterSignal(frame, "Read", 120, 1120, "left");
+}
+
+async function renderAlderMediaCoverSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  const mediaOnLeft = isAlderSplitLeft(payload);
+  setSolidFill(frame, tokens.dark_background);
+
+  const mediaRect = await appendRemoteImageRect(frame, slide, {
+    x: mediaOnLeft ? 54 : 580,
+    y: 64,
+    width: 446,
+    height: 1222,
+    cornerRadius: 36,
+    overlayHex: tokens.dark_background,
+    overlayOpacity: 0.18,
+    effects: [dropShadow("#000000", 0.18, 0, 20, 44)]
+  });
+
+  if (!mediaRect) {
+    appendAlderMediaStack(frame, mediaOnLeft ? 54 : 580, 92, 446, 1094, tokens);
+  }
+
+  const accent = figma.createRectangle();
+  accent.resize(14, 276);
+  accent.x = mediaOnLeft ? 540 : 76;
+  accent.y = 126;
+  accent.cornerRadius = 999;
+  accent.fills = [solidPaint(tokens.accent_orange)];
+  frame.appendChild(accent);
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.cover_family,
+    fontStyle: payload.typography.cover_style,
+    fallbackStyle: "Bold",
+    x: mediaOnLeft ? 578 : 108,
+    y: 122,
+    width: 398,
+    maxHeight: 760,
+    maxSize: 96,
+    minSize: 34,
+    lineHeight: 0.98,
+    color: tokens.text_light,
+    alignHorizontal: "LEFT"
+  });
 }
 
 async function renderTypographyEditorialBodySlide(frame, slide, payload) {
@@ -1893,6 +1987,16 @@ async function renderCreatorMonoCtaSlide(frame, slide, payload) {
 async function renderLightGrainCoverSlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   appendSoftGradientBackdrop(frame, tokens, "violet");
+  await appendRemoteImageRect(frame, slide, {
+    x: 0,
+    y: 0,
+    width: 1080,
+    height: 1350,
+    opacity: 0.24,
+    overlayHex: "#FFFFFF",
+    overlayOpacity: 0.08,
+    effects: [{ type: "LAYER_BLUR", radius: 14, visible: true }]
+  });
 
   await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
@@ -2160,6 +2264,16 @@ async function renderRetroSwipeCtaSlide(frame, slide, payload) {
 async function renderTwitterCardCoverSlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   appendSoftGradientBackdrop(frame, tokens, "peach");
+  await appendRemoteImageRect(frame, slide, {
+    x: 0,
+    y: 0,
+    width: 1080,
+    height: 1350,
+    opacity: 0.2,
+    overlayHex: "#FFFFFF",
+    overlayOpacity: 0.12,
+    effects: [{ type: "LAYER_BLUR", radius: 16, visible: true }]
+  });
   await appendTweetCard(frame, 36, 154, 1008, 820, slide, tokens, payload, true);
 }
 
@@ -2749,6 +2863,51 @@ function appendGlow(frame, x, y, size, hex, opacity) {
   glow.fills = [solidPaint(hex, opacity)];
   glow.effects = [{ type: "LAYER_BLUR", radius: 110, visible: true }];
   frame.appendChild(glow);
+}
+
+async function appendRemoteImageRect(frame, slide, options) {
+  if (!slide || !slide.image_asset || !slide.image_asset.url) {
+    return null;
+  }
+
+  try {
+    const image = await figma.createImageAsync(slide.image_asset.url);
+    const rect = figma.createRectangle();
+    rect.name = "Slide Image";
+    rect.resize(options.width, options.height);
+    rect.x = options.x;
+    rect.y = options.y;
+    rect.cornerRadius = options.cornerRadius || 0;
+    rect.fills = [
+      {
+        type: "IMAGE",
+        scaleMode: "FILL",
+        imageHash: image.hash
+      }
+    ];
+    if (typeof options.opacity === "number") {
+      rect.opacity = options.opacity;
+    }
+    if (Array.isArray(options.effects)) {
+      rect.effects = options.effects;
+    }
+    frame.appendChild(rect);
+
+    if (options.overlayHex) {
+      const overlay = figma.createRectangle();
+      overlay.name = "Slide Image Overlay";
+      overlay.resize(options.width, options.height);
+      overlay.x = options.x;
+      overlay.y = options.y;
+      overlay.cornerRadius = options.cornerRadius || 0;
+      overlay.fills = [solidPaint(options.overlayHex, options.overlayOpacity || 0.12)];
+      frame.appendChild(overlay);
+    }
+
+    return rect;
+  } catch (error) {
+    return null;
+  }
 }
 
 function appendSoftGradientBackdrop(frame, tokens, mode) {

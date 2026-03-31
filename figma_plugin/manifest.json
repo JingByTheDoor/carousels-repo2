@@ -6,8 +6,8 @@
   "editorType": ["figma"],
   "documentAccess": "dynamic-page",
   "networkAccess": {
-    "allowedDomains": ["http://localhost:8765"],
-    "reasoning": "Access the local carousel render bridge during development and local automation runs.",
-    "devAllowedDomains": ["http://localhost:8765"]
+    "allowedDomains": ["http://localhost:8765", "https://images.pexels.com"],
+    "reasoning": "Access the local carousel render bridge during development and load direct stock-image URLs from Pexels.",
+    "devAllowedDomains": ["http://localhost:8765", "https://images.pexels.com"]
   }
 }

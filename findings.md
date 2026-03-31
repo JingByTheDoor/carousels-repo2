@@ -181,3 +181,4 @@
   - apply image-slot rules only to image-friendly families
   - cache selected Pexels images locally under `.tmp/image-assets/`
   - record image strategy and chosen assets inside the canonical job artifact
+- The first renderer-side image pass should stay on cover slides only. That gives immediate value for the media-friendly families without destabilizing the body layouts that were already tuned for readability.

@@ -189,6 +189,11 @@ That command:
 - searches Pexels when `PEXELS_API_KEY` is configured
 - caches selected images in `.tmp/image-assets/<job_id>/`
 
+Current image render support:
+- image-friendly families can now render a hook-slide image when the payload includes a resolved stock asset
+- the plugin currently places images on cover slides only
+- body-slide image placement is still not implemented
+
 ## Style coverage audit
 Use this when new local examples are added and you want to verify whether the style engine actually covers them:
 
@@ -211,6 +216,7 @@ The audit is intentionally conservative:
 - The studio can now show real rendered thumbnails after the plugin finishes a variant, but it still falls back to payload-driven preview state before a render exists.
 - The style engine now covers the harvested Figma families plus the first local-example batch: mono minimal creator slides, light grain/glow slides, retro swipe creator slides, and soft tweet-card slides. It still does not cover every local example family in `Examples of carousels/`.
 - Only stock acquisition through `Pexels` is implemented right now. AI image generation and hybrid fallback are defined in the schema but not wired yet.
+- Image placement is currently limited to cover slides in image-friendly families.
 
 ## Planned image layer
 The next media recommendation for this repo is:

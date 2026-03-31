@@ -178,6 +178,7 @@ Add images to the carousel system without making the planner, style engine, or r
 6. Add image candidate previews in the studio.
 
 ## Current Limitations
-- Not implemented yet.
-- No provider credentials are configured yet for stock search.
-- No image slot definitions exist yet in the current plugin renderer.
+- Stock acquisition is implemented for `Pexels` only.
+- AI image generation is not implemented yet.
+- The plugin renderer currently places images on cover slides only.
+- Body-slide image placement and candidate review UI are still future work.

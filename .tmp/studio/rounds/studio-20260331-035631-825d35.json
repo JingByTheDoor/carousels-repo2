@@ -13,7 +13,8 @@
     "variant_count": 3,
     "preferred_style": "creator_mono",
     "style_pool": "local",
-    "base_copy_length": "tight"
+    "base_copy_length": "tight",
+    "image_mode": "auto"
   },
   "variants": [
     {
@@ -64,6 +65,10 @@
           "width": 1080,
           "height": 1350,
           "slide_gap": 120
+        },
+        "image_strategy": {
+          "mode": "none",
+          "provider": null
         },
         "style_tokens": {
           "light_background": "#FFFFFF",
@@ -116,7 +121,11 @@
               "Speed",
               "loops"
             ],
-            "accent_motif": "creator_footer_minimal"
+            "accent_motif": "creator_footer_minimal",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 2,
@@ -144,7 +153,11 @@
               "Immediate",
               "instantly"
             ],
-            "accent_motif": "creator_footer_minimal"
+            "accent_motif": "creator_footer_minimal",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 3,
@@ -172,7 +185,11 @@
               "visually",
               "changes"
             ],
-            "accent_motif": "creator_footer_minimal"
+            "accent_motif": "creator_footer_minimal",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 4,
@@ -200,7 +217,11 @@
               "back-and-forth",
               "revisions"
             ],
-            "accent_motif": "creator_footer_minimal"
+            "accent_motif": "creator_footer_minimal",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 5,
@@ -228,7 +249,11 @@
               "adjustments",
               "Improves"
             ],
-            "accent_motif": "creator_footer_minimal"
+            "accent_motif": "creator_footer_minimal",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 6,
@@ -256,7 +281,11 @@
               "Streamlined",
               "feedback"
             ],
-            "accent_motif": "creator_footer_minimal"
+            "accent_motif": "creator_footer_minimal",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 7,
@@ -284,7 +313,11 @@
               "systems",
               "Follow"
             ],
-            "accent_motif": "creator_footer_minimal"
+            "accent_motif": "creator_footer_minimal",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           }
         ]
       }
@@ -305,7 +338,7 @@
       "style_recipe": "light_grain_glow_v1",
       "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\studio-20260331-035631-825d35-v2.json",
       "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\studio-20260331-035631-825d35-v2.render.json",
-      "render_status": "planned",
+      "render_status": "rendering",
       "render_result_path": null,
       "figma_url": null,
       "preview_image_paths": [],
@@ -332,6 +365,10 @@
           "width": 1080,
           "height": 1350,
           "slide_gap": 120
+        },
+        "image_strategy": {
+          "mode": "none",
+          "provider": null
         },
         "style_tokens": {
           "light_background": "#F7F5FF",
@@ -384,7 +421,11 @@
               "Speed",
               "Loops"
             ],
-            "accent_motif": "grain_glow_corner"
+            "accent_motif": "grain_glow_corner",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 2,
@@ -412,7 +453,11 @@
               "Instantly",
               "feedback"
             ],
-            "accent_motif": "grain_glow_corner"
+            "accent_motif": "grain_glow_corner",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 3,
@@ -440,7 +485,11 @@
               "communicate",
               "Enhance"
             ],
-            "accent_motif": "grain_glow_corner"
+            "accent_motif": "grain_glow_corner",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 4,
@@ -468,7 +517,11 @@
               "Accelerate",
               "consensus"
             ],
-            "accent_motif": "grain_glow_corner"
+            "accent_motif": "grain_glow_corner",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 5,
@@ -496,7 +549,11 @@
               "Miscommunication",
               "revisions"
             ],
-            "accent_motif": "grain_glow_corner"
+            "accent_motif": "grain_glow_corner",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 6,
@@ -524,7 +581,11 @@
               "completion",
               "feedback"
             ],
-            "accent_motif": "grain_glow_corner"
+            "accent_motif": "grain_glow_corner",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 7,
@@ -552,7 +613,11 @@
               "systems",
               "Follow"
             ],
-            "accent_motif": "grain_glow_corner"
+            "accent_motif": "grain_glow_corner",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           }
         ]
       }
@@ -573,12 +638,28 @@
       "style_recipe": "retro_swipe_creator_v1",
       "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\studio-20260331-035631-825d35-v3.json",
       "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\studio-20260331-035631-825d35-v3.render.json",
-      "render_status": "planned",
-      "render_result_path": null,
+      "render_status": "complete",
+      "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\studio-20260331-035631-825d35-v3.render-result.json",
       "figma_url": null,
-      "preview_image_paths": [],
-      "preview_image_urls": [],
-      "rendered_at": null,
+      "preview_image_paths": [
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-035631-825d35-v3\\slide-01.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-035631-825d35-v3\\slide-02.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-035631-825d35-v3\\slide-03.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-035631-825d35-v3\\slide-04.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-035631-825d35-v3\\slide-05.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-035631-825d35-v3\\slide-06.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260331-035631-825d35-v3\\slide-07.png"
+      ],
+      "preview_image_urls": [
+        "/studio-output/previews/studio-20260331-035631-825d35-v3/slide-01.png",
+        "/studio-output/previews/studio-20260331-035631-825d35-v3/slide-02.png",
+        "/studio-output/previews/studio-20260331-035631-825d35-v3/slide-03.png",
+        "/studio-output/previews/studio-20260331-035631-825d35-v3/slide-04.png",
+        "/studio-output/previews/studio-20260331-035631-825d35-v3/slide-05.png",
+        "/studio-output/previews/studio-20260331-035631-825d35-v3/slide-06.png",
+        "/studio-output/previews/studio-20260331-035631-825d35-v3/slide-07.png"
+      ],
+      "rendered_at": "2026-03-31T14:41:28.549Z",
       "error": null,
       "payload": {
         "schema_version": "figma_plugin_payload_v2",
@@ -598,6 +679,10 @@
           "width": 1080,
           "height": 1350,
           "slide_gap": 120
+        },
+        "image_strategy": {
+          "mode": "none",
+          "provider": null
         },
         "style_tokens": {
           "light_background": "#9DAF86",
@@ -650,7 +735,11 @@
               "Time",
               "Half"
             ],
-            "accent_motif": "swipe_footer_button"
+            "accent_motif": "swipe_footer_button",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 2,
@@ -678,7 +767,11 @@
               "Instantly",
               "feedback"
             ],
-            "accent_motif": "swipe_footer_button"
+            "accent_motif": "swipe_footer_button",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 3,
@@ -706,7 +799,11 @@
               "Language",
               "Images"
             ],
-            "accent_motif": "swipe_footer_button"
+            "accent_motif": "swipe_footer_button",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 4,
@@ -734,7 +831,11 @@
               "standards",
               "guesswork"
             ],
-            "accent_motif": "swipe_footer_button"
+            "accent_motif": "swipe_footer_button",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 5,
@@ -762,7 +863,11 @@
               "reference",
               "directly"
             ],
-            "accent_motif": "swipe_footer_button"
+            "accent_motif": "swipe_footer_button",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 6,
@@ -790,7 +895,11 @@
               "accelerates",
               "Streamline"
             ],
-            "accent_motif": "swipe_footer_button"
+            "accent_motif": "swipe_footer_button",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           },
           {
             "slide_number": 7,
@@ -818,7 +927,11 @@
               "systems",
               "Follow"
             ],
-            "accent_motif": "swipe_footer_button"
+            "accent_motif": "swipe_footer_button",
+            "image_slot": "none",
+            "image_required": false,
+            "image_treatment": "none",
+            "image_asset": null
           }
         ]
       }

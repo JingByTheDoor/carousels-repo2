@@ -221,6 +221,20 @@
   - `python tools\\fetch_images_for_job.py --help`
   - FastAPI studio app import after the new studio field
   - `python tools\\fetch_images_for_job.py --job-id sheet-row-2` cleanly no-ops with `reason = "Auto image mode chose stock-first, but PEXELS_API_KEY is missing."`
+- Implemented the first renderer-side image placement pass:
+  - `figma_plugin/code.js` now normalizes `image_asset`, `image_slot`, and `image_treatment`
+  - the plugin manifest now allows direct Pexels image URLs
+  - cover-image rendering is wired for the image-friendly families:
+    - `reference_alder_split_media`
+    - `reference_cp_gallery_wall`
+    - `reference_typography_signal`
+    - `reference_light_grain_glow`
+    - `reference_twitter_card_soft`
+  - placement is intentionally limited to cover slides in this pass
+- Verified:
+  - `node --check figma_plugin\\code.js`
+  - `python tools\\fetch_images_for_job.py --job-id sheet-row-2`
+  - regenerated payload still contains `slides[0].image_slot = cover_media` with a valid `image_strategy` object
 
 ### Current Status
 - Google Sheets, OpenAI planning, and plugin render-payload generation are working.

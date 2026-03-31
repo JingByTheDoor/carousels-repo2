@@ -247,7 +247,7 @@ def _find_and_cache_pexels_asset(
         source_mode="stock",
         provider="pexels",
         query_or_prompt=image_request.query,
-        original_url=best.page_url or best.download_url,
+        original_url=best.download_url,
         local_path=str(asset_path),
         credit=f"Photo by {best.photographer} on Pexels",
         width=best.width,

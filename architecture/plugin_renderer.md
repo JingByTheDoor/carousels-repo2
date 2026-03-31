@@ -93,3 +93,5 @@ Render approved carousel payloads inside Figma without relying on Codex or chat-
 ## Follow-up path
 - Current implementation: manual file import plus localhost fetch/post bridge.
 - Next improvement: add exported-image automation after a successful Figma render.
+- Current image support: cover-slide image placement is allowed for image-friendly families when the payload contains a resolved asset URL.
+- Current non-goal: body-slide image placement is deferred until the cover-image path is validated visually in Figma.

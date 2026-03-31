@@ -202,6 +202,25 @@
   - stock-first
   - `pexels` as default stock provider
   - OpenAI image generation as fallback for abstract or stock-poor concepts
+- Implemented the first real image layer:
+  - added image fields to the canonical input, artifact, and render payload models
+  - added `PEXELS_API_KEY` support in config
+  - added `tools/carousel_system/image_assets.py` for stock search, local caching, and image-slot attachment
+  - added `tools/fetch_images_for_job.py` for backfilling images onto existing jobs
+  - wired image resolution into:
+    - `tools/plan_carousel.py`
+    - `tools/process_next_job.py`
+    - `tools/build_render_payload.py`
+    - `tools/carousel_system/render_bridge.py`
+    - `tools/carousel_system/studio.py`
+  - added `image_mode` to the studio UI
+  - added `.env.example` with `PEXELS_API_KEY`
+- Verified:
+  - `python -m compileall tools`
+  - `node --check figma_plugin\\code.js`
+  - `python tools\\fetch_images_for_job.py --help`
+  - FastAPI studio app import after the new studio field
+  - `python tools\\fetch_images_for_job.py --job-id sheet-row-2` cleanly no-ops with `reason = "Auto image mode chose stock-first, but PEXELS_API_KEY is missing."`
 
 ### Current Status
 - Google Sheets, OpenAI planning, and plugin render-payload generation are working.

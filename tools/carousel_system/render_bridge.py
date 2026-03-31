@@ -6,6 +6,7 @@ from pathlib import Path
 
 from carousel_system.config import ROOT_DIR, Settings
 from carousel_system.google_sheets import GoogleSheetsQueue, QueueRow
+from carousel_system.image_assets import resolve_image_assets
 from carousel_system.models import CarouselOutput, FigmaOutput, PluginRenderPayload, PluginRenderResult, SourceSync
 from carousel_system.payload import build_output_record, write_output_record
 from carousel_system.planner import PROMPT_VERSION, generate_carousel_plan
@@ -59,6 +60,7 @@ def plan_row_to_render_item(settings: Settings, queue: GoogleSheetsQueue, row: Q
     record.language = payload.language or infer_language(record)
     record.style_family = payload.style_family
     record.style_recipe = payload.style_recipe
+    resolve_image_assets(settings, record, payload)
     record.design_reference_log = [
         reference for reference in record.design_reference_log if reference.node_id in set(payload.reference_node_ids)
     ]
@@ -80,6 +82,7 @@ def plan_row_to_render_item(settings: Settings, queue: GoogleSheetsQueue, row: Q
             "prompt_version": PROMPT_VERSION,
             "render_payload_path": str(render_payload_path),
             "render_result_path": "",
+            "image_asset_paths": ",".join(asset.local_path or "" for asset in record.image_assets if asset.local_path),
         },
     )
     return RenderQueueItem(
@@ -140,6 +143,7 @@ def hydrate_planned_row(settings: Settings, queue: GoogleSheetsQueue, row: Queue
     record.language = payload.language or infer_language(record)
     record.style_family = payload.style_family
     record.style_recipe = payload.style_recipe
+    resolve_image_assets(settings, record, payload)
     record.design_reference_log = [
         reference for reference in record.design_reference_log if reference.node_id in set(payload.reference_node_ids)
     ]
@@ -155,6 +159,7 @@ def hydrate_planned_row(settings: Settings, queue: GoogleSheetsQueue, row: Queue
             "prompt_version": record.prompt_version,
             "reference_nodes_used": ",".join(payload.reference_node_ids),
             "render_payload_path": str(render_payload_path),
+            "image_asset_paths": ",".join(asset.local_path or "" for asset in record.image_assets if asset.local_path),
         },
     )
 

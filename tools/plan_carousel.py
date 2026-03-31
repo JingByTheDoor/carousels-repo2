@@ -7,6 +7,7 @@ from uuid import uuid4
 
 from carousel_system.cli import run
 from carousel_system.config import ROOT_DIR, load_settings
+from carousel_system.image_assets import resolve_image_assets
 from carousel_system.models import CarouselInput
 from carousel_system.payload import build_output_record, write_output_record
 from carousel_system.planner import PROMPT_VERSION, generate_carousel_plan
@@ -25,6 +26,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--script")
     parser.add_argument("--script-file")
     parser.add_argument("--cta-text")
+    parser.add_argument("--image-mode", default="auto", choices=["auto", "none", "stock", "ai", "hybrid"])
+    parser.add_argument(
+        "--image-source-preference",
+        default="pexels",
+        choices=["pexels", "unsplash", "openai_gpt_image"],
+    )
+    parser.add_argument("--no-ai-fallback", action="store_true")
+    parser.add_argument(
+        "--image-focus",
+        default="brand_safe",
+        choices=["literal", "abstract", "brand_safe", "mixed"],
+    )
     parser.add_argument("--language")
     parser.add_argument(
         "--aspect-ratio",
@@ -64,6 +77,10 @@ def main() -> int:
         topic=args.topic,
         script=script_text,
         cta_text=args.cta_text,
+        image_mode=args.image_mode,
+        image_source_preference=args.image_source_preference,
+        allow_ai_fallback=not args.no_ai_fallback,
+        image_focus=args.image_focus,
         language=args.language,
         aspect_ratio=args.aspect_ratio,
         output_modes=[mode.strip() for mode in args.output_modes.split(",") if mode.strip()],
@@ -78,6 +95,7 @@ def main() -> int:
     record.language = render_payload.language or infer_language(record)
     record.style_family = render_payload.style_family
     record.style_recipe = render_payload.style_recipe
+    resolve_image_assets(settings, record, render_payload)
     record.design_reference_log = [
         reference for reference in record.design_reference_log if reference.node_id in set(render_payload.reference_node_ids)
     ]

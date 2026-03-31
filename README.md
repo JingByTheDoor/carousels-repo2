@@ -13,6 +13,7 @@ This repo turns a `topic` or `script` into a validated 7-slide Instagram carouse
 - Render-aware plugin payload generation with display-safe text variants
 - Multi-family style selection grounded in approved Figma references
 - Figma reference logging for every generated payload
+- Stock-image acquisition with local caching for image-friendly families
 
 ## Current render architecture
 - Python tools generate:
@@ -21,14 +22,16 @@ This repo turns a `topic` or `script` into a validated 7-slide Instagram carouse
 - The local Figma plugin in [figma_plugin](C:/Users/User/OneDrive%20-%20Board%20of%20Education%20of%20SD%2039%20(Vancouver)/Documents/Carousels/carousels-repo2/figma_plugin) consumes the render payload and creates the slides inside Figma.
 - The local bridge server in `tools/render_server.py` can now serve the next job directly to the plugin and accept render results back over `http://localhost:8765`.
 - A local finalize step still exists for manual result files, but the bridge path can now complete the Google Sheet update automatically.
+- Image assets, when acquired, are cached under `.tmp/image-assets/` and recorded into both the job artifact and the render payload.
 
 ## Setup
 1. Copy `.env.example` to `.env`.
 2. Add your OpenAI API key.
-3. Create a Google service account JSON file and set `GOOGLE_SERVICE_ACCOUNT_JSON`.
-4. Create a Google Sheet, copy its spreadsheet ID, and set `GOOGLE_SHEETS_SPREADSHEET_ID`.
-5. Share the Google Sheet with the service account email.
-6. Optionally add a Figma personal access token to verify REST access to the reference file.
+3. Optionally add `PEXELS_API_KEY` if you want automatic stock-image attachment.
+4. Create a Google service account JSON file and set `GOOGLE_SERVICE_ACCOUNT_JSON`.
+5. Create a Google Sheet, copy its spreadsheet ID, and set `GOOGLE_SHEETS_SPREADSHEET_ID`.
+6. Share the Google Sheet with the service account email.
+7. Optionally add a Figma personal access token to verify REST access to the reference file.
 
 ## Install
 ```powershell
@@ -53,6 +56,11 @@ That command now writes both:
 - `.tmp/jobs/<job_id>.json`
 - `.tmp/render-jobs/<job_id>.render.json`
 
+Useful image flags:
+```powershell
+.venv\Scripts\python tools\plan_carousel.py --topic "Why better onboarding reduces churn" --image-mode stock
+```
+
 ## Review Studio
 If you want a fast review loop instead of working directly in the Google Sheet, use the local studio.
 
@@ -69,6 +77,7 @@ Inside the studio you can:
 - enter a topic or script
 - generate a round of variants
 - vary style, copy length, or both
+- choose an image mode for the round
 - rate variants as `love`, `good`, or `bad`
 - generate the next round from those ratings
 - let the Figma plugin auto-render the generated variants through the localhost bridge
@@ -169,6 +178,17 @@ When the local Figma plugin is open in auto mode, studio-generated variants are 
 .venv\Scripts\python tools\build_render_payload.py --job-id <job_id>
 ```
 
+## Attach stock images to an existing job
+```powershell
+.venv\Scripts\python tools\fetch_images_for_job.py --job-id <job_id>
+```
+
+That command:
+- rebuilds the render payload
+- applies image-slot rules for the selected style family
+- searches Pexels when `PEXELS_API_KEY` is configured
+- caches selected images in `.tmp/image-assets/<job_id>/`
+
 ## Style coverage audit
 Use this when new local examples are added and you want to verify whether the style engine actually covers them:
 
@@ -190,6 +210,7 @@ The audit is intentionally conservative:
 - The plugin bridge still depends on a live Figma desktop session with the development plugin running.
 - The studio can now show real rendered thumbnails after the plugin finishes a variant, but it still falls back to payload-driven preview state before a render exists.
 - The style engine now covers the harvested Figma families plus the first local-example batch: mono minimal creator slides, light grain/glow slides, retro swipe creator slides, and soft tweet-card slides. It still does not cover every local example family in `Examples of carousels/`.
+- Only stock acquisition through `Pexels` is implemented right now. AI image generation and hybrid fallback are defined in the schema but not wired yet.
 
 ## Planned image layer
 The next media recommendation for this repo is:

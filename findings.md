@@ -175,3 +175,9 @@
   - AI imagery is better as fallback for abstract concepts, not the universal first choice
 - `pexels` is the strongest default stock provider for the planned image layer because Unsplash’s API rules require hotlinking and attribution handling that fit imported Figma assets poorly.
 - The planned AI-image fallback should target OpenAI’s current image API rather than a separate provider, because the repo already depends on OpenAI and the official API supports portrait-friendly generation and base64 output.
+- The first implemented image pass should not try to solve everything at once. Stock-first with graceful no-op behavior is the right integration because it does not make the existing planner/render pipeline fail when no image key is present.
+- The most stable near-term image behavior is:
+  - expose `image_mode` in CLI, studio, and Google Sheets
+  - apply image-slot rules only to image-friendly families
+  - cache selected Pexels images locally under `.tmp/image-assets/`
+  - record image strategy and chosen assets inside the canonical job artifact

@@ -3,6 +3,7 @@ from __future__ import annotations
 from carousel_system.cli import run
 from carousel_system.config import ROOT_DIR, load_settings
 from carousel_system.google_sheets import GoogleSheetsQueue
+from carousel_system.image_assets import resolve_image_assets
 from carousel_system.models import SourceSync
 from carousel_system.payload import build_output_record, write_output_record
 from carousel_system.planner import PROMPT_VERSION, generate_carousel_plan
@@ -44,6 +45,7 @@ def main() -> int:
         record.language = render_payload.language
         record.style_family = render_payload.style_family
         record.style_recipe = render_payload.style_recipe
+        resolve_image_assets(settings, record, render_payload)
         record.design_reference_log = [
             reference for reference in record.design_reference_log if reference.node_id in set(render_payload.reference_node_ids)
         ]
@@ -65,6 +67,7 @@ def main() -> int:
                 "prompt_version": PROMPT_VERSION,
                 "render_payload_path": str(render_payload_path),
                 "render_result_path": "",
+                "image_asset_paths": ",".join(asset.local_path or "" for asset in record.image_assets if asset.local_path),
             },
         )
         print(render_payload_path)

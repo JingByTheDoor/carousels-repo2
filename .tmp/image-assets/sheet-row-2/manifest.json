@@ -1,0 +1,9 @@
+{
+  "job_id": "sheet-row-2",
+  "image_strategy": {
+    "mode": "none",
+    "provider": null,
+    "reason": "Auto image mode chose stock-first, but PEXELS_API_KEY is missing."
+  },
+  "image_assets": []
+}

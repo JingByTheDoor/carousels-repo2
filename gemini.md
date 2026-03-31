@@ -11,6 +11,10 @@ Status: `Approved and implemented`
   "topic": "string|null",
   "script": "string|null",
   "cta_text": "string|null",
+  "image_mode": "auto|none|stock|ai|hybrid",
+  "image_source_preference": "pexels|unsplash|openai_gpt_image",
+  "allow_ai_fallback": "boolean",
+  "image_focus": "literal|abstract|brand_safe|mixed",
   "language": "string|null",
   "aspect_ratio": "square_1080|portrait_1080x1350",
   "output_modes": ["figma", "png"],
@@ -44,6 +48,26 @@ Status: `Approved and implemented`
   "language": "string|null",
   "style_family": "string|null",
   "style_recipe": "string|null",
+  "image_strategy": {
+    "mode": "none|stock|ai|hybrid",
+    "provider": "pexels|unsplash|openai_gpt_image|null",
+    "reason": "string|null"
+  },
+  "image_assets": [
+    {
+      "slide_number": "integer",
+      "role": "hook|info|cta",
+      "source_mode": "stock|ai",
+      "provider": "pexels|unsplash|openai_gpt_image",
+      "query_or_prompt": "string",
+      "original_url": "string|null",
+      "local_path": "string|null",
+      "credit": "string|null",
+      "width": "integer|null",
+      "height": "integer|null",
+      "alt_text": "string|null"
+    }
+  ],
   "content_plan": [
     {
       "slide_number": 1,
@@ -153,6 +177,10 @@ Status: `Approved and implemented`
     "height": 1350,
     "slide_gap": 120
   },
+  "image_strategy": {
+    "mode": "none|stock|ai|hybrid",
+    "provider": "pexels|unsplash|openai_gpt_image|null"
+  },
   "style_tokens": {
     "light_background": "#F4F6F7",
     "dark_background": "#020202",
@@ -200,7 +228,16 @@ Status: `Approved and implemented`
       "max_body_lines": "integer",
       "can_truncate_body": "boolean",
       "emphasis_words": ["string"],
-      "accent_motif": "string|null"
+      "accent_motif": "string|null",
+      "image_slot": "none|cover_media|body_media|cta_media",
+      "image_required": "boolean",
+      "image_treatment": "none|crop|mask|duotone|blur_glow|card_embed|gallery_wall",
+      "image_asset": {
+        "provider": "pexels|unsplash|openai_gpt_image|null",
+        "local_path": "string|null",
+        "url": "string|null",
+        "credit": "string|null"
+      }
     }
   ]
 }
@@ -240,6 +277,7 @@ Status: `Approved and implemented`
     "topic": "string|null",
     "script": "string|null",
     "cta_text": "string|null",
+    "image_mode": "auto|none|stock|ai|hybrid",
     "language": "string|null",
     "notes": "string|null",
     "batch_mode": "vary_both|vary_style|vary_copy",
@@ -291,6 +329,10 @@ Status: `Approved and implemented`
     "aspect_ratio",
     "output_modes",
     "reference_style",
+    "image_mode",
+    "image_source_preference",
+    "allow_ai_fallback",
+    "image_focus",
     "notes",
     "figma_url",
     "export_paths",
@@ -301,66 +343,8 @@ Status: `Approved and implemented`
     "style_recipe",
     "prompt_version",
     "render_payload_path",
-    "render_result_path"
-  ]
-}
-```
-
-## Planned Image Extension Schema
-Status: `Proposed, not implemented`
-
-### Planned Input Extension
-```json
-{
-  "image_mode": "auto|none|stock|ai|hybrid",
-  "image_source_preference": "pexels|unsplash|openai_gpt_image",
-  "allow_ai_fallback": "boolean",
-  "image_focus": "literal|abstract|brand_safe|mixed"
-}
-```
-
-### Planned Job Artifact Extension
-```json
-{
-  "image_strategy": {
-    "mode": "none|stock|ai|hybrid",
-    "provider": "pexels|unsplash|openai_gpt_image|null",
-    "reason": "string|null"
-  },
-  "image_assets": [
-    {
-      "slide_number": "integer",
-      "role": "hook|info|cta",
-      "source_mode": "stock|ai",
-      "provider": "pexels|unsplash|openai_gpt_image",
-      "query_or_prompt": "string",
-      "original_url": "string|null",
-      "local_path": "string|null",
-      "credit": "string|null"
-    }
-  ]
-}
-```
-
-### Planned Render Payload Extension
-```json
-{
-  "image_strategy": {
-    "mode": "none|stock|ai|hybrid",
-    "provider": "string|null"
-  },
-  "slides": [
-    {
-      "image_slot": "none|cover_media|body_media|cta_media",
-      "image_required": "boolean",
-      "image_treatment": "crop|mask|duotone|blur_glow|card_embed",
-      "image_asset": {
-        "provider": "string|null",
-        "local_path": "string|null",
-        "url": "string|null",
-        "credit": "string|null"
-      }
-    }
+    "render_result_path",
+    "image_asset_paths"
   ]
 }
 ```
@@ -386,6 +370,7 @@ Status: `Proposed, not implemented`
 - Studio variants may also track their render lifecycle and rendered outputs independently of Google Sheets.
 - The planned image layer should default to stock-first with AI fallback, not AI-first.
 - `pexels` is the preferred first stock provider for the local renderer workflow; `unsplash` is a weaker default because its API guidelines require hotlinking returned URLs and attribution handling that does not fit Figma import as cleanly.
+- The currently implemented image acquisition path is `Pexels` only. `ai` and `hybrid` modes exist in the schema, but AI fallback is not implemented yet.
 
 ## Maintenance Log
 

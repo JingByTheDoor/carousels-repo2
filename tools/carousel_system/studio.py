@@ -9,6 +9,7 @@ from uuid import uuid4
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 from carousel_system.config import ROOT_DIR, Settings
+from carousel_system.image_assets import resolve_image_assets
 from carousel_system.models import CarouselInput, CarouselOutput, PluginRenderPayload, PluginRenderResult
 from carousel_system.payload import build_output_record, write_output_record
 from carousel_system.planner import PROMPT_VERSION, generate_carousel_plan
@@ -30,6 +31,7 @@ StudioBatchMode = Literal["vary_both", "vary_style", "vary_copy"]
 StudioCopyLength = Literal["tight", "balanced", "expanded", "punchy"]
 StudioRating = Literal["unrated", "love", "good", "bad"]
 StudioStylePool = Literal["all", "core", "local"]
+StudioImageMode = Literal["auto", "none", "stock", "ai", "hybrid"]
 
 
 STYLE_OPTIONS: tuple[tuple[str, str], ...] = (
@@ -79,6 +81,13 @@ COPY_LENGTH_OPTIONS: tuple[tuple[StudioCopyLength, str], ...] = (
     ("expanded", "Expanded"),
     ("punchy", "Punchy"),
 )
+IMAGE_MODE_OPTIONS: tuple[tuple[StudioImageMode, str], ...] = (
+    ("auto", "Auto"),
+    ("none", "No Images"),
+    ("stock", "Stock Only"),
+    ("ai", "AI Only"),
+    ("hybrid", "Hybrid"),
+)
 COPY_LENGTH_ORDER: tuple[StudioCopyLength, ...] = ("tight", "balanced", "expanded", "punchy")
 COPY_LENGTH_NOTES: dict[StudioCopyLength, str] = {
     "tight": (
@@ -118,6 +127,7 @@ class StudioCreateRequest(BaseModel):
     preferred_style: str = "auto"
     style_pool: StudioStylePool = "all"
     base_copy_length: StudioCopyLength = "balanced"
+    image_mode: StudioImageMode = "auto"
 
     @field_validator("topic", "script", "cta_text", "language", "notes", mode="before")
     @classmethod
@@ -212,6 +222,7 @@ def studio_bootstrap_payload() -> dict:
     return {
         "style_options": [{"value": value, "label": label} for value, label in STYLE_OPTIONS],
         "copy_length_options": [{"value": value, "label": label} for value, label in COPY_LENGTH_OPTIONS],
+        "image_mode_options": [{"value": value, "label": label} for value, label in IMAGE_MODE_OPTIONS],
         "batch_modes": [
             {"value": "vary_both", "label": "Vary Style + Copy"},
             {"value": "vary_style", "label": "Vary Style"},
@@ -252,6 +263,7 @@ def create_review_round(
             script=request.script,
             cta_text=request.cta_text,
             language=request.language,
+            image_mode=request.image_mode,
             aspect_ratio="portrait_1080x1350",
             output_modes=["figma", "png"],
             reference_style=spec.requested_style,
@@ -265,6 +277,7 @@ def create_review_round(
         record.language = payload.language or infer_language(record)
         record.style_family = payload.style_family
         record.style_recipe = payload.style_recipe
+        resolve_image_assets(settings, record, payload)
         record.design_reference_log = [
             reference for reference in record.design_reference_log if reference.node_id in set(payload.reference_node_ids)
         ]

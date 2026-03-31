@@ -50,6 +50,13 @@ JobStatus = Literal["queued", "planning", "planned", "rendering", "complete", "e
 TextDensity = Literal["low", "medium", "high"]
 LayoutPreference = Literal["hero", "editorial", "mask_left", "spotlight", "cta"]
 VisualPriority = Literal["headline", "body", "cta"]
+ImageMode = Literal["auto", "none", "stock", "ai", "hybrid"]
+ResolvedImageMode = Literal["none", "stock", "ai", "hybrid"]
+ImageProvider = Literal["pexels", "unsplash", "openai_gpt_image"]
+ImageFocus = Literal["literal", "abstract", "brand_safe", "mixed"]
+ImageSourceMode = Literal["stock", "ai"]
+ImageSlot = Literal["none", "cover_media", "body_media", "cta_media"]
+ImageTreatment = Literal["none", "crop", "mask", "duotone", "blur_glow", "card_embed", "gallery_wall"]
 SafeAreaProfile = Literal[
     "cover_tall_text",
     "cover_balanced",
@@ -70,6 +77,10 @@ class CarouselInput(BaseModel):
     aspect_ratio: Literal["square_1080", "portrait_1080x1350"] = "portrait_1080x1350"
     output_modes: list[Literal["figma", "png"]] = Field(default_factory=lambda: ["figma", "png"])
     reference_style: str = "auto"
+    image_mode: ImageMode = "auto"
+    image_source_preference: ImageProvider = "pexels"
+    allow_ai_fallback: bool = True
+    image_focus: ImageFocus = "brand_safe"
     reference_file_key: str
     reference_node_ids: list[str] = Field(default_factory=lambda: DEFAULT_REFERENCE_NODE_IDS.copy())
     notes: str | None = None
@@ -153,6 +164,42 @@ class ExportArtifact(BaseModel):
     path_or_url: str
 
 
+class ImageStrategy(BaseModel):
+    mode: ResolvedImageMode = "none"
+    provider: ImageProvider | None = None
+    reason: str | None = None
+
+    @field_validator("reason", mode="before")
+    @classmethod
+    def _normalize_optional_reason(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(value.strip().split())
+        return cleaned or None
+
+
+class ImageAsset(BaseModel):
+    slide_number: int
+    role: Literal["hook", "info", "cta"]
+    source_mode: ImageSourceMode
+    provider: ImageProvider
+    query_or_prompt: str
+    original_url: str | None = None
+    local_path: str | None = None
+    credit: str | None = None
+    width: int | None = None
+    height: int | None = None
+    alt_text: str | None = None
+
+    @field_validator("query_or_prompt", "original_url", "local_path", "credit", "alt_text", mode="before")
+    @classmethod
+    def _normalize_optional_asset_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(value.strip().split())
+        return cleaned or None
+
+
 class SourceSync(BaseModel):
     google_sheet_id: str | None = None
     worksheet_name: str | None = None
@@ -202,6 +249,26 @@ class RenderCanvasSpec(BaseModel):
     slide_gap: int = 120
 
 
+class RenderImageAssetSpec(BaseModel):
+    provider: ImageProvider | None = None
+    local_path: str | None = None
+    url: str | None = None
+    credit: str | None = None
+
+    @field_validator("local_path", "url", "credit", mode="before")
+    @classmethod
+    def _normalize_optional_render_asset_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(value.strip().split())
+        return cleaned or None
+
+
+class RenderImageStrategySpec(BaseModel):
+    mode: ResolvedImageMode = "none"
+    provider: ImageProvider | None = None
+
+
 class RenderSlideSpec(BaseModel):
     slide_number: int
     slide_role: Literal["hook", "info", "cta"]
@@ -231,6 +298,10 @@ class RenderSlideSpec(BaseModel):
     can_truncate_body: bool = False
     emphasis_words: list[str] = Field(default_factory=list)
     accent_motif: str | None = None
+    image_slot: ImageSlot = "none"
+    image_required: bool = False
+    image_treatment: ImageTreatment = "none"
+    image_asset: RenderImageAssetSpec | None = None
 
     @field_validator(
         "headline_short",
@@ -270,6 +341,7 @@ class PluginRenderPayload(BaseModel):
     reference_file_key: str
     reference_node_ids: list[str]
     canvas: RenderCanvasSpec = Field(default_factory=RenderCanvasSpec)
+    image_strategy: RenderImageStrategySpec = Field(default_factory=RenderImageStrategySpec)
     style_tokens: StyleTokens
     typography: TypographyTokens
     slides: list[RenderSlideSpec]
@@ -321,6 +393,8 @@ class CarouselOutput(BaseModel):
     design_reference_log: list[DesignReferenceLog]
     render_artifact: RenderArtifact = Field(default_factory=RenderArtifact)
     figma_output: FigmaOutput = Field(default_factory=FigmaOutput)
+    image_strategy: ImageStrategy = Field(default_factory=ImageStrategy)
+    image_assets: list[ImageAsset] = Field(default_factory=list)
     exports: list[ExportArtifact] = Field(default_factory=list)
     source_sync: SourceSync = Field(default_factory=SourceSync)
     error: str | None = None

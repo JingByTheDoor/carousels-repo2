@@ -13,6 +13,10 @@ Normalize manual or Google Sheets input into the canonical schema in `gemini.md`
 - `topic`
 - `script`
 - `cta_text`
+- `image_mode`
+- `image_source_preference`
+- `allow_ai_fallback`
+- `image_focus`
 - `aspect_ratio`
 - `output_modes`
 - `reference_style`
@@ -27,6 +31,7 @@ Normalize manual or Google Sheets input into the canonical schema in `gemini.md`
 - `prompt_version`
 - `render_payload_path`
 - `render_result_path`
+- `image_asset_paths`
 
 ## Status flow
 - `queued`: waiting to be processed
@@ -42,6 +47,7 @@ Normalize manual or Google Sheets input into the canonical schema in `gemini.md`
 - `output_modes` is stored as a comma-separated string in Sheets and normalized to a list internally.
 - `aspect_ratio` defaults to `portrait_1080x1350`.
 - `reference_style` defaults to `auto`.
+- `image_mode` defaults to `auto`.
 - `language` is optional; if blank, planning/render metadata may infer it.
 - `process_next_job.py` must write both `.tmp/jobs/<job_id>.json` and `.tmp/render-jobs/<job_id>.render.json`.
 

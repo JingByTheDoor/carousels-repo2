@@ -15,6 +15,7 @@ Provide a fast local review loop for generating multiple carousel variants, rati
    - preferred style
    - style pool
    - base copy length
+   - image mode
 4. Studio generates one review round with multiple variants.
 5. Each variant produces:
    - a canonical job artifact in `.tmp/jobs/`

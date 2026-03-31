@@ -17,6 +17,10 @@ QUEUE_HEADERS = [
     "topic",
     "script",
     "cta_text",
+    "image_mode",
+    "image_source_preference",
+    "allow_ai_fallback",
+    "image_focus",
     "aspect_ratio",
     "output_modes",
     "reference_style",
@@ -31,6 +35,7 @@ QUEUE_HEADERS = [
     "prompt_version",
     "render_payload_path",
     "render_result_path",
+    "image_asset_paths",
 ]
 
 
@@ -169,6 +174,10 @@ class GoogleSheetsQueue:
             "topic": row.values.get("topic"),
             "script": row.values.get("script"),
             "cta_text": row.values.get("cta_text"),
+            "image_mode": row.values.get("image_mode") or "auto",
+            "image_source_preference": row.values.get("image_source_preference") or "pexels",
+            "allow_ai_fallback": (row.values.get("allow_ai_fallback") or "true").strip().lower() not in {"false", "0", "no"},
+            "image_focus": row.values.get("image_focus") or "brand_safe",
             "language": row.values.get("language"),
             "aspect_ratio": row.values.get("aspect_ratio") or "portrait_1080x1350",
             "output_modes": output_modes or ["figma", "png"],

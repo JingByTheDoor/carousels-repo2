@@ -17,6 +17,7 @@ const elements = {
   stylePool: document.getElementById("style_pool"),
   baseCopyLength: document.getElementById("base_copy_length"),
   language: document.getElementById("language"),
+  imageMode: document.getElementById("image_mode"),
   statusText: document.getElementById("status-text"),
   nextRoundButton: document.getElementById("next-round-button"),
   ratingNote: document.getElementById("rating-note"),
@@ -39,6 +40,7 @@ async function init() {
     populateSelect(elements.preferredStyle, bootstrap.style_options, "value", "label", "auto");
     populateSelect(elements.stylePool, bootstrap.style_pools, "value", "label", "all");
     populateSelect(elements.baseCopyLength, bootstrap.copy_length_options, "value", "label", "balanced");
+    populateSelect(elements.imageMode, bootstrap.image_mode_options, "value", "label", "auto");
 
     if (bootstrap.latest_round) {
       applyRound(bootstrap.latest_round);
@@ -75,6 +77,7 @@ async function onGenerateRound(event) {
       preferred_style: elements.preferredStyle.value,
       style_pool: elements.stylePool.value,
       base_copy_length: elements.baseCopyLength.value,
+      image_mode: elements.imageMode.value,
     };
     const round = await requestJson("/api/rounds", {
       method: "POST",

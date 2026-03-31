@@ -20,6 +20,7 @@ This repository follows the B.L.A.S.T. protocol and A.N.T. 3-layer architecture 
 - Navigation decisions route between SOPs and deterministic tools.
 - `tools/` stores atomic, testable Python scripts only.
 - `.tmp/` stores intermediate and disposable artifacts only.
+- `.tmp/image-assets/` stores cached stock-image assets and manifests for jobs that requested images.
 - `figma_plugin/` stores the local Figma renderer that consumes plugin payloads and emits plugin result files.
 - `tools/render_server.py` is the local bridge between the queue/planning layer and the live Figma plugin session.
 - `tools/studio_server.py` and `tools/start_studio.py` provide the local review-and-rating layer above the planner and style engine.

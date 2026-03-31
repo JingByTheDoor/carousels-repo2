@@ -22,6 +22,7 @@ class ConfigError(RuntimeError):
 class Settings:
     openai_api_key: str | None
     openai_model: str
+    pexels_api_key: str | None
     google_service_account_json: Path | None
     google_spreadsheet_id: str | None
     google_worksheet_name: str
@@ -49,6 +50,7 @@ def load_settings(
     settings = Settings(
         openai_api_key=os.getenv("OPENAI_API_KEY"),
         openai_model=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
+        pexels_api_key=os.getenv("PEXELS_API_KEY"),
         google_service_account_json=_optional_path(os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")),
         google_spreadsheet_id=os.getenv("GOOGLE_SHEETS_SPREADSHEET_ID"),
         google_worksheet_name=os.getenv("GOOGLE_SHEETS_WORKSHEET_NAME", DEFAULT_WORKSHEET_NAME),

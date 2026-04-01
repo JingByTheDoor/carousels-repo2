@@ -1,0 +1,23 @@
+{
+  "job_id": "studio-20260401-001939-cf92b0-v2",
+  "image_strategy": {
+    "mode": "stock",
+    "provider": "pexels",
+    "reason": "Attached 1 stock image asset via Pexels for reference_cp_gallery_wall."
+  },
+  "image_assets": [
+    {
+      "slide_number": 1,
+      "role": "hook",
+      "source_mode": "stock",
+      "provider": "pexels",
+      "query_or_prompt": "rectangle is the best shape professional clean",
+      "original_url": "https://images.pexels.com/photos/8947666/pexels-photo-8947666.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+      "local_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\image-assets\\studio-20260401-001939-cf92b0-v2\\slide-01-pexels-8947666.jpeg",
+      "credit": "Photo by www.kaboompics.com on Pexels",
+      "width": 4422,
+      "height": 6633,
+      "alt_text": "Simple minimalist black card mockup set on a windowsill with natural light, ideal for design presentations."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "job_id": "studio-20260401-001939-cf92b0-v1",
+  "image_strategy": {
+    "mode": "none",
+    "provider": null,
+    "reason": "reference_cp_longform_split is currently treated as a text-led family."
+  },
+  "image_assets": []
+}

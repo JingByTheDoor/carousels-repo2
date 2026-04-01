@@ -427,25 +427,34 @@ function requestJson(url, options = {}) {
     ...options,
   };
 
-  return fetch(url, requestOptions).then(async (response) => {
-    const raw = await response.text();
-    let payload = null;
-    if (raw) {
-      try {
-        payload = JSON.parse(raw);
-      } catch (_error) {
-        payload = raw;
+  return fetch(url, requestOptions)
+    .catch((error) => {
+      if (error instanceof TypeError) {
+        throw new Error(
+          `Studio backend is unreachable at ${window.location.origin}. Start the app with .\\.venv\\Scripts\\python.exe tools\\start_studio.py and refresh.`,
+        );
       }
-    }
+      throw error;
+    })
+    .then(async (response) => {
+      const raw = await response.text();
+      let payload = null;
+      if (raw) {
+        try {
+          payload = JSON.parse(raw);
+        } catch (_error) {
+          payload = raw;
+        }
+      }
 
-    if (!response.ok) {
-      if (payload && typeof payload === "object" && payload.detail) {
-        throw new Error(payload.detail);
+      if (!response.ok) {
+        if (payload && typeof payload === "object" && payload.detail) {
+          throw new Error(payload.detail);
+        }
+        throw new Error(typeof payload === "string" ? payload : `Request failed with status ${response.status}`);
       }
-      throw new Error(typeof payload === "string" ? payload : `Request failed with status ${response.status}`);
-    }
-    return payload;
-  });
+      return payload;
+    });
 }
 
 function populateSelect(select, options, defaultValue) {

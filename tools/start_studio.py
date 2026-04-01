@@ -8,6 +8,8 @@ import threading
 import time
 import webbrowser
 from pathlib import Path
+from urllib.error import URLError
+from urllib.request import urlopen
 
 import uvicorn
 
@@ -58,9 +60,18 @@ def main() -> int:
 
     if not args.no_browser:
         studio_url = f"http://{args.host}:{args.port}"
+        health_url = f"{studio_url}/health"
 
         def _open_browser() -> None:
-            time.sleep(1.2)
+            deadline = time.time() + 20
+            while time.time() < deadline:
+                try:
+                    with urlopen(health_url, timeout=1.5):
+                        break
+                except URLError:
+                    time.sleep(0.4)
+            else:
+                time.sleep(1.0)
             webbrowser.open(studio_url)
 
         threading.Thread(target=_open_browser, daemon=True).start()

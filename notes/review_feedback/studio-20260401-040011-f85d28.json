@@ -1,0 +1,38 @@
+{
+  "round_id": "studio-20260401-040011-f85d28",
+  "created_at": "2026-04-01T04:00:30.050207+00:00",
+  "round_number": 1,
+  "generated_brief": "Low-prep writing activities that help English students think faster",
+  "winner": {
+    "variant_id": "studio-20260401-040011-f85d28-variant-1",
+    "ordinal": 1,
+    "style": "Light Grain Glow",
+    "style_family": "reference_light_grain_glow",
+    "copy_length": "Balanced",
+    "feedback": "Best structure but improve CTA.",
+    "figma_url": null,
+    "figma_page_url": null
+  },
+  "losers": [
+    {
+      "variant_id": "studio-20260401-040011-f85d28-variant-2",
+      "ordinal": 2,
+      "style": "Twitter Card Soft",
+      "style_family": "reference_twitter_card_soft",
+      "copy_length": "Expanded",
+      "feedback": "loser feedback 2",
+      "figma_url": null,
+      "figma_page_url": null
+    },
+    {
+      "variant_id": "studio-20260401-040011-f85d28-variant-3",
+      "ordinal": 3,
+      "style": "Alder Split Right",
+      "style_family": "reference_alder_split_media",
+      "copy_length": "Tight",
+      "feedback": "loser feedback 3",
+      "figma_url": null,
+      "figma_page_url": null
+    }
+  ]
+}

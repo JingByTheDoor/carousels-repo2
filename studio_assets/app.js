@@ -12,6 +12,7 @@ const state = {
 const elements = {
   generateButton: document.getElementById("generate-button"),
   nextRoundButton: document.getElementById("next-round-button"),
+  submitButton: document.getElementById("submit-button"),
   statusText: document.getElementById("status-text"),
   topic: document.getElementById("topic"),
   script: document.getElementById("script"),
@@ -59,6 +60,7 @@ async function init() {
 function bindEvents() {
   elements.generateButton.addEventListener("click", onGenerateRound);
   elements.nextRoundButton.addEventListener("click", onGenerateNextRound);
+  elements.submitButton.addEventListener("click", onSubmitReview);
   window.addEventListener("keydown", onGlobalKeydown);
 }
 
@@ -129,6 +131,52 @@ async function onGenerateNextRound() {
   }
 }
 
+async function onSubmitReview() {
+  const round = state.currentRound;
+  if (!round) {
+    return;
+  }
+
+  const winnerId = state.selectedWinnerId;
+  if (!winnerId) {
+    setStatus("Pick the strongest variant first.", true);
+    return;
+  }
+
+  const loserFeedback = {};
+  for (const variant of round.variants) {
+    if (variant.variant_id === winnerId) {
+      continue;
+    }
+    const note = cleanValue(state.feedbackByVariant[variant.variant_id]);
+    if (!note) {
+      setStatus("Add one short note for each rejected variant before submitting.", true);
+      return;
+    }
+    loserFeedback[variant.variant_id] = note;
+  }
+
+  try {
+    toggleBusy(true);
+    setStatus("Submitting review files and clearing the current round...");
+    const response = await requestJson(`/api/review-rounds/${round.round_id}/submit`, {
+      method: "POST",
+      body: JSON.stringify({
+        winner_variant_id: winnerId,
+        winner_feedback: cleanValue(state.feedbackByVariant[winnerId]),
+        loser_feedback: loserFeedback,
+      }),
+    });
+    clearCurrentRound();
+    const notePath = response.review_note_markdown_path || response.review_note_json_path || "notes/review_feedback/";
+    setStatus(`Review submitted. Files saved to ${notePath}`, "success");
+  } catch (error) {
+    setStatus(error.message || String(error), true);
+  } finally {
+    toggleBusy(false);
+  }
+}
+
 function buildReviewRequestPayload() {
   return compactObject({
     topic: cleanValue(elements.topic.value),
@@ -177,6 +225,17 @@ function renderEmptyState() {
     </article>
   `;
   updateNextButtonState();
+}
+
+function clearCurrentRound() {
+  stopPolling();
+  state.currentRound = null;
+  state.selectedWinnerId = null;
+  state.feedbackByVariant = {};
+  state.slideIndexByVariant = {};
+  state.fullscreenVariantId = null;
+  renderFullscreenViewer();
+  renderEmptyState();
 }
 
 function renderRoundSummary(round) {
@@ -600,6 +659,7 @@ function updateNextButtonState() {
   const round = state.currentRound;
   if (!round || state.isBusy || !isRoundReadyForReview(round) || !state.selectedWinnerId) {
     elements.nextRoundButton.disabled = true;
+    elements.submitButton.disabled = true;
     return;
   }
 
@@ -608,6 +668,7 @@ function updateNextButtonState() {
     .every((variant) => cleanValue(state.feedbackByVariant[variant.variant_id]));
 
   elements.nextRoundButton.disabled = !hasAllLoserNotes;
+  elements.submitButton.disabled = !hasAllLoserNotes;
 }
 
 function isRoundReadyForReview(round) {
@@ -653,6 +714,7 @@ function toggleBusy(isBusy) {
   state.isBusy = isBusy;
   elements.generateButton.disabled = isBusy;
   elements.nextRoundButton.disabled = true;
+  elements.submitButton.disabled = true;
   [
     elements.topic,
     elements.script,

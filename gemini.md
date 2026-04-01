@@ -442,6 +442,7 @@ Status: `Approved and implemented`
   - `POST /api/review-rounds`
   - `GET /api/review-rounds/{round_id}`
   - `POST /api/review-rounds/{round_id}/winner`
+  - `POST /api/review-rounds/{round_id}/submit`
   - `POST /api/review-rounds/{round_id}/next`
 - Locked review-mode rules:
   - 3 variants only
@@ -449,4 +450,5 @@ Status: `Approved and implemented`
   - image on slide 1 plus at least 3 info-slide images
   - CTA slide image omitted by default
 - Added winner-feedback support and persistent review-note exports under `notes/review_feedback/`.
+- Added a dedicated submit path so review notes can be saved and the active review lane cleared without generating the next round.
 - Added review-round compatibility handling so older stored rounds do not break the new studio UI.

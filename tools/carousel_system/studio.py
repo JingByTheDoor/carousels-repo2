@@ -59,7 +59,7 @@ StudioRating = Literal["unrated", "love", "good", "bad"]
 StudioStylePool = Literal["all", "core", "local"]
 StudioImageMode = Literal["auto", "none", "stock", "ai", "hybrid"]
 StudioRoundMode = Literal["advanced", "review"]
-StudioReviewStatus = Literal["drafting", "rendering", "ready_for_review", "winner_selected", "error"]
+StudioReviewStatus = Literal["drafting", "rendering", "ready_for_review", "winner_selected", "submitted", "error"]
 LayoutDensityLabel = Literal["Minimal", "Mixed", "Dense"]
 
 
@@ -316,9 +316,19 @@ class StudioRoundRecord(BaseModel):
     review_status: StudioReviewStatus = "drafting"
     winner_variant_id: str | None = None
     figma_file_url: str | None = None
+    review_note_json_path: str | None = None
+    review_note_markdown_path: str | None = None
     variants: list[StudioVariantRecord]
 
-    @field_validator("generated_brief", "niche_preset", "winner_variant_id", "figma_file_url", mode="before")
+    @field_validator(
+        "generated_brief",
+        "niche_preset",
+        "winner_variant_id",
+        "figma_file_url",
+        "review_note_json_path",
+        "review_note_markdown_path",
+        mode="before",
+    )
     @classmethod
     def _clean_round_optional_text(cls, value: str | None) -> str | None:
         if value is None:
@@ -551,6 +561,14 @@ def save_review_winner(round_id: str, request: ReviewWinnerRequest) -> StudioRou
     return round_record
 
 
+def submit_review_round(round_id: str, request: ReviewWinnerRequest) -> StudioRoundRecord:
+    round_record = save_review_winner(round_id, request)
+    round_record.review_status = "submitted"
+    save_round(round_record)
+    _clear_active_round(round_record.round_id)
+    return round_record
+
+
 def load_round(round_id: str | None) -> StudioRoundRecord | None:
     if not round_id:
         return None
@@ -567,12 +585,12 @@ def load_latest_round() -> StudioRoundRecord | None:
 
 def load_latest_review_round() -> StudioRoundRecord | None:
     latest_round = load_latest_round()
-    if latest_round and latest_round.round_mode == "review":
+    if latest_round and latest_round.round_mode == "review" and latest_round.review_status != "submitted":
         return latest_round
 
     for round_path in _iter_round_paths():
         round_record = StudioRoundRecord.model_validate_json(round_path.read_text(encoding="utf-8"))
-        if round_record.round_mode == "review":
+        if round_record.round_mode == "review" and round_record.review_status != "submitted":
             return round_record
     return None
 
@@ -614,6 +632,14 @@ def save_round(round_record: StudioRoundRecord) -> Path:
     STUDIO_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
     STUDIO_STATE_PATH.write_text(state.model_dump_json(indent=2), encoding="utf-8")
     return path
+
+
+def _clear_active_round(round_id: str) -> None:
+    state = load_state()
+    if state.latest_round_id != round_id:
+        return
+    STUDIO_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    STUDIO_STATE_PATH.write_text(StudioState(latest_round_id=None).model_dump_json(indent=2), encoding="utf-8")
 
 
 def acquire_next_studio_render_variant() -> StudioVariantRecord | None:
@@ -1072,6 +1098,8 @@ def _apply_render_snapshot_to_variant(
 
 def _refresh_round_summary(round_record: StudioRoundRecord) -> None:
     round_record.figma_file_url = next((variant.figma_url for variant in round_record.variants if variant.figma_url), None)
+    if round_record.review_status == "submitted":
+        return
     has_error = any(variant.render_status == "error" for variant in round_record.variants)
     all_complete = bool(round_record.variants) and all(variant.render_status == "complete" for variant in round_record.variants)
     if has_error:
@@ -1200,6 +1228,8 @@ def _write_review_feedback_notes(round_record: StudioRoundRecord) -> None:
 
     markdown_path = REVIEW_NOTES_DIR / f"{round_record.round_id}.md"
     markdown_path.write_text("\n".join(markdown_lines) + "\n", encoding="utf-8")
+    round_record.review_note_json_path = str(json_path)
+    round_record.review_note_markdown_path = str(markdown_path)
 
 
 def _preview_url_from_path(path: str) -> str:

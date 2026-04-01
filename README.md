@@ -81,7 +81,7 @@ Default review flow:
 4. Review only those rendered variants.
 5. Pick the winner.
 6. Type what is good or still not perfect on the winner, and what is wrong with the other 2.
-7. Click `Generate Next 3`.
+7. Either click `Generate Next 3` to iterate, or click `Submit Review` to save the files and clear the active round.
 
 Default review behavior:
 - no topic is required; the app auto-generates a brief in the niche `materials helpful to English teachers`

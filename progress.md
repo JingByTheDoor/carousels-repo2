@@ -278,3 +278,7 @@
   - winner card now has its own note box
   - winner feedback is sent into the next-round planner context
   - review summaries are written to `notes/review_feedback/<round_id>.md` and `.json`
+- Added `Submit Review`:
+  - saves winner + loser feedback without generating another round
+  - marks the round as `submitted`
+  - clears the active review lane

@@ -22,6 +22,7 @@ from carousel_system.studio import (
     load_round,
     rate_variant,
     save_review_winner,
+    submit_review_round,
     studio_bootstrap_payload,
 )
 
@@ -79,6 +80,14 @@ def create_app() -> FastAPI:
     def set_review_winner(round_id: str, request: ReviewWinnerRequest) -> dict:
         try:
             round_record = save_review_winner(round_id, request)
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        return round_record.model_dump(mode="json")
+
+    @app.post("/api/review-rounds/{round_id}/submit")
+    def submit_review_lane_round(round_id: str, request: ReviewWinnerRequest) -> dict:
+        try:
+            round_record = submit_review_round(round_id, request)
         except FileNotFoundError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
         return round_record.model_dump(mode="json")

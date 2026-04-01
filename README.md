@@ -62,7 +62,7 @@ Useful image flags:
 ```
 
 ## Review Studio
-If you want a fast review loop instead of working directly in the Google Sheet, use the local studio.
+The default browser UI is now a minimal Figma review lane, not the old control panel.
 
 One command:
 ```powershell
@@ -72,16 +72,30 @@ One command:
 That launcher:
 - starts the browser review app at `http://127.0.0.1:3000`
 - starts the render bridge too, unless you pass `--no-render-bridge`
+- forces the bridge into `studio_only` queue mode so Google Sheets rows do not appear in the middle of a review round
 
-Inside the studio you can:
-- enter a topic or script
-- generate a round of variants
-- vary style, copy length, or both
-- choose an image mode for the round
-- rate variants as `love`, `good`, or `bad`
-- generate the next round from those ratings
-- let the Figma plugin auto-render the generated variants through the localhost bridge
-- see real rendered slide thumbnails appear in the studio as variants finish rendering
+Default review flow:
+1. Open the studio.
+2. Click `Generate 3`.
+3. Wait for the plugin to render 3 real Figma variants.
+4. Review only those rendered variants.
+5. Pick the winner.
+6. Type what is wrong with the other 2.
+7. Click `Generate Next 3`.
+
+Default review behavior:
+- no topic is required; the app auto-generates a brief in the niche `materials helpful to English teachers`
+- the round always has exactly 3 variants
+- variation is driven by style + copy-length changes, not manual tuning fields
+- the app only shows real rendered thumbnails or a waiting state; it does not fall back to payload-only slide mockups
+- each variant card shows:
+  - copy label
+  - layout density label
+  - style label
+  - image count
+  - `Open Variant Page` link
+
+Advanced controls still exist behind the `Advanced` drawer if you want to seed a topic, script, CTA, language, style, or image mode.
 
 Studio artifacts:
 - `.tmp/studio/rounds/<round_id>.json`
@@ -168,11 +182,12 @@ That command now plans the content and writes the plugin render payload in one p
    - finalize the job artifact and Google Sheet automatically
 
 The studio launcher can start this bridge for you automatically, so you do not need a second terminal in the normal review flow.
-If you explicitly want the old behavior, set `RENDER_QUEUE_PRIORITY=studio_first`.
+If you explicitly want a different queue order, override it when launching `tools/render_server.py`.
 
 When the local Figma plugin is open in auto mode, studio-generated variants are picked up by the same bridge and pushed through the real renderer. The studio then updates each variant card with:
 - `render_status`
 - `figma_url`
+- `figma_page_url`
 - `render_result_path`
 - exported slide thumbnail previews from the plugin result
 
@@ -216,7 +231,7 @@ The audit is intentionally conservative:
 ## Current limitations
 - PNG export automation is still not implemented in the local toolchain.
 - The plugin bridge still depends on a live Figma desktop session with the development plugin running.
-- The studio can now show real rendered thumbnails after the plugin finishes a variant, but it still falls back to payload-driven preview state before a render exists.
+- The review studio now shows only real rendered thumbnails or a waiting state. It intentionally does not show payload-only fake previews.
 - The style engine now covers the harvested Figma families plus the first local-example batch: mono minimal creator slides, light grain/glow slides, retro swipe creator slides, and soft tweet-card slides. It still does not cover every local example family in `Examples of carousels/`.
 - Only stock acquisition through `Pexels` is implemented right now. AI image generation and hybrid fallback are defined in the schema but not wired yet.
 - Image placement is currently limited to cover slides in image-friendly families.

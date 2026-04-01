@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from base64 import b64decode, b64encode
 import json
 import re
 from dataclasses import dataclass
@@ -7,6 +8,8 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import parse_qs, urlencode, urlparse
 from urllib.request import Request, urlopen
+
+from openai import OpenAI
 
 from carousel_system.config import ROOT_DIR, Settings
 from carousel_system.models import (
@@ -21,17 +24,33 @@ from carousel_system.models import (
 IMAGE_ASSETS_DIR = ROOT_DIR / ".tmp" / "image-assets"
 IMAGE_FRIENDLY_FAMILIES = {
     "reference_alder_split_media",
-    "reference_cp_gallery_wall",
     "reference_twitter_card_soft",
     "reference_light_grain_glow",
-    "reference_typography_signal",
 }
-IMAGE_SLOT_BY_FAMILY = {
+STANDARD_IMAGE_SLOT_BY_FAMILY = {
     "reference_alder_split_media": ("cover_media", "mask"),
-    "reference_cp_gallery_wall": ("cover_media", "gallery_wall"),
     "reference_twitter_card_soft": ("cover_media", "card_embed"),
     "reference_light_grain_glow": ("cover_media", "blur_glow"),
-    "reference_typography_signal": ("cover_media", "blur_glow"),
+}
+REVIEW_IMAGE_SLOT_BY_FAMILY = {
+    "reference_alder_split_media": {
+        1: ("cover_media", "mask"),
+        2: ("body_media", "mask"),
+        4: ("body_media", "mask"),
+        6: ("body_media", "mask"),
+    },
+    "reference_light_grain_glow": {
+        1: ("cover_media", "blur_glow"),
+        2: ("body_media", "blur_glow"),
+        4: ("body_media", "blur_glow"),
+        6: ("body_media", "blur_glow"),
+    },
+    "reference_twitter_card_soft": {
+        1: ("cover_media", "card_embed"),
+        2: ("body_media", "card_embed"),
+        4: ("body_media", "card_embed"),
+        6: ("body_media", "card_embed"),
+    },
 }
 LOCALE_BY_LANGUAGE = {
     "ru": "ru-RU",
@@ -91,8 +110,12 @@ def resolve_image_assets(settings: Settings, record: CarouselOutput, payload: Pl
     assets: list[ImageAsset] = []
     for image_request in requests:
         asset = _find_and_cache_pexels_asset(settings, record, image_request)
+        if asset is None and strategy.mode in {"ai", "hybrid"} and record.normalized_input.allow_ai_fallback:
+            asset = _generate_ai_asset(settings, record, image_request)
         if asset:
             assets.append(asset)
+
+    assets = _backfill_missing_review_assets(requests, assets)
 
     if assets:
         record.image_assets = assets
@@ -108,23 +131,32 @@ def resolve_image_assets(settings: Settings, record: CarouselOutput, payload: Pl
 
 
 def _apply_slot_defaults(record: CarouselOutput, payload: PluginRenderPayload) -> None:
-    slot, treatment = IMAGE_SLOT_BY_FAMILY.get(payload.style_family, ("none", "none"))
     for slide in payload.slides:
         slide.image_slot = "none"
         slide.image_required = False
         slide.image_treatment = "none"
         slide.image_asset = None
 
-    if slot == "none" or payload.style_family not in IMAGE_FRIENDLY_FAMILIES:
+    if payload.style_family not in IMAGE_FRIENDLY_FAMILIES:
         return
 
-    hook_slide = next((slide for slide in payload.slides if slide.slide_number == 1), None)
-    if hook_slide is None:
+    if record.normalized_input.generation_mode == "review":
+        slide_plan = REVIEW_IMAGE_SLOT_BY_FAMILY.get(payload.style_family, {})
+    else:
+        slot, treatment = STANDARD_IMAGE_SLOT_BY_FAMILY.get(payload.style_family, ("none", "none"))
+        slide_plan = {1: (slot, treatment)}
+
+    if not slide_plan:
         return
 
-    hook_slide.image_slot = slot
-    hook_slide.image_required = record.normalized_input.image_mode in {"stock", "ai"}
-    hook_slide.image_treatment = treatment
+    require_image = record.normalized_input.image_mode in {"stock", "ai", "hybrid"}
+    for slide in payload.slides:
+        slot, treatment = slide_plan.get(slide.slide_number, ("none", "none"))
+        if slot == "none":
+            continue
+        slide.image_slot = slot
+        slide.image_required = require_image
+        slide.image_treatment = treatment
 
 
 def _resolve_image_strategy(
@@ -163,6 +195,24 @@ def _resolve_image_strategy(
         return ImageStrategy(mode="hybrid", provider=provider, reason=reason)
 
     if requested_mode == "auto":
+        if record.normalized_input.generation_mode == "review":
+            if settings.pexels_api_key:
+                return ImageStrategy(
+                    mode="hybrid",
+                    provider="pexels",
+                    reason="Review mode uses stock-first images with AI fallback when needed.",
+                )
+            if settings.openai_api_key:
+                return ImageStrategy(
+                    mode="ai",
+                    provider="openai_gpt_image",
+                    reason="Review mode fell back to AI because Pexels is unavailable.",
+                )
+            return ImageStrategy(
+                mode="none",
+                provider=None,
+                reason="Review mode needs images, but neither Pexels nor OpenAI is configured.",
+            )
         if not settings.pexels_api_key:
             return ImageStrategy(
                 mode="none",
@@ -201,16 +251,19 @@ def _build_query(record: CarouselOutput, slide_number: int) -> str:
     slide = next((item for item in record.content_plan if item.slide_number == slide_number), None)
     topic = record.normalized_input.topic or ""
     headline = slide.headline if slide else ""
-    source = topic or headline or record.content_plan[0].headline
+    body = slide.body if slide else ""
+    role = slide.slide_role if slide else "info"
+    source = " ".join(part for part in [topic, headline, body] if part) or record.content_plan[0].headline
     keywords = _compact_keywords(source)
     focus = record.normalized_input.image_focus
+    niche = "english teacher materials" if record.normalized_input.generation_mode == "review" else "education"
     if focus == "brand_safe":
-        return f"{keywords} professional clean"
+        return f"{keywords} {role} {niche} professional clean"
     if focus == "literal":
-        return f"{keywords} realistic"
+        return f"{keywords} {role} {niche} realistic"
     if focus == "abstract":
-        return f"{keywords} conceptual"
-    return f"{keywords} editorial"
+        return f"{keywords} {role} {niche} conceptual"
+    return f"{keywords} {role} {niche} editorial"
 
 
 def _compact_keywords(text: str, *, max_words: int = 6) -> str:
@@ -254,6 +307,77 @@ def _find_and_cache_pexels_asset(
         height=best.height,
         alt_text=best.alt_text,
     )
+
+
+def _generate_ai_asset(
+    settings: Settings,
+    record: CarouselOutput,
+    image_request: ImageRequest,
+) -> ImageAsset | None:
+    if not settings.openai_api_key:
+        return None
+
+    prompt = (
+        f"Create a vertical editorial image for an Instagram carousel slide about {image_request.query}. "
+        "Make it useful for English teachers and teaching materials. "
+        "Keep it clean, realistic, brand-safe, and suitable for an educational business account. "
+        "Avoid text, watermarks, logos, or UI chrome."
+    )
+    client = OpenAI(api_key=settings.openai_api_key)
+    response = client.images.generate(
+        model="gpt-image-1",
+        prompt=prompt,
+        size="1024x1536",
+        quality="medium",
+        output_format="png",
+    )
+    if not response.data:
+        return None
+
+    image = response.data[0]
+    if not image.b64_json:
+        return None
+
+    asset_dir = IMAGE_ASSETS_DIR / record.job_id
+    asset_dir.mkdir(parents=True, exist_ok=True)
+    asset_path = asset_dir / f"slide-{image_request.slide_number:02d}-openai.png"
+    asset_path.write_bytes(b64decode(image.b64_json))
+    revised_prompt = image.revised_prompt or prompt
+    return ImageAsset(
+        slide_number=image_request.slide_number,
+        role=image_request.role,
+        source_mode="ai",
+        provider="openai_gpt_image",
+        query_or_prompt=revised_prompt,
+        original_url=None,
+        local_path=str(asset_path),
+        credit="Generated with OpenAI",
+        alt_text=revised_prompt,
+    )
+
+
+def _backfill_missing_review_assets(requests: list[ImageRequest], assets: list[ImageAsset]) -> list[ImageAsset]:
+    if not requests or not assets:
+        return assets
+    asset_map = {asset.slide_number: asset for asset in assets}
+    fallback_asset = asset_map.get(1) or assets[0]
+    for request in requests:
+        if request.slide_number in asset_map:
+            continue
+        asset_map[request.slide_number] = ImageAsset(
+            slide_number=request.slide_number,
+            role=request.role,
+            source_mode=fallback_asset.source_mode,
+            provider=fallback_asset.provider,
+            query_or_prompt=request.query,
+            original_url=fallback_asset.original_url,
+            local_path=fallback_asset.local_path,
+            credit=fallback_asset.credit,
+            width=fallback_asset.width,
+            height=fallback_asset.height,
+            alt_text=fallback_asset.alt_text,
+        )
+    return [asset_map[request.slide_number] for request in requests if request.slide_number in asset_map]
 
 
 def _search_pexels_candidates(settings: Settings, query: str, *, language: str) -> list[PexelsCandidate]:
@@ -353,11 +477,15 @@ def _attach_assets_to_payload(payload: PluginRenderPayload, assets: list[ImageAs
         asset = asset_map.get(slide.slide_number)
         if not asset:
             continue
+        data_base64 = None
+        if asset.provider == "openai_gpt_image" and asset.local_path:
+            data_base64 = b64encode(Path(asset.local_path).read_bytes()).decode("utf-8")
         slide.image_asset = RenderImageAssetSpec(
             provider=asset.provider,
             local_path=asset.local_path,
             url=asset.original_url,
             credit=asset.credit,
+            data_base64=data_base64,
         )
 
 

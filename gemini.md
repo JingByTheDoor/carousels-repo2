@@ -293,7 +293,11 @@ Status: `Approved and implemented`
       "job_id": "string",
       "rating": "unrated|love|good|bad",
       "rating_note": "string|null",
+      "rejection_note": "string|null",
       "copy_length": "tight|balanced|expanded|punchy",
+      "copy_length_label": "string",
+      "layout_density_label": "Minimal|Mixed|Dense",
+      "image_count": "integer",
       "requested_style": "string",
       "requested_style_label": "string",
       "planner_notes": "string",
@@ -306,6 +310,8 @@ Status: `Approved and implemented`
       "render_status": "planned|rendering|complete|error",
       "render_result_path": "string|null",
       "figma_url": "string|null",
+      "figma_page_name": "string|null",
+      "figma_page_url": "string|null",
       "preview_image_paths": ["string"],
       "preview_image_urls": ["string"],
       "rendered_at": "ISO-8601 string|null",
@@ -368,10 +374,15 @@ Status: `Approved and implemented`
 - The local review studio is allowed to generate review rounds outside Google Sheets, but each variant must still emit the canonical job artifact and render payload.
 - Studio ratings may influence the next round, but they must not overwrite prior round artifacts.
 - Studio variants may also track their render lifecycle and rendered outputs independently of Google Sheets.
+- Review mode may omit both `topic` and `script`; when that happens the system must auto-generate the brief inside the fixed niche preset `english_teacher_materials`.
+- Default review mode must create exactly 3 variants.
+- Default review mode must use only review-safe, image-capable families.
+- Default review mode must not show payload-only fake previews in the browser UI; it may show a waiting state until real rendered previews exist.
 - The planned image layer should default to stock-first with AI fallback, not AI-first.
 - `pexels` is the preferred first stock provider for the local renderer workflow; `unsplash` is a weaker default because its API guidelines require hotlinking returned URLs and attribution handling that does not fit Figma import as cleanly.
-- The currently implemented image acquisition path is `Pexels` only. `ai` and `hybrid` modes exist in the schema, but AI fallback is not implemented yet.
+- The currently implemented image acquisition path is stock-first with `Pexels`, plus OpenAI image fallback for `ai` and `hybrid` modes when stock cannot satisfy review-mode image slots.
 - The render bridge now defaults to `sheets_first` queue priority so pending studio rounds do not silently override Google Sheets rows during auto-rendering.
+- The studio launcher must override render queue priority to `studio_only` so the minimal review lane is isolated from Google Sheets jobs.
 
 ## Maintenance Log
 
@@ -405,3 +416,31 @@ Status: `Approved and implemented`
   - per-variant `rating`
   - per-variant `rating_note`
 - Approved the local ideation path where the studio sits above the canonical job/payload artifacts rather than replacing them.
+
+### 2026-03-31
+- Reworked the studio into a minimal review-first lane:
+  - default action is `Generate 3`
+  - default niche is `english_teacher_materials`
+  - advanced fields are hidden behind an `Advanced` drawer
+- Added review-mode fields for:
+  - `generated_brief`
+  - `review_status`
+  - `winner_variant_id`
+  - `figma_file_url`
+  - per-variant `rejection_note`
+  - per-variant `copy_length_label`
+  - per-variant `layout_density_label`
+  - per-variant `image_count`
+  - per-variant `figma_page_name`
+  - per-variant `figma_page_url`
+- Added review endpoints:
+  - `POST /api/review-rounds`
+  - `GET /api/review-rounds/{round_id}`
+  - `POST /api/review-rounds/{round_id}/winner`
+  - `POST /api/review-rounds/{round_id}/next`
+- Locked review-mode rules:
+  - 3 variants only
+  - real rendered Figma previews only
+  - image on slide 1 plus at least 3 info-slide images
+  - CTA slide image omitted by default
+- Added review-round compatibility handling so older stored rounds do not break the new studio UI.

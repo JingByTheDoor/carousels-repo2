@@ -251,14 +251,16 @@ function normalizeImageAsset(asset) {
   const localPath = cleanText(asset.local_path);
   const credit = cleanText(asset.credit);
   const provider = cleanText(asset.provider);
-  if (!url && !localPath) {
+  const dataBase64 = cleanText(asset.data_base64);
+  if (!url && !localPath && !dataBase64) {
     return null;
   }
   return {
     provider,
     url,
     local_path: localPath,
-    credit
+    credit,
+    data_base64: dataBase64
   };
 }
 
@@ -294,6 +296,7 @@ async function renderCarousel(payload) {
     page_id: page.id,
     file_key: typeof figma.fileKey === "string" ? figma.fileKey : null,
     file_url: typeof figma.fileKey === "string" ? `https://www.figma.com/design/${figma.fileKey}` : null,
+    page_url: typeof figma.fileKey === "string" ? `https://www.figma.com/design/${figma.fileKey}?page-id=${encodeURIComponent(page.id)}` : null,
     slide_node_ids: nodeIds,
     preview_images: previewImages,
     rendered_at: new Date().toISOString()
@@ -895,7 +898,28 @@ async function renderAlderSplitMediaBodySlide(frame, slide, payload, orientation
   const textX = mediaOnLeft ? 514 : 84;
   const textWidth = mediaOnLeft ? 478 : 508;
 
-  appendAlderMediaStack(frame, mediaX, 92, mediaWidth, 1090, tokens);
+  const mediaRect = await appendRemoteImageRect(frame, slide, {
+    x: mediaX,
+    y: 92,
+    width: mediaWidth,
+    height: 1090,
+    cornerRadius: 28,
+    overlayHex: "#FFFFFF",
+    overlayOpacity: 0.08
+  });
+  if (!mediaRect) {
+    appendAlderMediaStack(frame, mediaX, 92, mediaWidth, 1090, tokens);
+  } else {
+    const stroke = figma.createRectangle();
+    stroke.resize(mediaWidth, 1090);
+    stroke.x = mediaX;
+    stroke.y = 92;
+    stroke.cornerRadius = 28;
+    stroke.fills = [];
+    stroke.strokes = [solidPaint(tokens.text_dark, 0.08)];
+    stroke.strokeWeight = 2;
+    frame.appendChild(stroke);
+  }
 
   const dot = figma.createEllipse();
   dot.resize(22, 22);
@@ -2018,6 +2042,16 @@ async function renderLightGrainCoverSlide(frame, slide, payload) {
 async function renderLightGrainBodySlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   appendSoftGradientBackdrop(frame, tokens, slide.slide_number % 2 === 0 ? "green" : "violet");
+  await appendRemoteImageRect(frame, slide, {
+    x: 0,
+    y: 0,
+    width: 1080,
+    height: 1350,
+    opacity: 0.2,
+    overlayHex: "#FFFFFF",
+    overlayOpacity: 0.1,
+    effects: [{ type: "LAYER_BLUR", radius: 10, visible: true }]
+  });
 
   const number = await createTextBlock(frame, {
     text: String(slide.slide_number - 1),
@@ -2280,6 +2314,16 @@ async function renderTwitterCardCoverSlide(frame, slide, payload) {
 async function renderTwitterCardBodySlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   appendSoftGradientBackdrop(frame, tokens, slide.slide_number % 2 === 0 ? "sky" : "peach");
+  await appendRemoteImageRect(frame, slide, {
+    x: 0,
+    y: 0,
+    width: 1080,
+    height: 1350,
+    opacity: 0.2,
+    overlayHex: "#FFFFFF",
+    overlayOpacity: 0.08,
+    effects: [{ type: "LAYER_BLUR", radius: 8, visible: true }]
+  });
   await appendTweetCard(frame, 34, 140, 1012, 900, slide, tokens, payload, false);
 }
 
@@ -2866,12 +2910,20 @@ function appendGlow(frame, x, y, size, hex, opacity) {
 }
 
 async function appendRemoteImageRect(frame, slide, options) {
-  if (!slide || !slide.image_asset || !slide.image_asset.url) {
+  if (!slide || !slide.image_asset) {
     return null;
   }
 
   try {
-    const image = await figma.createImageAsync(slide.image_asset.url);
+    let image = null;
+    if (slide.image_asset.data_base64) {
+      image = figma.createImage(decodeBase64(slide.image_asset.data_base64));
+    } else if (slide.image_asset.url) {
+      image = await figma.createImageAsync(slide.image_asset.url);
+    }
+    if (!image) {
+      return null;
+    }
     const rect = figma.createRectangle();
     rect.name = "Slide Image";
     rect.resize(options.width, options.height);
@@ -3500,6 +3552,15 @@ function encodeBase64(bytes) {
     result += index + 2 < bytes.length ? alphabet[triple & 63] : "=";
   }
   return result;
+}
+
+function decodeBase64(base64) {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+  return bytes;
 }
 
 function uniquePageName(baseName) {

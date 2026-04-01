@@ -3,136 +3,88 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Carousel Review Studio</title>
+    <title>Minimal Figma Review Studio</title>
     <link rel="stylesheet" href="/studio-assets/styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="control-panel">
-        <div class="panel-card">
-          <p class="eyebrow">Review Studio</p>
-          <h1>Generate, rate, iterate</h1>
-          <p class="muted">
-            Make one round of variants, rate what works, then generate the next round without touching the sheet.
-          </p>
+    <main class="page-shell">
+      <section class="hero-card">
+        <p class="eyebrow">Minimal Review Studio</p>
+        <h1>Generate 3 real Figma options</h1>
+        <p class="hero-copy">
+          One-click review for materials helpful to English teachers. Generate three real Figma variants, pick the
+          winner, note what is wrong with the others, then generate the next round.
+        </p>
+        <div class="hero-actions">
+          <button id="generate-button" class="primary-button" type="button">Generate 3</button>
+          <button id="next-round-button" class="secondary-button" type="button" disabled>Generate Next 3</button>
         </div>
+        <div class="status-strip">
+          <span id="status-text">Loading studio…</span>
+        </div>
+      </section>
 
-        <form id="generate-form" class="panel-card form-stack">
+      <details class="advanced-panel" id="advanced-panel">
+        <summary>Advanced</summary>
+        <div class="advanced-grid">
           <label>
             <span>Topic</span>
-            <input id="topic" name="topic" type="text" placeholder="Why most hooks fail before slide 2" />
+            <input id="topic" name="topic" type="text" placeholder="Optional seed topic" />
           </label>
 
           <label>
             <span>Script</span>
-            <textarea id="script" name="script" rows="7" placeholder="Optional full script. If blank, the planner writes it from the topic."></textarea>
+            <textarea id="script" name="script" rows="5" placeholder="Optional full script"></textarea>
           </label>
 
           <label>
             <span>CTA Text</span>
-            <input id="cta_text" name="cta_text" type="text" placeholder="Follow for more carousel breakdowns" />
+            <input id="cta_text" name="cta_text" type="text" placeholder="Optional CTA override" />
           </label>
 
           <label>
             <span>Notes</span>
-            <textarea id="notes" name="notes" rows="3" placeholder="Optional direction, angle, or constraint."></textarea>
+            <textarea id="notes" name="notes" rows="3" placeholder="Optional direction or constraint"></textarea>
           </label>
 
-          <div class="split-grid">
-            <label>
-              <span>Batch Mode</span>
-              <select id="batch_mode" name="batch_mode"></select>
-            </label>
-            <label>
-              <span>Variants</span>
-              <input id="variant_count" name="variant_count" type="number" min="3" max="6" value="4" />
-            </label>
-          </div>
-
-          <div class="split-grid">
-            <label>
-              <span>Preferred Style</span>
-              <select id="preferred_style" name="preferred_style"></select>
-            </label>
-            <label>
-              <span>Style Pool</span>
-              <select id="style_pool" name="style_pool"></select>
-            </label>
-          </div>
-
-          <div class="split-grid">
-            <label>
-              <span>Base Copy Length</span>
-              <select id="base_copy_length" name="base_copy_length"></select>
-            </label>
-            <label>
-              <span>Language</span>
-              <input id="language" name="language" type="text" placeholder="Optional, e.g. en or ru" />
-            </label>
-          </div>
-
-          <div class="split-grid">
-            <label>
-              <span>Image Mode</span>
-              <select id="image_mode" name="image_mode"></select>
-            </label>
-            <div></div>
-          </div>
-
-          <button id="generate-button" class="primary-button" type="submit">Generate Review Round</button>
-        </form>
-
-        <div class="panel-card">
-          <div class="inline-heading">
-            <h2>Round Actions</h2>
-            <button id="next-round-button" class="ghost-button" type="button" disabled>Generate Next Round</button>
-          </div>
-          <p class="muted small">
-            The next round uses your best ratings as the anchor and tries nearby variations automatically.
-          </p>
           <label>
-            <span>Rating Note</span>
-            <textarea id="rating-note" rows="3" placeholder="Optional note, e.g. stronger hook but keep this style."></textarea>
+            <span>Preferred Style</span>
+            <select id="preferred_style" name="preferred_style"></select>
           </label>
-          <div class="rating-actions">
-            <button class="rating-button love" data-rating="love" type="button" disabled>Love</button>
-            <button class="rating-button good" data-rating="good" type="button" disabled>Good</button>
-            <button class="rating-button bad" data-rating="bad" type="button" disabled>Bad</button>
+
+          <label>
+            <span>Base Copy Length</span>
+            <select id="base_copy_length" name="base_copy_length"></select>
+          </label>
+
+          <label>
+            <span>Image Mode</span>
+            <select id="image_mode" name="image_mode"></select>
+          </label>
+
+          <label>
+            <span>Language</span>
+            <input id="language" name="language" type="text" placeholder="Optional, e.g. en or ru" />
+          </label>
+        </div>
+      </details>
+
+      <section class="round-card">
+        <div class="round-header">
+          <div>
+            <p class="eyebrow">Current Round</p>
+            <h2 id="round-title">No round yet</h2>
+          </div>
+          <div class="round-links">
+            <a id="round-figma-link" class="chip-link hidden" href="#" target="_blank" rel="noreferrer">Open file</a>
           </div>
         </div>
+        <div class="round-meta" id="round-meta"></div>
+        <p class="round-brief" id="round-brief">Click Generate 3 to start a new round.</p>
+      </section>
 
-        <div class="panel-card status-card">
-          <h2>Status</h2>
-          <p id="status-text" class="muted">Loading studio…</p>
-        </div>
-      </aside>
-
-      <main class="preview-panel">
-        <section class="panel-card">
-          <div class="inline-heading">
-            <div>
-              <p class="eyebrow">Current Round</p>
-              <h2 id="round-title">No round yet</h2>
-            </div>
-            <div class="round-meta" id="round-meta"></div>
-          </div>
-          <div id="variant-tabs" class="variant-tabs"></div>
-        </section>
-
-        <section class="panel-card">
-          <div class="inline-heading">
-            <div>
-              <p class="eyebrow">Variant Preview</p>
-              <h2 id="variant-title">Generate a round to begin</h2>
-            </div>
-            <div class="variant-meta" id="variant-meta"></div>
-          </div>
-          <div id="style-swatches" class="style-swatches"></div>
-          <div id="preview-grid" class="preview-grid"></div>
-          <div id="variant-paths" class="variant-paths"></div>
-        </section>
-      </main>
-    </div>
+      <section class="review-grid" id="review-grid"></section>
+    </main>
 
     <script src="/studio-assets/app.js"></script>
   </body>

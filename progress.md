@@ -255,3 +255,22 @@
 - The style engine now covers the distinct slide archetypes from the approved Figma file, including the lower black-profile portrait family, the lower white-profile portrait family, and the alternate light typography set.
 - The repo now has an explicit local-example coverage audit, and the first local harvest batch has reduced unmapped groups from 102 to 86.
 - PNG export automation is still not implemented in the local toolchain.
+- Rebuilt Studio into a minimal review-first app:
+  - blank-input `Generate 3` now works
+  - default niche is `materials helpful to English teachers`
+  - default review mode creates exactly 3 variants
+  - advanced controls are hidden behind an `Advanced` drawer
+  - the browser shows only real rendered previews or a waiting state
+  - the next-round flow is `pick winner + loser notes -> Generate Next 3`
+- Added review-mode backend isolation and metadata:
+  - new review endpoints in `studio_web.py`
+  - `load_latest_review_round()` for review-only bootstrap behavior
+  - `create_next_review_round()` now requires a winner before iteration
+  - new round/variant metadata for generated briefs, review status, page URLs, copy labels, density labels, and image counts
+- Updated `tools/start_studio.py` + render bridge behavior so the default studio launcher uses `studio_only` queue priority.
+- Verified:
+  - `python -m compileall tools`
+  - `node --check studio_assets\\app.js`
+  - `fastapi.testclient` bootstrap request
+  - real blank review-round generation through `POST /api/review-rounds`
+  - real winner + loser-note iteration through `POST /api/review-rounds/{round_id}/winner` then `/next`

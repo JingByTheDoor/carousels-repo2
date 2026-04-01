@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from dataclasses import replace
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
@@ -22,12 +23,15 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Serve render jobs to the local Figma plugin.")
     parser.add_argument("--host")
     parser.add_argument("--port", type=int)
+    parser.add_argument("--queue-mode", choices=["sheets_first", "studio_first", "studio_only", "sheets_only"])
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     settings = load_settings(require_openai=True, require_google=True)
+    if args.queue_mode:
+        settings = replace(settings, render_queue_priority=args.queue_mode)
     host = args.host or settings.render_server_host
     port = args.port or settings.render_server_port
     queue = GoogleSheetsQueue(settings)

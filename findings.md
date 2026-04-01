@@ -184,3 +184,12 @@
 - The first renderer-side image pass should stay on cover slides only. That gives immediate value for the media-friendly families without destabilizing the body layouts that were already tuned for readability.
 - Studio-first bridge priority is confusing when the user is working from Google Sheets, because old pending studio variants can render before the visible sheet row and make it look like the sheet input was ignored.
 - The first cover-image treatment was too soft on image-enabled styles, especially `reference_twitter_card_soft`. The problem was not image selection but renderer treatment values: blur radius and overlay opacity were washing out the stock photo too aggressively.
+- The minimal review UX works better when the browser refuses to show payload-only fake slides. A waiting state is clearer than mixing non-rendered previews with real Figma outputs.
+- Review rounds need queue isolation. If the bridge can see Google Sheets jobs while the user is reviewing variants, the app stops feeling deterministic.
+- Older stored studio round JSON can break the new review app if new variant fields are required. Backward-compatible defaults are necessary for fields such as `copy_length_label`, `layout_density_label`, and `requested_style_label`.
+- The blank-input path is viable for this product as long as the niche is fixed. Auto-generating briefs inside `english_teacher_materials` produces a much simpler interface without removing the advanced path.
+- The review-safe family set is small on purpose:
+  - `alder_split_right`
+  - `light_glow`
+  - `twitter_card`
+  This makes the "must include 4 images" rule realistic instead of hoping every style can absorb media cleanly.

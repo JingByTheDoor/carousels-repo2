@@ -1,90 +1,75 @@
 const state = {
+  bootstrap: null,
   currentRound: null,
-  currentIndex: 0,
+  selectedWinnerId: null,
+  feedbackByVariant: {},
+  pollTimer: null,
+  isBusy: false,
 };
 
-let refreshTimer = null;
-
 const elements = {
-  form: document.getElementById("generate-form"),
+  generateButton: document.getElementById("generate-button"),
+  nextRoundButton: document.getElementById("next-round-button"),
+  statusText: document.getElementById("status-text"),
   topic: document.getElementById("topic"),
   script: document.getElementById("script"),
   ctaText: document.getElementById("cta_text"),
   notes: document.getElementById("notes"),
-  batchMode: document.getElementById("batch_mode"),
-  variantCount: document.getElementById("variant_count"),
   preferredStyle: document.getElementById("preferred_style"),
-  stylePool: document.getElementById("style_pool"),
   baseCopyLength: document.getElementById("base_copy_length"),
-  language: document.getElementById("language"),
   imageMode: document.getElementById("image_mode"),
-  statusText: document.getElementById("status-text"),
-  nextRoundButton: document.getElementById("next-round-button"),
-  ratingNote: document.getElementById("rating-note"),
-  ratingButtons: Array.from(document.querySelectorAll(".rating-button")),
+  language: document.getElementById("language"),
   roundTitle: document.getElementById("round-title"),
+  roundFigmaLink: document.getElementById("round-figma-link"),
   roundMeta: document.getElementById("round-meta"),
-  variantTabs: document.getElementById("variant-tabs"),
-  variantTitle: document.getElementById("variant-title"),
-  variantMeta: document.getElementById("variant-meta"),
-  previewGrid: document.getElementById("preview-grid"),
-  styleSwatches: document.getElementById("style-swatches"),
-  variantPaths: document.getElementById("variant-paths"),
+  roundBrief: document.getElementById("round-brief"),
+  reviewGrid: document.getElementById("review-grid"),
 };
+
+init();
 
 async function init() {
   bindEvents();
   try {
     const bootstrap = await requestJson("/api/bootstrap");
-    populateSelect(elements.batchMode, bootstrap.batch_modes, "value", "label", "vary_both");
-    populateSelect(elements.preferredStyle, bootstrap.style_options, "value", "label", "auto");
-    populateSelect(elements.stylePool, bootstrap.style_pools, "value", "label", "all");
-    populateSelect(elements.baseCopyLength, bootstrap.copy_length_options, "value", "label", "balanced");
-    populateSelect(elements.imageMode, bootstrap.image_mode_options, "value", "label", "auto");
+    state.bootstrap = bootstrap;
+    populateSelect(elements.preferredStyle, bootstrap.style_options, "auto");
+    populateSelect(elements.baseCopyLength, bootstrap.copy_length_options, bootstrap.review_defaults.base_copy_length);
+    populateSelect(elements.imageMode, bootstrap.image_mode_options, bootstrap.review_defaults.image_mode);
 
-    if (bootstrap.latest_round) {
-      applyRound(bootstrap.latest_round);
-      setStatus("Loaded the latest review round.");
+    const latestRound =
+      bootstrap.latest_review_round ||
+      (bootstrap.latest_round && bootstrap.latest_round.round_mode === "review" ? bootstrap.latest_round : null);
+
+    if (latestRound) {
+      applyRound(latestRound);
+      setStatus(roundStatusMessage(latestRound));
     } else {
-      setStatus("Studio ready. Generate a review round to begin.");
+      renderEmptyState();
+      setStatus("Ready. Click Generate 3 to create a new review round.");
     }
   } catch (error) {
+    renderEmptyState();
     setStatus(error.message || String(error), true);
   }
 }
 
 function bindEvents() {
-  elements.form.addEventListener("submit", onGenerateRound);
+  elements.generateButton.addEventListener("click", onGenerateRound);
   elements.nextRoundButton.addEventListener("click", onGenerateNextRound);
-  elements.ratingButtons.forEach((button) => {
-    button.addEventListener("click", () => onRateVariant(button.dataset.rating));
-  });
 }
 
-async function onGenerateRound(event) {
-  event.preventDefault();
+async function onGenerateRound() {
   try {
-    setStatus("Generating review round...");
     toggleBusy(true);
-    const payload = {
-      topic: cleanValue(elements.topic.value),
-      script: cleanValue(elements.script.value),
-      cta_text: cleanValue(elements.ctaText.value),
-      notes: cleanValue(elements.notes.value),
-      language: cleanValue(elements.language.value),
-      batch_mode: elements.batchMode.value,
-      variant_count: Number(elements.variantCount.value || 4),
-      preferred_style: elements.preferredStyle.value,
-      style_pool: elements.stylePool.value,
-      base_copy_length: elements.baseCopyLength.value,
-      image_mode: elements.imageMode.value,
-    };
-    const round = await requestJson("/api/rounds", {
+    setStatus("Generating three new variants...");
+    const payload = buildReviewRequestPayload();
+    const round = await requestJson("/api/review-rounds", {
       method: "POST",
       body: JSON.stringify(payload),
     });
     applyRound(round);
-    setStatus("Generated a new review round.");
+    setStatus("Round created. Waiting for real Figma renders...");
   } catch (error) {
     setStatus(error.message || String(error), true);
   } finally {
@@ -93,17 +78,45 @@ async function onGenerateRound(event) {
 }
 
 async function onGenerateNextRound() {
-  if (!state.currentRound) {
+  const round = state.currentRound;
+  if (!round) {
     return;
   }
+
+  const winnerId = state.selectedWinnerId;
+  if (!winnerId) {
+    setStatus("Pick the strongest variant first.", true);
+    return;
+  }
+
+  const loserFeedback = {};
+  for (const variant of round.variants) {
+    if (variant.variant_id === winnerId) {
+      continue;
+    }
+    const note = cleanValue(state.feedbackByVariant[variant.variant_id]);
+    if (!note) {
+      setStatus("Add one short note for each rejected variant before generating the next round.", true);
+      return;
+    }
+    loserFeedback[variant.variant_id] = note;
+  }
+
   try {
-    setStatus("Generating the next round from your ratings...");
     toggleBusy(true);
-    const round = await requestJson(`/api/rounds/${state.currentRound.round_id}/next`, {
+    setStatus("Saving your winner and generating the next three...");
+    await requestJson(`/api/review-rounds/${round.round_id}/winner`, {
+      method: "POST",
+      body: JSON.stringify({
+        winner_variant_id: winnerId,
+        loser_feedback: loserFeedback,
+      }),
+    });
+    const nextRound = await requestJson(`/api/review-rounds/${round.round_id}/next`, {
       method: "POST",
     });
-    applyRound(round);
-    setStatus("Generated the next round.");
+    applyRound(nextRound);
+    setStatus("Next round created. Waiting for fresh Figma renders...");
   } catch (error) {
     setStatus(error.message || String(error), true);
   } finally {
@@ -111,249 +124,337 @@ async function onGenerateNextRound() {
   }
 }
 
-async function onRateVariant(rating) {
-  const variant = getCurrentVariant();
-  if (!variant || !state.currentRound) {
-    return;
-  }
-  try {
-    setStatus(`Saving rating: ${rating}...`);
-    const round = await requestJson(
-      `/api/rounds/${state.currentRound.round_id}/variants/${variant.variant_id}/rating`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          rating,
-          note: cleanValue(elements.ratingNote.value),
-        }),
-      },
-    );
-    applyRound(round, variant.variant_id);
-    setStatus(`Saved rating: ${rating}.`);
-  } catch (error) {
-    setStatus(error.message || String(error), true);
-  }
+function buildReviewRequestPayload() {
+  return compactObject({
+    topic: cleanValue(elements.topic.value),
+    script: cleanValue(elements.script.value),
+    cta_text: cleanValue(elements.ctaText.value),
+    notes: cleanValue(elements.notes.value),
+    preferred_style: elements.preferredStyle.value || state.bootstrap.review_defaults.preferred_style,
+    base_copy_length: elements.baseCopyLength.value || state.bootstrap.review_defaults.base_copy_length,
+    image_mode: elements.imageMode.value || state.bootstrap.review_defaults.image_mode,
+    language: cleanValue(elements.language.value),
+  });
 }
 
-function applyRound(round, preferredVariantId) {
+function applyRound(round) {
   state.currentRound = round;
-  const preferredIndex = round.variants.findIndex((variant) => variant.variant_id === preferredVariantId);
-  state.currentIndex = preferredIndex >= 0 ? preferredIndex : 0;
+  state.selectedWinnerId = round.winner_variant_id || null;
+  state.feedbackByVariant = {};
+  round.variants.forEach((variant) => {
+    state.feedbackByVariant[variant.variant_id] = variant.rejection_note || variant.rating_note || "";
+  });
 
-  elements.roundTitle.textContent = `Round ${round.round_number}`;
+  renderRoundSummary(round);
+  renderVariantGrid(round);
+  updateNextButtonState();
+  managePolling(round);
+}
+
+function renderEmptyState() {
+  elements.roundTitle.textContent = "No review round yet";
+  elements.roundBrief.textContent = "Click Generate 3 to create three real Figma-ready options.";
   elements.roundMeta.innerHTML = "";
-  elements.roundMeta.appendChild(metaChip(round.request.batch_mode.replaceAll("_", " ")));
-  elements.roundMeta.appendChild(metaChip(`${round.variants.length} variants`));
-  elements.roundMeta.appendChild(metaChip(round.request.style_pool));
-
-  renderVariantTabs();
-  renderCurrentVariant();
-  elements.nextRoundButton.disabled = false;
-  startRoundRefresh();
+  elements.roundFigmaLink.classList.add("hidden");
+  elements.roundFigmaLink.href = "#";
+  elements.reviewGrid.innerHTML = `
+    <article class="empty-card">
+      <p class="empty-title">Nothing generated yet</p>
+      <p class="empty-copy">This app only shows real rendered review variants. Generate a round and let the Figma plugin finish the renders.</p>
+    </article>
+  `;
+  updateNextButtonState();
 }
 
-function renderVariantTabs() {
-  const round = state.currentRound;
-  elements.variantTabs.innerHTML = "";
-  if (!round) {
-    return;
+function renderRoundSummary(round) {
+  elements.roundTitle.textContent = `Round ${round.round_number}`;
+  elements.roundBrief.textContent =
+    round.generated_brief || "Materials helpful to English teachers";
+
+  elements.roundMeta.innerHTML = "";
+  elements.roundMeta.appendChild(metaChip("Review Mode"));
+  elements.roundMeta.appendChild(metaChip("3 Variants"));
+  elements.roundMeta.appendChild(metaChip(`Status: ${formatStatus(round.review_status)}`));
+  elements.roundMeta.appendChild(metaChip(`Niche: ${state.bootstrap.review_defaults.niche_label}`));
+
+  if (round.figma_file_url) {
+    elements.roundFigmaLink.classList.remove("hidden");
+    elements.roundFigmaLink.href = round.figma_file_url;
+  } else {
+    elements.roundFigmaLink.classList.add("hidden");
+    elements.roundFigmaLink.href = "#";
   }
-  round.variants.forEach((variant, index) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `variant-tab ${index === state.currentIndex ? "active" : ""}`;
-    button.innerHTML = `
-      <strong>Variant ${variant.ordinal}</strong>
-      <span class="meta">${variant.requested_style_label} · ${capitalize(variant.copy_length)}</span>
-      <span class="meta">Rating: ${capitalize(variant.rating)} · Render: ${capitalize(variant.render_status)}</span>
-    `;
-    button.addEventListener("click", () => {
-      state.currentIndex = index;
-      renderVariantTabs();
-      renderCurrentVariant();
-    });
-    elements.variantTabs.appendChild(button);
-  });
 }
 
-function renderCurrentVariant() {
-  const variant = getCurrentVariant();
-  elements.previewGrid.innerHTML = "";
-  elements.styleSwatches.innerHTML = "";
-  elements.variantMeta.innerHTML = "";
-  elements.variantPaths.innerHTML = "";
-
-  if (!variant) {
-    elements.variantTitle.textContent = "Generate a round to begin";
-    toggleRatingButtons(false);
-    return;
-  }
-
-  elements.variantTitle.textContent = `Variant ${variant.ordinal} · ${variant.requested_style_label}`;
-  elements.variantMeta.appendChild(metaChip(`Copy: ${capitalize(variant.copy_length)}`));
-  elements.variantMeta.appendChild(metaChip(variant.style_family));
-  elements.variantMeta.appendChild(metaChip(variant.style_recipe));
-  elements.variantMeta.appendChild(metaChip(`Rating: ${capitalize(variant.rating)}`));
-  elements.variantMeta.appendChild(metaChip(`Render: ${capitalize(variant.render_status)}`));
-  if (variant.figma_url) {
-    const link = document.createElement("a");
-    link.className = "meta-chip";
-    link.href = variant.figma_url;
-    link.target = "_blank";
-    link.rel = "noreferrer";
-    link.textContent = "Open in Figma";
-    elements.variantMeta.appendChild(link);
-  }
-
-  renderStyleSwatches(variant.payload.style_tokens);
-  renderPreviewSlides(variant);
-  renderVariantPaths(variant);
-
-  elements.ratingNote.value = variant.rating_note || "";
-  toggleRatingButtons(true);
-}
-
-function renderStyleSwatches(tokens) {
-  const swatchKeys = [
-    ["Light", tokens.light_background],
-    ["Dark", tokens.dark_background],
-    ["Blue", tokens.accent_blue],
-    ["Magenta", tokens.accent_magenta],
-    ["Gold", tokens.accent_gold],
-    ["Orange", tokens.accent_orange],
-  ];
-
-  swatchKeys.forEach(([label, color]) => {
-    const chip = document.createElement("div");
-    chip.className = "swatch";
-    chip.innerHTML = `<span class="swatch-dot" style="background:${color}"></span><span>${label}</span>`;
-    elements.styleSwatches.appendChild(chip);
-  });
-}
-
-function renderPreviewSlides(variant) {
-  if (variant.preview_image_urls && variant.preview_image_urls.length) {
-    renderImagePreviews(variant);
-    return;
-  }
-
-  const tokens = variant.payload.style_tokens;
-  const darkMode = isDark(tokens.dark_background);
-  variant.payload.slides.forEach((slide) => {
+function renderVariantGrid(round) {
+  elements.reviewGrid.innerHTML = "";
+  round.variants.forEach((variant) => {
     const card = document.createElement("article");
-    const useDark = slide.slide_role !== "info" ? darkMode : false;
-    const background = slide.slide_role !== "info" ? tokens.dark_background : tokens.light_background;
-    const textColor =
-      slide.slide_role !== "info"
-        ? contrastText(tokens.dark_background)
-        : contrastText(tokens.light_background);
-    const bodyText = slide.body_display || slide.body || "";
-    const footerText = slide.button_label || slide.accent_motif || slide.layout_variant;
+    card.className = `variant-card ${variant.variant_id === state.selectedWinnerId ? "winner-selected" : ""}`;
 
-    card.className = `slide-card ${useDark ? "dark" : "light"}`;
-    card.style.background = background;
-    card.style.color = textColor;
-    card.style.boxShadow = `inset 0 0 0 1px ${withOpacity(tokens.accent_blue, 0.18)}`;
+    const isWinner = variant.variant_id === state.selectedWinnerId;
+    const previewMarkup = buildPreviewMarkup(variant);
+    const pageHref = variant.figma_page_url || variant.figma_url || "#";
+    const feedbackValue = state.feedbackByVariant[variant.variant_id] || "";
+    const feedbackDisabled = !state.selectedWinnerId || isWinner || !isRoundReadyForReview(round) || state.isBusy;
+
     card.innerHTML = `
-      <div>
-        <div class="slide-label">${slide.slide_number.toString().padStart(2, "0")} ${slide.slide_role}</div>
+      <div class="variant-header">
+        <div>
+          <p class="variant-kicker">Variant ${variant.ordinal}</p>
+          <h3>${escapeHtml(variant.requested_style_label)}</h3>
+        </div>
+        <label class="winner-toggle ${isWinner ? "active" : ""}">
+          <input type="radio" name="winner-variant" value="${escapeHtml(variant.variant_id)}" ${
+            isWinner ? "checked" : ""
+          } ${!isRoundReadyForReview(round) || state.isBusy ? "disabled" : ""} />
+          <span>Pick Winner</span>
+        </label>
       </div>
-      <div>
-        <div class="slide-headline">${escapeHtml(slide.headline_display || slide.headline)}</div>
-        ${bodyText ? `<div class="slide-body">${escapeHtml(bodyText)}</div>` : ""}
+
+      <div class="preview-panel">
+        ${previewMarkup}
       </div>
-      <div class="slide-footer">${escapeHtml(footerText)}</div>
+
+      <div class="variant-meta">
+        ${chipMarkup(`Copy: ${escapeHtml(variant.copy_length_label)}`)}
+        ${chipMarkup(`Layout: ${escapeHtml(variant.layout_density_label)}`)}
+        ${chipMarkup(`Images: ${variant.image_count}`)}
+        ${chipMarkup(`Render: ${escapeHtml(formatStatus(variant.render_status))}`)}
+      </div>
+
+      <div class="variant-links">
+        ${
+          variant.figma_url
+            ? `<a class="chip-link" href="${escapeAttribute(variant.figma_url)}" target="_blank" rel="noreferrer">Open File</a>`
+            : ""
+        }
+        ${
+          pageHref !== "#"
+            ? `<a class="chip-link" href="${escapeAttribute(pageHref)}" target="_blank" rel="noreferrer">Open Variant Page</a>`
+            : ""
+        }
+      </div>
+
+      <label class="feedback-block ${isWinner ? "hidden" : ""}">
+        <span>What is wrong with this one?</span>
+        <textarea
+          class="feedback-input"
+          data-variant-id="${escapeHtml(variant.variant_id)}"
+          rows="3"
+          placeholder="Example: too much text, weaker cover, image feels generic"
+          ${feedbackDisabled ? "disabled" : ""}
+        >${escapeHtml(feedbackValue)}</textarea>
+      </label>
     `;
-    elements.previewGrid.appendChild(card);
+
+    const radio = card.querySelector('input[type="radio"]');
+    if (radio) {
+      radio.addEventListener("change", () => {
+        state.selectedWinnerId = variant.variant_id;
+        renderVariantGrid(state.currentRound);
+        updateNextButtonState();
+      });
+    }
+
+    const textarea = card.querySelector(".feedback-input");
+    if (textarea) {
+      textarea.addEventListener("input", (event) => {
+        state.feedbackByVariant[variant.variant_id] = event.target.value;
+        updateNextButtonState();
+      });
+    }
+
+    elements.reviewGrid.appendChild(card);
   });
 }
 
-function renderImagePreviews(variant) {
-  variant.preview_image_urls.forEach((url, index) => {
-    const wrapper = document.createElement("article");
-    wrapper.className = "slide-card image-card";
-    const label = variant.payload.slides[index]
-      ? `${String(variant.payload.slides[index].slide_number).padStart(2, "0")} ${variant.payload.slides[index].slide_role}`
-      : `Slide ${index + 1}`;
-    wrapper.innerHTML = `
-      <div class="slide-label">${label}</div>
-      <img class="slide-image" src="${url}?t=${Date.now()}" alt="${label}" />
+function buildPreviewMarkup(variant) {
+  if (variant.preview_image_urls && variant.preview_image_urls.length) {
+    const thumbMarkup = variant.preview_image_urls
+      .slice(1, 7)
+      .map((url, index) => {
+        const alt = `Variant ${variant.ordinal} slide ${index + 2}`;
+        return `<img class="preview-thumb" src="${escapeAttribute(cacheBust(url))}" alt="${escapeAttribute(alt)}" />`;
+      })
+      .join("");
+
+    return `
+      <div class="preview-stack">
+        <img class="preview-primary" src="${escapeAttribute(cacheBust(variant.preview_image_urls[0]))}" alt="Variant ${variant.ordinal} cover" />
+        ${
+          thumbMarkup
+            ? `<div class="preview-strip">${thumbMarkup}</div>`
+            : '<div class="preview-placeholder small">Rendered. Open the Figma page for the full 7-slide set.</div>'
+        }
+      </div>
     `;
-    elements.previewGrid.appendChild(wrapper);
-  });
+  }
+
+  if (variant.render_status === "complete") {
+    return `
+      <div class="preview-placeholder">
+        <strong>Rendered in Figma</strong>
+        <span>Open the variant page to inspect the actual slides.</span>
+      </div>
+    `;
+  }
+
+  if (variant.render_status === "error") {
+    return `
+      <div class="preview-placeholder error">
+        <strong>Render failed</strong>
+        <span>${escapeHtml(variant.error || "Unknown render error")}</span>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="preview-placeholder">
+      <strong>Waiting for Figma render</strong>
+      <span>The app will replace this placeholder with real rendered previews as soon as the plugin finishes.</span>
+    </div>
+  `;
 }
 
-function renderVariantPaths(variant) {
-  elements.variantPaths.appendChild(pathChip(`Job: ${variant.job_artifact_path}`));
-  elements.variantPaths.appendChild(pathChip(`Render Payload: ${variant.render_payload_path}`));
-  if (variant.render_result_path) {
-    elements.variantPaths.appendChild(pathChip(`Render Result: ${variant.render_result_path}`));
+function updateNextButtonState() {
+  const round = state.currentRound;
+  if (!round || state.isBusy || !isRoundReadyForReview(round) || !state.selectedWinnerId) {
+    elements.nextRoundButton.disabled = true;
+    return;
   }
+
+  const hasAllLoserNotes = round.variants
+    .filter((variant) => variant.variant_id !== state.selectedWinnerId)
+    .every((variant) => cleanValue(state.feedbackByVariant[variant.variant_id]));
+
+  elements.nextRoundButton.disabled = !hasAllLoserNotes;
 }
 
-function getCurrentVariant() {
-  if (!state.currentRound || !state.currentRound.variants.length) {
-    return null;
+function isRoundReadyForReview(round) {
+  return round.review_status === "ready_for_review" || round.review_status === "winner_selected";
+}
+
+function managePolling(round) {
+  stopPolling();
+  if (!shouldPoll(round)) {
+    return;
   }
-  return state.currentRound.variants[state.currentIndex] || null;
+
+  state.pollTimer = window.setInterval(async () => {
+    try {
+      const refreshed = await requestJson(`/api/review-rounds/${round.round_id}`);
+      applyRound(refreshed);
+      setStatus(roundStatusMessage(refreshed));
+    } catch (error) {
+      stopPolling();
+      setStatus(error.message || String(error), true);
+    }
+  }, 3000);
+}
+
+function shouldPoll(round) {
+  if (!round) {
+    return false;
+  }
+  if (round.review_status === "rendering" || round.review_status === "drafting") {
+    return true;
+  }
+  return round.variants.some((variant) => variant.render_status === "planned" || variant.render_status === "rendering");
+}
+
+function stopPolling() {
+  if (state.pollTimer) {
+    window.clearInterval(state.pollTimer);
+    state.pollTimer = null;
+  }
 }
 
 function toggleBusy(isBusy) {
-  elements.form.querySelectorAll("button, input, textarea, select").forEach((node) => {
-    node.disabled = isBusy;
+  state.isBusy = isBusy;
+  elements.generateButton.disabled = isBusy;
+  elements.nextRoundButton.disabled = true;
+  [
+    elements.topic,
+    elements.script,
+    elements.ctaText,
+    elements.notes,
+    elements.preferredStyle,
+    elements.baseCopyLength,
+    elements.imageMode,
+    elements.language,
+  ].forEach((field) => {
+    field.disabled = isBusy;
   });
-  elements.nextRoundButton.disabled = isBusy || !state.currentRound;
-  toggleRatingButtons(!isBusy && Boolean(getCurrentVariant()));
-}
 
-function toggleRatingButtons(enabled) {
-  elements.ratingButtons.forEach((button) => {
-    button.disabled = !enabled;
-  });
+  if (state.currentRound) {
+    renderVariantGrid(state.currentRound);
+    updateNextButtonState();
+  }
 }
 
 function setStatus(message, isError = false) {
   elements.statusText.textContent = message;
-  elements.statusText.style.color = isError ? "#ff9b9b" : "";
-}
-
-function startRoundRefresh() {
-  stopRoundRefresh();
-  if (!state.currentRound) {
-    return;
-  }
-  refreshTimer = window.setInterval(() => {
-    void refreshRound();
-  }, 5000);
-}
-
-function stopRoundRefresh() {
-  if (refreshTimer) {
-    clearInterval(refreshTimer);
-    refreshTimer = null;
+  const strip = elements.statusText.parentElement;
+  if (strip) {
+    strip.classList.toggle("error", isError);
   }
 }
 
-async function refreshRound() {
-  if (!state.currentRound) {
-    return;
-  }
-  try {
-    const round = await requestJson(`/api/rounds/${state.currentRound.round_id}`);
-    const previousVariantId = getCurrentVariant() ? getCurrentVariant().variant_id : null;
-    applyRound(round, previousVariantId);
-  } catch (error) {
-    console.error(error);
-  }
+function roundStatusMessage(round) {
+  const base = {
+    drafting: "Drafting the round...",
+    rendering: "Rendering real Figma variants...",
+    ready_for_review: "All three variants are ready for review.",
+    winner_selected: "Winner saved. Generate the next three when ready.",
+    error: "A render error occurred. Check the variant cards.",
+  }[round.review_status] || "Studio ready.";
+  return base;
 }
 
-function populateSelect(select, options, valueKey, labelKey, defaultValue) {
+function formatStatus(value) {
+  return String(value || "")
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+function requestJson(url, options = {}) {
+  const requestOptions = {
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+    ...options,
+  };
+
+  return fetch(url, requestOptions).then(async (response) => {
+    const raw = await response.text();
+    let payload = null;
+    if (raw) {
+      try {
+        payload = JSON.parse(raw);
+      } catch (_error) {
+        payload = raw;
+      }
+    }
+
+    if (!response.ok) {
+      if (payload && typeof payload === "object" && payload.detail) {
+        throw new Error(payload.detail);
+      }
+      throw new Error(typeof payload === "string" ? payload : `Request failed with status ${response.status}`);
+    }
+    return payload;
+  });
+}
+
+function populateSelect(select, options, defaultValue) {
   select.innerHTML = "";
   options.forEach((option) => {
     const node = document.createElement("option");
-    node.value = option[valueKey];
-    node.textContent = option[labelKey];
-    if (option[valueKey] === defaultValue) {
+    node.value = option.value;
+    node.textContent = option.label;
+    if (option.value === defaultValue) {
       node.selected = true;
     }
     select.appendChild(node);
@@ -367,71 +468,36 @@ function metaChip(label) {
   return chip;
 }
 
-function pathChip(label) {
-  const chip = document.createElement("div");
-  chip.className = "path-chip";
-  chip.textContent = label;
-  return chip;
+function chipMarkup(label) {
+  return `<span class="meta-chip">${label}</span>`;
 }
 
-async function requestJson(url, options = {}) {
-  const response = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    ...options,
-  });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(payload.detail || payload.error || `Request failed: ${response.status}`);
-  }
-  return payload;
+function compactObject(value) {
+  return Object.fromEntries(Object.entries(value).filter((entry) => entry[1] !== null && entry[1] !== ""));
 }
 
 function cleanValue(value) {
-  const cleaned = value.trim();
-  return cleaned ? cleaned : null;
-}
-
-function capitalize(value) {
   if (!value) {
-    return "";
+    return null;
   }
-  return value.charAt(0).toUpperCase() + value.slice(1);
+  const cleaned = String(value).trim().replace(/\s+/g, " ");
+  return cleaned || null;
 }
 
-function isDark(hex) {
-  const rgb = hexToRgb(hex);
-  const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-  return brightness < 145;
-}
-
-function contrastText(hex) {
-  return isDark(hex) ? "#FFFFFF" : "#111111";
-}
-
-function withOpacity(hex, opacity) {
-  const rgb = hexToRgb(hex);
-  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
-}
-
-function hexToRgb(hex) {
-  const normalized = hex.replace("#", "");
-  const value = normalized.length === 3
-    ? normalized.split("").map((character) => character + character).join("")
-    : normalized;
-  return {
-    r: Number.parseInt(value.slice(0, 2), 16),
-    g: Number.parseInt(value.slice(2, 4), 16),
-    b: Number.parseInt(value.slice(4, 6), 16),
-  };
+function cacheBust(url) {
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}t=${Date.now()}`;
 }
 
 function escapeHtml(value) {
-  return value
+  return String(value ?? "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
-init();
+function escapeAttribute(value) {
+  return escapeHtml(value);
+}

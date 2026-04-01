@@ -44,6 +44,8 @@ def main() -> int:
                 bridge_host,
                 "--port",
                 str(bridge_port),
+                "--queue-mode",
+                "studio_only",
             ],
             cwd=ROOT_DIR,
         )

@@ -9,13 +9,19 @@ from fastapi.staticfiles import StaticFiles
 from carousel_system.config import ConfigError, ROOT_DIR, load_settings
 from carousel_system.studio import (
     STUDIO_DIR,
+    ReviewRoundCreateRequest,
+    ReviewWinnerRequest,
     StudioCreateRequest,
     StudioRateRequest,
+    create_minimal_review_round,
+    create_next_review_round,
     create_next_round,
     create_review_round,
+    load_latest_review_round,
     load_latest_round,
     load_round,
     rate_variant,
+    save_review_winner,
     studio_bootstrap_payload,
 )
 
@@ -41,8 +47,54 @@ def create_app() -> FastAPI:
     def bootstrap() -> dict:
         payload = studio_bootstrap_payload()
         latest_round = load_latest_round()
+        latest_review = load_latest_review_round()
         payload["latest_round"] = latest_round.model_dump(mode="json") if latest_round else None
+        payload["latest_review_round"] = latest_review.model_dump(mode="json") if latest_review else None
         return payload
+
+    @app.get("/api/review-rounds/latest")
+    def latest_review_round() -> dict:
+        round_record = load_latest_review_round()
+        if round_record is None:
+            raise HTTPException(status_code=404, detail="No review rounds generated yet.")
+        return round_record.model_dump(mode="json")
+
+    @app.get("/api/review-rounds/{round_id}")
+    def get_review_round(round_id: str) -> dict:
+        round_record = load_round(round_id)
+        if round_record is None:
+            raise HTTPException(status_code=404, detail="Review round not found.")
+        return round_record.model_dump(mode="json")
+
+    @app.post("/api/review-rounds")
+    def create_review_lane_round(request: ReviewRoundCreateRequest) -> dict:
+        try:
+            settings = load_settings(require_openai=True)
+            round_record = create_minimal_review_round(settings, request)
+        except ConfigError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        return round_record.model_dump(mode="json")
+
+    @app.post("/api/review-rounds/{round_id}/winner")
+    def set_review_winner(round_id: str, request: ReviewWinnerRequest) -> dict:
+        try:
+            round_record = save_review_winner(round_id, request)
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        return round_record.model_dump(mode="json")
+
+    @app.post("/api/review-rounds/{round_id}/next")
+    def next_review_round(round_id: str) -> dict:
+        try:
+            settings = load_settings(require_openai=True)
+            round_record = create_next_review_round(settings, round_id)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        except ConfigError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        return round_record.model_dump(mode="json")
 
     @app.get("/api/rounds/latest")
     def latest_round() -> dict:

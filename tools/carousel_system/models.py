@@ -47,6 +47,7 @@ DEFAULT_RENDER_SCHEMA_VERSION = "figma_plugin_payload_v2"
 DEFAULT_RENDER_BACKEND = "figma_plugin_file_import"
 
 JobStatus = Literal["queued", "planning", "planned", "rendering", "complete", "error"]
+GenerationMode = Literal["standard", "review"]
 TextDensity = Literal["low", "medium", "high"]
 LayoutPreference = Literal["hero", "editorial", "mask_left", "spotlight", "cta"]
 VisualPriority = Literal["headline", "body", "cta"]
@@ -70,6 +71,8 @@ SafeAreaProfile = Literal[
 class CarouselInput(BaseModel):
     job_id: str = Field(min_length=1)
     source: Literal["manual", "google_sheets"]
+    generation_mode: GenerationMode = "standard"
+    niche_preset: str | None = None
     topic: str | None = None
     script: str | None = None
     cta_text: str | None = None
@@ -156,6 +159,8 @@ class FigmaOutput(BaseModel):
     file_key: str | None = None
     file_url: str | None = None
     page_name: str | None = None
+    page_id: str | None = None
+    page_url: str | None = None
     slide_node_ids: list[str] = Field(default_factory=list)
 
 
@@ -254,8 +259,9 @@ class RenderImageAssetSpec(BaseModel):
     local_path: str | None = None
     url: str | None = None
     credit: str | None = None
+    data_base64: str | None = None
 
-    @field_validator("local_path", "url", "credit", mode="before")
+    @field_validator("local_path", "url", "credit", "data_base64", mode="before")
     @classmethod
     def _normalize_optional_render_asset_text(cls, value: str | None) -> str | None:
         if value is None:
@@ -376,6 +382,7 @@ class PluginRenderResult(BaseModel):
     page_id: str
     file_key: str | None = None
     file_url: str | None = None
+    page_url: str | None = None
     slide_node_ids: list[str] = Field(default_factory=list)
     preview_images: list[PluginPreviewImage] = Field(default_factory=list)
     rendered_at: str

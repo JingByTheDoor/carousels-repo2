@@ -1,0 +1,62 @@
+{
+  "job_id": "studio-20260401-025354-91e376-v3",
+  "image_strategy": {
+    "mode": "hybrid",
+    "provider": "pexels",
+    "reason": "Attached 4 stock image assets via Pexels for reference_alder_split_media."
+  },
+  "image_assets": [
+    {
+      "slide_number": 1,
+      "role": "hook",
+      "source_mode": "stock",
+      "provider": "pexels",
+      "query_or_prompt": "low prep writing activities that help hook english teacher materials professional clean",
+      "original_url": "https://images.pexels.com/photos/8617760/pexels-photo-8617760.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+      "local_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\image-assets\\studio-20260401-025354-91e376-v3\\slide-01-pexels-8617760.jpeg",
+      "credit": "Photo by Yan Krukau on Pexels",
+      "width": 3647,
+      "height": 5471,
+      "alt_text": "A teacher helps a student at her desk in a bright classroom environment."
+    },
+    {
+      "slide_number": 2,
+      "role": "info",
+      "source_mode": "stock",
+      "provider": "pexels",
+      "query_or_prompt": "low prep writing activities that help info english teacher materials professional clean",
+      "original_url": "https://images.pexels.com/photos/6502817/pexels-photo-6502817.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+      "local_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\image-assets\\studio-20260401-025354-91e376-v3\\slide-02-pexels-6502817.jpeg",
+      "credit": "Photo by Thirdman on Pexels",
+      "width": 4421,
+      "height": 6631,
+      "alt_text": "Teacher explaining English lesson using a whiteboard in a classroom setting."
+    },
+    {
+      "slide_number": 4,
+      "role": "info",
+      "source_mode": "stock",
+      "provider": "pexels",
+      "query_or_prompt": "low prep writing activities that help info english teacher materials professional clean",
+      "original_url": "https://images.pexels.com/photos/6502817/pexels-photo-6502817.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+      "local_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\image-assets\\studio-20260401-025354-91e376-v3\\slide-04-pexels-6502817.jpeg",
+      "credit": "Photo by Thirdman on Pexels",
+      "width": 4421,
+      "height": 6631,
+      "alt_text": "Teacher explaining English lesson using a whiteboard in a classroom setting."
+    },
+    {
+      "slide_number": 6,
+      "role": "info",
+      "source_mode": "stock",
+      "provider": "pexels",
+      "query_or_prompt": "low prep writing activities that help info english teacher materials professional clean",
+      "original_url": "https://images.pexels.com/photos/6502817/pexels-photo-6502817.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+      "local_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\image-assets\\studio-20260401-025354-91e376-v3\\slide-06-pexels-6502817.jpeg",
+      "credit": "Photo by Thirdman on Pexels",
+      "width": 4421,
+      "height": 6631,
+      "alt_text": "Teacher explaining English lesson using a whiteboard in a classroom setting."
+    }
+  ]
+}

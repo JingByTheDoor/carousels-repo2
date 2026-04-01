@@ -97,6 +97,10 @@ def plan_row_to_render_item(settings: Settings, queue: GoogleSheetsQueue, row: Q
 
 def acquire_next_render_item(settings: Settings, queue: GoogleSheetsQueue) -> RenderQueueItem | None:
     priority = (settings.render_queue_priority or "sheets_first").strip().lower()
+    if priority == "studio_only":
+        return _acquire_studio_render_item()
+    if priority == "sheets_only":
+        return _acquire_sheet_render_item(settings, queue)
     if priority == "studio_first":
         item = _acquire_studio_render_item()
         if item:
@@ -220,6 +224,8 @@ def apply_render_result(
         file_key=result.file_key,
         file_url=result.file_url,
         page_name=result.page_name,
+        page_id=result.page_id,
+        page_url=result.page_url,
         slide_node_ids=result.slide_node_ids,
     )
     record.render_artifact.result_path = str(result_path)

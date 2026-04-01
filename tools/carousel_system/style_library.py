@@ -401,6 +401,19 @@ STYLE_RECIPES: dict[str, StyleRecipeSpec] = {
 
 def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpec:
     preference = (record.normalized_input.reference_style or "").strip().lower()
+    if record.normalized_input.generation_mode == "review":
+        if preference in {"alder_split_right", "alder_right"}:
+            return ALDER_SPLIT_RIGHT_RECIPE
+        if preference in {"light_glow", "light_grain", "soft_light", "reference_light_grain_glow"}:
+            return LIGHT_GRAIN_GLOW_RECIPE
+        if preference in {"twitter_card", "tweet", "twitter_post", "reference_twitter_card_soft"}:
+            return TWITTER_CARD_SOFT_RECIPE
+        review_candidates = [
+            ALDER_SPLIT_RIGHT_RECIPE,
+            LIGHT_GRAIN_GLOW_RECIPE,
+            TWITTER_CARD_SOFT_RECIPE,
+        ]
+        return review_candidates[_content_signature(record) % len(review_candidates)]
     if preference in {"alder_forced", "alder_locked", "reference_mix_alder_portrait"}:
         return ALDER_DENSE_RECIPE if language == "ru" else ALDER_RECIPE
     if preference in {"alder_split_right", "alder_right"}:

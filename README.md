@@ -80,7 +80,7 @@ Default review flow:
 3. Wait for the plugin to render 3 real Figma variants.
 4. Review only those rendered variants.
 5. Pick the winner.
-6. Type what is wrong with the other 2.
+6. Type what is good or still not perfect on the winner, and what is wrong with the other 2.
 7. Click `Generate Next 3`.
 
 Default review behavior:
@@ -101,6 +101,8 @@ Studio artifacts:
 - `.tmp/studio/rounds/<round_id>.json`
 - `.tmp/jobs/<job_id>.json`
 - `.tmp/render-jobs/<job_id>.render.json`
+- `notes/review_feedback/<round_id>.md`
+- `notes/review_feedback/<round_id>.json`
 
 If you only want the review app without the bridge:
 ```powershell

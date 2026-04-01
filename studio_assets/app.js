@@ -108,10 +108,12 @@ async function onGenerateNextRound() {
   try {
     toggleBusy(true);
     setStatus("Saving your winner and generating the next three...");
+    const winnerFeedback = cleanValue(state.feedbackByVariant[winnerId]);
     await requestJson(`/api/review-rounds/${round.round_id}/winner`, {
       method: "POST",
       body: JSON.stringify({
         winner_variant_id: winnerId,
+        winner_feedback: winnerFeedback,
         loser_feedback: loserFeedback,
       }),
     });
@@ -146,7 +148,8 @@ function applyRound(round) {
   const nextFeedbackByVariant = {};
   const nextSlideIndexByVariant = { ...state.slideIndexByVariant };
   round.variants.forEach((variant) => {
-    nextFeedbackByVariant[variant.variant_id] = state.feedbackByVariant[variant.variant_id] ?? variant.rejection_note ?? variant.rating_note ?? "";
+    nextFeedbackByVariant[variant.variant_id] =
+      state.feedbackByVariant[variant.variant_id] ?? variant.winner_feedback ?? variant.rejection_note ?? variant.rating_note ?? "";
     const maxIndex = Math.max((variant.preview_image_urls || []).length - 1, 0);
     const currentIndex = nextSlideIndexByVariant[variant.variant_id] ?? 0;
     nextSlideIndexByVariant[variant.variant_id] = Math.min(currentIndex, maxIndex);
@@ -206,7 +209,11 @@ function renderVariantGrid(round) {
     const previewMarkup = buildPreviewMarkup(variant);
     const pageHref = variant.figma_page_url || variant.figma_url || "#";
     const feedbackValue = state.feedbackByVariant[variant.variant_id] || "";
-    const feedbackDisabled = !state.selectedWinnerId || isWinner || !isRoundReadyForReview(round) || state.isBusy;
+    const feedbackDisabled = !isRoundReadyForReview(round) || state.isBusy;
+    const feedbackLabel = isWinner ? "What is good here or still not perfect?" : "What is wrong with this one?";
+    const feedbackPlaceholder = isWinner
+      ? "Example: strong cover, better image choice, but CTA could be clearer"
+      : "Example: too much text, weaker cover, image feels generic";
 
     card.innerHTML = `
       <div class="variant-header">
@@ -246,13 +253,13 @@ function renderVariantGrid(round) {
         }
       </div>
 
-      <label class="feedback-block ${isWinner ? "hidden" : ""}">
-        <span>What is wrong with this one?</span>
+      <label class="feedback-block ${isWinner ? "winner-note" : ""}">
+        <span>${escapeHtml(feedbackLabel)}</span>
         <textarea
           class="feedback-input"
           data-variant-id="${escapeHtml(variant.variant_id)}"
           rows="3"
-          placeholder="Example: too much text, weaker cover, image feels generic"
+          placeholder="${escapeHtml(feedbackPlaceholder)}"
           ${feedbackDisabled ? "disabled" : ""}
         >${escapeHtml(feedbackValue)}</textarea>
       </label>

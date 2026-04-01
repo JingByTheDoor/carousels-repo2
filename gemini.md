@@ -293,6 +293,7 @@ Status: `Approved and implemented`
       "job_id": "string",
       "rating": "unrated|love|good|bad",
       "rating_note": "string|null",
+      "winner_feedback": "string|null",
       "rejection_note": "string|null",
       "copy_length": "tight|balanced|expanded|punchy",
       "copy_length_label": "string",
@@ -378,6 +379,10 @@ Status: `Approved and implemented`
 - Default review mode must create exactly 3 variants.
 - Default review mode must use only review-safe, image-capable families.
 - Default review mode must not show payload-only fake previews in the browser UI; it may show a waiting state until real rendered previews exist.
+- The saved review decision must support both:
+  - winner feedback
+  - loser rejection notes
+- Review feedback summaries must be written to `notes/review_feedback/` as human-readable markdown plus structured JSON.
 - The planned image layer should default to stock-first with AI fallback, not AI-first.
 - `pexels` is the preferred first stock provider for the local renderer workflow; `unsplash` is a weaker default because its API guidelines require hotlinking returned URLs and attribution handling that does not fit Figma import as cleanly.
 - The currently implemented image acquisition path is stock-first with `Pexels`, plus OpenAI image fallback for `ai` and `hybrid` modes when stock cannot satisfy review-mode image slots.
@@ -443,4 +448,5 @@ Status: `Approved and implemented`
   - real rendered Figma previews only
   - image on slide 1 plus at least 3 info-slide images
   - CTA slide image omitted by default
+- Added winner-feedback support and persistent review-note exports under `notes/review_feedback/`.
 - Added review-round compatibility handling so older stored rounds do not break the new studio UI.

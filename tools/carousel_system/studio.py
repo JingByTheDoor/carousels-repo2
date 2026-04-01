@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path
@@ -26,6 +27,7 @@ STUDIO_ROUNDS_DIR = STUDIO_DIR / "rounds"
 STUDIO_STATE_PATH = STUDIO_DIR / "state.json"
 STUDIO_PREVIEWS_DIR = STUDIO_DIR / "previews"
 STUDIO_OUTPUT_URL_PREFIX = "/studio-output"
+REVIEW_NOTES_DIR = ROOT_DIR / "notes" / "review_feedback"
 
 REVIEW_NICHE_PRESET = "english_teacher_materials"
 REVIEW_NICHE_LABEL = "Materials helpful to English teachers"
@@ -220,6 +222,7 @@ class ReviewRoundCreateRequest(BaseModel):
 
 class ReviewWinnerRequest(BaseModel):
     winner_variant_id: str
+    winner_feedback: str | None = None
     loser_feedback: dict[str, str] = Field(default_factory=dict)
 
     @field_validator("winner_variant_id", mode="before")
@@ -240,6 +243,14 @@ class ReviewWinnerRequest(BaseModel):
                 cleaned[normalized_key] = normalized_value
         return cleaned
 
+    @field_validator("winner_feedback", mode="before")
+    @classmethod
+    def _clean_winner_feedback(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(str(value).strip().split())
+        return cleaned or None
+
 
 class StudioVariantRecord(BaseModel):
     variant_id: str
@@ -247,6 +258,7 @@ class StudioVariantRecord(BaseModel):
     job_id: str
     rating: StudioRating = "unrated"
     rating_note: str | None = None
+    winner_feedback: str | None = None
     rejection_note: str | None = None
     copy_length: StudioCopyLength
     copy_length_label: str = ""
@@ -274,6 +286,7 @@ class StudioVariantRecord(BaseModel):
 
     @field_validator(
         "rating_note",
+        "winner_feedback",
         "rejection_note",
         "render_result_path",
         "figma_url",
@@ -523,15 +536,18 @@ def save_review_winner(round_id: str, request: ReviewWinnerRequest) -> StudioRou
     for variant in round_record.variants:
         if variant.variant_id == request.winner_variant_id:
             variant.rating = "love"
-            variant.rating_note = None
+            variant.rating_note = request.winner_feedback
+            variant.winner_feedback = request.winner_feedback
             variant.rejection_note = None
         else:
             note = request.loser_feedback.get(variant.variant_id)
             variant.rating = "bad"
             variant.rating_note = note
+            variant.winner_feedback = None
             variant.rejection_note = note
 
     save_round(round_record)
+    _write_review_feedback_notes(round_record)
     return round_record
 
 
@@ -885,6 +901,9 @@ def _compose_review_planner_notes(
         notes.append(
             f"Keep what worked from the previous winner: {winner.requested_style_label}, {winner.copy_length_label} copy."
         )
+    winner_feedback = _winner_feedback(previous_round)
+    if winner_feedback:
+        notes.append(f"Winner feedback to preserve or refine: {winner_feedback}")
     loser_notes = _rejection_notes(previous_round)
     if loser_notes:
         notes.append(f"Avoid these previous problems: {' | '.join(loser_notes)}")
@@ -925,6 +944,9 @@ def _compose_next_review_note(previous_round: StudioRoundRecord) -> str | None:
     winner = _winner_variant(previous_round)
     if winner:
         notes.append(f"Anchor on Variant {winner.ordinal}.")
+    winner_feedback = _winner_feedback(previous_round)
+    if winner_feedback:
+        notes.append(f"Keep or refine these winner traits: {winner_feedback}")
     loser_notes = _rejection_notes(previous_round)
     if loser_notes:
         notes.append(f"Fix these problems: {' | '.join(loser_notes)}")
@@ -937,6 +959,13 @@ def _winner_variant(previous_round: StudioRoundRecord | None) -> StudioVariantRe
     for variant in previous_round.variants:
         if variant.variant_id == previous_round.winner_variant_id:
             return variant
+    return None
+
+
+def _winner_feedback(previous_round: StudioRoundRecord | None) -> str | None:
+    winner = _winner_variant(previous_round)
+    if winner and winner.winner_feedback:
+        return winner.winner_feedback
     return None
 
 
@@ -1089,6 +1118,88 @@ def _rejection_notes(previous_round: StudioRoundRecord | None) -> list[str]:
         if variant.rejection_note:
             notes.append(variant.rejection_note)
     return notes
+
+
+def _write_review_feedback_notes(round_record: StudioRoundRecord) -> None:
+    if round_record.round_mode != "review":
+        return
+
+    REVIEW_NOTES_DIR.mkdir(parents=True, exist_ok=True)
+    winner = _winner_variant(round_record)
+    losers = [variant for variant in round_record.variants if variant.variant_id != round_record.winner_variant_id]
+    payload = {
+        "round_id": round_record.round_id,
+        "created_at": round_record.created_at,
+        "round_number": round_record.round_number,
+        "generated_brief": round_record.generated_brief,
+        "winner": {
+            "variant_id": winner.variant_id if winner else None,
+            "ordinal": winner.ordinal if winner else None,
+            "style": winner.requested_style_label if winner else None,
+            "style_family": winner.style_family if winner else None,
+            "copy_length": winner.copy_length_label if winner else None,
+            "feedback": winner.winner_feedback if winner else None,
+            "figma_url": winner.figma_url if winner else None,
+            "figma_page_url": winner.figma_page_url if winner else None,
+        },
+        "losers": [
+            {
+                "variant_id": variant.variant_id,
+                "ordinal": variant.ordinal,
+                "style": variant.requested_style_label,
+                "style_family": variant.style_family,
+                "copy_length": variant.copy_length_label,
+                "feedback": variant.rejection_note,
+                "figma_url": variant.figma_url,
+                "figma_page_url": variant.figma_page_url,
+            }
+            for variant in losers
+        ],
+    }
+
+    json_path = REVIEW_NOTES_DIR / f"{round_record.round_id}.json"
+    json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    markdown_lines = [
+        f"# Review Feedback {round_record.round_id}",
+        "",
+        f"- Round: {round_record.round_number}",
+        f"- Brief: {round_record.generated_brief or 'n/a'}",
+    ]
+
+    if winner:
+        markdown_lines.extend(
+            [
+                "",
+                "## Winner",
+                f"- Variant: {winner.ordinal}",
+                f"- Style: {winner.requested_style_label}",
+                f"- Copy: {winner.copy_length_label}",
+                f"- Figma: {winner.figma_page_url or winner.figma_url or 'n/a'}",
+                f"- Winner note: {winner.winner_feedback or 'n/a'}",
+            ]
+        )
+
+    markdown_lines.extend(["", "## Rejected Variants"])
+    for variant in losers:
+        markdown_lines.extend(
+            [
+                f"- Variant {variant.ordinal}: {variant.requested_style_label} / {variant.copy_length_label}",
+                f"  Feedback: {variant.rejection_note or 'n/a'}",
+            ]
+        )
+
+    markdown_lines.extend(
+        [
+            "",
+            "## Action Notes",
+            f"- Keep/refine from winner: {winner.winner_feedback if winner and winner.winner_feedback else 'n/a'}",
+            f"- Problems to avoid: {' | '.join(_rejection_notes(round_record)) if _rejection_notes(round_record) else 'n/a'}",
+        ]
+    )
+
+    markdown_path = REVIEW_NOTES_DIR / f"{round_record.round_id}.md"
+    markdown_path.write_text("\n".join(markdown_lines) + "\n", encoding="utf-8")
 
 
 def _preview_url_from_path(path: str) -> str:

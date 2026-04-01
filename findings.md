@@ -193,3 +193,5 @@
   - `light_glow`
   - `twitter_card`
   This makes the "must include 4 images" rule realistic instead of hoping every style can absorb media cleanly.
+- Review feedback is more useful when the winner can carry a note too. The next round should not only know what failed; it should also know what was promising but still imperfect.
+- Review notes need a durable home outside `.tmp`. A persistent `notes/review_feedback/` folder is a better place for future system-change decisions than ephemeral round files alone.

@@ -274,3 +274,7 @@
   - `fastapi.testclient` bootstrap request
   - real blank review-round generation through `POST /api/review-rounds`
   - real winner + loser-note iteration through `POST /api/review-rounds/{round_id}/winner` then `/next`
+- Added richer review feedback capture:
+  - winner card now has its own note box
+  - winner feedback is sent into the next-round planner context
+  - review summaries are written to `notes/review_feedback/<round_id>.md` and `.json`

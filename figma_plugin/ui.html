@@ -223,6 +223,8 @@
       let isRendering = false;
       let autoMode = false;
       let autoTimer = null;
+      let autoFinishedJobs = 0;
+      const AUTO_MODE_JOB_TARGET = 3;
 
       function setStatus(text, variant) {
         statusNode.textContent = formatStatusText(text);
@@ -260,6 +262,31 @@
         autoMode = nextState;
         autoButton.textContent = autoMode ? "Stop Auto Mode" : "Start Auto Mode";
         autoButton.className = autoMode ? "success" : "secondary";
+      }
+
+      function resetAutoProgress() {
+        autoFinishedJobs = 0;
+      }
+
+      function stopAutoMode(message, variant) {
+        setAutoMode(false);
+        clearAutoTimer();
+        setStatus(message, variant || "");
+      }
+
+      function markAutoJobFinished(success) {
+        autoFinishedJobs += 1;
+        if (!autoMode) {
+          return false;
+        }
+        if (autoFinishedJobs >= AUTO_MODE_JOB_TARGET) {
+          stopAutoMode(
+            `Auto Mode finished ${autoFinishedJobs} job${autoFinishedJobs === 1 ? "" : "s"} and stopped.`,
+            success ? "success" : "error"
+          );
+          return true;
+        }
+        return false;
       }
 
       function clearAutoTimer() {
@@ -411,13 +438,12 @@
 
       autoButton.addEventListener("click", () => {
         if (autoMode) {
-          setAutoMode(false);
-          clearAutoTimer();
-          setStatus("Auto Mode stopped.", "");
+          stopAutoMode("Auto Mode stopped.", "");
           return;
         }
+        resetAutoProgress();
         setAutoMode(true);
-        setStatus("Auto Mode started. Polling the local render bridge...", "");
+        setStatus(`Auto Mode started. Polling until ${AUTO_MODE_JOB_TARGET} jobs finish...`, "");
         void pollNextJob();
       });
 
@@ -501,6 +527,13 @@
         }
 
         if (message.type === "bridge-empty") {
+          if (autoMode && autoFinishedJobs > 0) {
+            stopAutoMode(
+              `Auto Mode finished ${autoFinishedJobs} job${autoFinishedJobs === 1 ? "" : "s"} and the queue is now empty.`,
+              "success"
+            );
+            return;
+          }
           setStatus("No planned jobs available right now.", "");
           scheduleAutoPoll(5000);
           return;
@@ -516,7 +549,15 @@
         }
 
         if (message.type === "bridge-post-complete") {
-          setStatus("Render complete and posted back to the local bridge.", "success");
+          if (markAutoJobFinished(true)) {
+            currentBridgeJobId = null;
+            currentPayload = null;
+            return;
+          }
+          setStatus(
+            `Render complete and posted back to the local bridge. ${autoFinishedJobs}/${AUTO_MODE_JOB_TARGET} finished.`,
+            "success"
+          );
           currentBridgeJobId = null;
           currentPayload = null;
           scheduleAutoPoll(1000);
@@ -524,7 +565,15 @@
         }
 
         if (message.type === "bridge-post-error-complete") {
-          setStatus("Render error posted back to the local bridge.", "error");
+          if (markAutoJobFinished(false)) {
+            currentBridgeJobId = null;
+            currentPayload = null;
+            return;
+          }
+          setStatus(
+            `Render error posted back to the local bridge. ${autoFinishedJobs}/${AUTO_MODE_JOB_TARGET} finished.`,
+            "error"
+          );
           currentBridgeJobId = null;
           currentPayload = null;
           scheduleAutoPoll(5000);

@@ -30,6 +30,7 @@ const FONT_FALLBACKS = {
   Poppins: ["Bold", "SemiBold", "Regular", "Medium"],
   Montserrat: ["Black", "Bold", "SemiBold", "Regular"]
 };
+const PREVIEW_EXPORT_WIDTH = 720;
 
 figma.ui.onmessage = async (message) => {
   if (!message || !message.type) {
@@ -311,7 +312,7 @@ async function exportSlidePreviews(frames, slides) {
         format: "PNG",
         constraint: {
           type: "WIDTH",
-          value: 240
+          value: PREVIEW_EXPORT_WIDTH
         }
       });
       previews.push({

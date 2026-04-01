@@ -3,6 +3,8 @@ const state = {
   currentRound: null,
   selectedWinnerId: null,
   feedbackByVariant: {},
+  slideIndexByVariant: {},
+  fullscreenVariantId: null,
   pollTimer: null,
   isBusy: false,
 };
@@ -57,6 +59,7 @@ async function init() {
 function bindEvents() {
   elements.generateButton.addEventListener("click", onGenerateRound);
   elements.nextRoundButton.addEventListener("click", onGenerateNextRound);
+  window.addEventListener("keydown", onGlobalKeydown);
 }
 
 async function onGenerateRound() {
@@ -140,13 +143,20 @@ function buildReviewRequestPayload() {
 function applyRound(round) {
   state.currentRound = round;
   state.selectedWinnerId = round.winner_variant_id || null;
-  state.feedbackByVariant = {};
+  const nextFeedbackByVariant = {};
+  const nextSlideIndexByVariant = { ...state.slideIndexByVariant };
   round.variants.forEach((variant) => {
-    state.feedbackByVariant[variant.variant_id] = variant.rejection_note || variant.rating_note || "";
+    nextFeedbackByVariant[variant.variant_id] = state.feedbackByVariant[variant.variant_id] ?? variant.rejection_note ?? variant.rating_note ?? "";
+    const maxIndex = Math.max((variant.preview_image_urls || []).length - 1, 0);
+    const currentIndex = nextSlideIndexByVariant[variant.variant_id] ?? 0;
+    nextSlideIndexByVariant[variant.variant_id] = Math.min(currentIndex, maxIndex);
   });
+  state.feedbackByVariant = nextFeedbackByVariant;
+  state.slideIndexByVariant = nextSlideIndexByVariant;
 
   renderRoundSummary(round);
   renderVariantGrid(round);
+  renderFullscreenViewer();
   updateNextButtonState();
   managePolling(round);
 }
@@ -265,28 +275,77 @@ function renderVariantGrid(round) {
       });
     }
 
+    bindPreviewControls(card, variant);
+
     elements.reviewGrid.appendChild(card);
   });
 }
 
 function buildPreviewMarkup(variant) {
   if (variant.preview_image_urls && variant.preview_image_urls.length) {
+    const slideCount = variant.preview_image_urls.length;
+    const activeIndex = activePreviewIndex(variant);
+    const activeSlide = variant.payload?.slides?.[activeIndex];
     const thumbMarkup = variant.preview_image_urls
-      .slice(1, 7)
       .map((url, index) => {
-        const alt = `Variant ${variant.ordinal} slide ${index + 2}`;
-        return `<img class="preview-thumb" src="${escapeAttribute(cacheBust(url))}" alt="${escapeAttribute(alt)}" />`;
+        const slide = variant.payload?.slides?.[index];
+        const alt = `Variant ${variant.ordinal} slide ${index + 1}`;
+        return `
+          <button
+            type="button"
+            class="preview-thumb-button ${index === activeIndex ? "active" : ""}"
+            data-preview-index="${index}"
+            aria-label="Show slide ${index + 1}"
+          >
+            <img class="preview-thumb" src="${escapeAttribute(cacheBust(url))}" alt="${escapeAttribute(alt)}" />
+            <span class="preview-thumb-label">${escapeHtml(slide?.slide_number || index + 1)}</span>
+          </button>
+        `;
       })
       .join("");
 
     return `
       <div class="preview-stack">
-        <img class="preview-primary" src="${escapeAttribute(cacheBust(variant.preview_image_urls[0]))}" alt="Variant ${variant.ordinal} cover" />
-        ${
-          thumbMarkup
-            ? `<div class="preview-strip">${thumbMarkup}</div>`
-            : '<div class="preview-placeholder small">Rendered. Open the Figma page for the full 7-slide set.</div>'
-        }
+        <div class="preview-stage">
+          <img
+            class="preview-primary"
+            src="${escapeAttribute(cacheBust(variant.preview_image_urls[activeIndex]))}"
+            alt="Variant ${variant.ordinal} slide ${activeIndex + 1}"
+          />
+          <button
+            type="button"
+            class="preview-fullscreen"
+            data-preview-fullscreen="${escapeHtml(variant.variant_id)}"
+            aria-label="Open fullscreen preview"
+          >
+            Full Screen
+          </button>
+          <button
+            type="button"
+            class="preview-nav preview-nav-prev"
+            data-preview-nav="prev"
+            ${activeIndex === 0 ? "disabled" : ""}
+            aria-label="Previous slide"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            class="preview-nav preview-nav-next"
+            data-preview-nav="next"
+            ${activeIndex === slideCount - 1 ? "disabled" : ""}
+            aria-label="Next slide"
+          >
+            ›
+          </button>
+          <div class="preview-stage-meta">
+            <span>Slide ${activeIndex + 1}/${slideCount}</span>
+            <span>${escapeHtml(formatStatus(activeSlide?.slide_role || "slide"))}</span>
+          </div>
+        </div>
+        <div class="preview-strip" data-preview-strip>
+          ${thumbMarkup}
+        </div>
       </div>
     `;
   }
@@ -315,6 +374,219 @@ function buildPreviewMarkup(variant) {
       <span>The app will replace this placeholder with real rendered previews as soon as the plugin finishes.</span>
     </div>
   `;
+}
+
+function bindPreviewControls(card, variant) {
+  const fullscreenButton = card.querySelector("[data-preview-fullscreen]");
+  if (fullscreenButton) {
+    fullscreenButton.addEventListener("click", () => {
+      openFullscreenViewer(variant.variant_id);
+    });
+  }
+
+  card.querySelectorAll("[data-preview-index]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setPreviewIndex(variant.variant_id, Number(button.dataset.previewIndex || 0));
+    });
+  });
+
+  card.querySelectorAll("[data-preview-nav]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const delta = button.dataset.previewNav === "next" ? 1 : -1;
+      setPreviewIndex(variant.variant_id, activePreviewIndex(variant) + delta);
+    });
+  });
+
+  const strip = card.querySelector("[data-preview-strip]");
+  if (strip) {
+    strip.addEventListener(
+      "wheel",
+      (event) => {
+        if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+          event.preventDefault();
+          strip.scrollLeft += event.deltaY;
+        }
+      },
+      { passive: false },
+    );
+
+    const activeThumb = strip.querySelector(".preview-thumb-button.active");
+    if (activeThumb) {
+      requestAnimationFrame(() => {
+        activeThumb.scrollIntoView({ block: "nearest", inline: "center" });
+      });
+    }
+  }
+}
+
+function setPreviewIndex(variantId, nextIndex) {
+  const variant = state.currentRound?.variants?.find((item) => item.variant_id === variantId);
+  if (!variant || !variant.preview_image_urls?.length) {
+    return;
+  }
+  const maxIndex = variant.preview_image_urls.length - 1;
+  state.slideIndexByVariant[variantId] = Math.max(0, Math.min(nextIndex, maxIndex));
+  renderVariantGrid(state.currentRound);
+  renderFullscreenViewer();
+}
+
+function activePreviewIndex(variant) {
+  const maxIndex = Math.max((variant.preview_image_urls || []).length - 1, 0);
+  const currentIndex = state.slideIndexByVariant[variant.variant_id] ?? 0;
+  return Math.max(0, Math.min(currentIndex, maxIndex));
+}
+
+function openFullscreenViewer(variantId) {
+  state.fullscreenVariantId = variantId;
+  renderFullscreenViewer();
+}
+
+function closeFullscreenViewer() {
+  state.fullscreenVariantId = null;
+  renderFullscreenViewer();
+}
+
+function renderFullscreenViewer() {
+  const existing = document.getElementById("fullscreen-viewer");
+  if (existing) {
+    existing.remove();
+  }
+
+  const variant = state.currentRound?.variants?.find((item) => item.variant_id === state.fullscreenVariantId);
+  if (!variant || !variant.preview_image_urls?.length) {
+    document.body.classList.remove("viewer-open");
+    return;
+  }
+
+  const activeIndex = activePreviewIndex(variant);
+  const activeSlide = variant.payload?.slides?.[activeIndex];
+  const overlay = document.createElement("div");
+  overlay.id = "fullscreen-viewer";
+  overlay.className = "viewer-overlay";
+  overlay.innerHTML = `
+    <div class="viewer-backdrop" data-viewer-close="true"></div>
+    <div class="viewer-dialog" role="dialog" aria-modal="true" aria-label="Fullscreen carousel preview">
+      <div class="viewer-header">
+        <div>
+          <p class="variant-kicker">Variant ${variant.ordinal}</p>
+          <h3>${escapeHtml(variant.requested_style_label)}</h3>
+        </div>
+        <div class="viewer-actions">
+          <span class="meta-chip">Slide ${activeIndex + 1}/${variant.preview_image_urls.length}</span>
+          <button type="button" class="viewer-close" data-viewer-close="true" aria-label="Close fullscreen preview">Close</button>
+        </div>
+      </div>
+      <div class="viewer-stage">
+        <img
+          class="viewer-image"
+          src="${escapeAttribute(cacheBust(variant.preview_image_urls[activeIndex]))}"
+          alt="Variant ${variant.ordinal} slide ${activeIndex + 1}"
+        />
+        <button
+          type="button"
+          class="preview-nav preview-nav-prev"
+          data-viewer-nav="prev"
+          ${activeIndex === 0 ? "disabled" : ""}
+          aria-label="Previous slide"
+        >
+          ‹
+        </button>
+        <button
+          type="button"
+          class="preview-nav preview-nav-next"
+          data-viewer-nav="next"
+          ${activeIndex === variant.preview_image_urls.length - 1 ? "disabled" : ""}
+          aria-label="Next slide"
+        >
+          ›
+        </button>
+        <div class="preview-stage-meta viewer-stage-meta">
+          <span>${escapeHtml(formatStatus(activeSlide?.slide_role || "slide"))}</span>
+          <span>${escapeHtml(activeSlide?.headline_display || activeSlide?.headline || "")}</span>
+        </div>
+      </div>
+      <div class="viewer-strip" data-viewer-strip>
+        ${variant.preview_image_urls
+          .map((url, index) => {
+            const slide = variant.payload?.slides?.[index];
+            return `
+              <button
+                type="button"
+                class="preview-thumb-button ${index === activeIndex ? "active" : ""}"
+                data-viewer-index="${index}"
+                aria-label="Show slide ${index + 1}"
+              >
+                <img class="preview-thumb" src="${escapeAttribute(cacheBust(url))}" alt="Variant ${variant.ordinal} slide ${index + 1}" />
+                <span class="preview-thumb-label">${escapeHtml(slide?.slide_number || index + 1)}</span>
+              </button>
+            `;
+          })
+          .join("")}
+      </div>
+    </div>
+  `;
+
+  overlay.querySelectorAll("[data-viewer-close]").forEach((button) => {
+    button.addEventListener("click", closeFullscreenViewer);
+  });
+  overlay.querySelectorAll("[data-viewer-nav]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const delta = button.dataset.viewerNav === "next" ? 1 : -1;
+      setPreviewIndex(variant.variant_id, activeIndex + delta);
+    });
+  });
+  overlay.querySelectorAll("[data-viewer-index]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setPreviewIndex(variant.variant_id, Number(button.dataset.viewerIndex || 0));
+    });
+  });
+
+  const strip = overlay.querySelector("[data-viewer-strip]");
+  if (strip) {
+    strip.addEventListener(
+      "wheel",
+      (event) => {
+        if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+          event.preventDefault();
+          strip.scrollLeft += event.deltaY;
+        }
+      },
+      { passive: false },
+    );
+    const activeThumb = strip.querySelector(".preview-thumb-button.active");
+    if (activeThumb) {
+      requestAnimationFrame(() => {
+        activeThumb.scrollIntoView({ block: "nearest", inline: "center" });
+      });
+    }
+  }
+
+  document.body.appendChild(overlay);
+  document.body.classList.add("viewer-open");
+}
+
+function onGlobalKeydown(event) {
+  if (!state.fullscreenVariantId) {
+    return;
+  }
+
+  if (event.key === "Escape") {
+    closeFullscreenViewer();
+    return;
+  }
+
+  const variant = state.currentRound?.variants?.find((item) => item.variant_id === state.fullscreenVariantId);
+  if (!variant) {
+    return;
+  }
+
+  if (event.key === "ArrowRight") {
+    event.preventDefault();
+    setPreviewIndex(variant.variant_id, activePreviewIndex(variant) + 1);
+  } else if (event.key === "ArrowLeft") {
+    event.preventDefault();
+    setPreviewIndex(variant.variant_id, activePreviewIndex(variant) - 1);
+  }
 }
 
 function updateNextButtonState() {

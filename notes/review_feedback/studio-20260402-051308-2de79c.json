@@ -1,0 +1,38 @@
+{
+  "round_id": "studio-20260402-051308-2de79c",
+  "created_at": "2026-04-02T05:13:24.834009+00:00",
+  "round_number": 1,
+  "generated_brief": "Low-prep writing activities that help English students think faster",
+  "winner": {
+    "variant_id": "studio-20260402-051308-2de79c-variant-1",
+    "ordinal": 1,
+    "style": "Placeholder Media Glow",
+    "style_family": "reference_twitter_card_soft",
+    "copy_length": "Balanced",
+    "feedback": "this is ok but the last slide is kind off glitched out and the images are the same on 2 and 4",
+    "figma_url": null,
+    "figma_page_url": null
+  },
+  "losers": [
+    {
+      "variant_id": "studio-20260402-051308-2de79c-variant-2",
+      "ordinal": 2,
+      "style": "Light Grain Glow",
+      "style_family": "reference_light_grain_glow",
+      "copy_length": "Expanded",
+      "feedback": "the text is too small and there is too much white space",
+      "figma_url": null,
+      "figma_page_url": null
+    },
+    {
+      "variant_id": "studio-20260402-051308-2de79c-variant-3",
+      "ordinal": 3,
+      "style": "Device Mockup Gradient",
+      "style_family": "reference_twitter_card_soft",
+      "copy_length": "Tight",
+      "feedback": "this is absicall the same as the winner",
+      "figma_url": null,
+      "figma_page_url": null
+    }
+  ]
+}

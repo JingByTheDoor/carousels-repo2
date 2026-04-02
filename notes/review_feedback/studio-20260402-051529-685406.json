@@ -1,0 +1,38 @@
+{
+  "round_id": "studio-20260402-051529-685406",
+  "created_at": "2026-04-02T05:15:47.516269+00:00",
+  "round_number": 1,
+  "generated_brief": "Low-prep writing activities that help English students think faster",
+  "winner": {
+    "variant_id": "studio-20260402-051529-685406-variant-2",
+    "ordinal": 2,
+    "style": "Light Grain Glow",
+    "style_family": "reference_light_grain_glow",
+    "copy_length": "Expanded",
+    "feedback": "preatty good but there is a misgeneration of the text on the last slide",
+    "figma_url": null,
+    "figma_page_url": null
+  },
+  "losers": [
+    {
+      "variant_id": "studio-20260402-051529-685406-variant-1",
+      "ordinal": 1,
+      "style": "Placeholder Media Glow",
+      "style_family": "reference_alder_split_media",
+      "copy_length": "Balanced",
+      "feedback": "too much white space and random squares on slides 3 and 5, also the last cta slide has random like comment save buttons that are not needed",
+      "figma_url": null,
+      "figma_page_url": null
+    },
+    {
+      "variant_id": "studio-20260402-051529-685406-variant-3",
+      "ordinal": 3,
+      "style": "Device Mockup Gradient",
+      "style_family": "reference_twitter_card_soft",
+      "copy_length": "Tight",
+      "feedback": "ok but the last slide has wierd text that doesn't mak sense",
+      "figma_url": null,
+      "figma_page_url": null
+    }
+  ]
+}

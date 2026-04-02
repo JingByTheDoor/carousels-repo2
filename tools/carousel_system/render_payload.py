@@ -704,6 +704,10 @@ def _build_cta_copy_segments(cta_text: str, headline: str, language: str) -> tup
 
     if body_display == audience_text and len(body_display) > 40:
         body_display = _shorten_body(audience_text, language, hard_limit=40)
+    if body_display and _is_redundant_cta_fragment(body_display, headline):
+        body_display = None
+    if supporting_text and _is_redundant_cta_fragment(supporting_text, headline):
+        supporting_text = None
     return body_display, supporting_text
 
 
@@ -759,3 +763,17 @@ def _split_cta_audience(audience_text: str) -> tuple[str, str | None]:
             return primary, secondary or None
 
     return audience_text, None
+
+
+def _is_redundant_cta_fragment(fragment: str, headline: str) -> bool:
+    fragment_normalized = re.sub(r"[^a-zа-я0-9]+", " ", fragment.lower()).strip()
+    headline_normalized = re.sub(r"[^a-zа-я0-9]+", " ", headline.lower()).strip()
+    if not fragment_normalized or not headline_normalized:
+        return False
+    if fragment_normalized in headline_normalized:
+        return True
+    fragment_words = fragment_normalized.split()
+    headline_words = headline_normalized.split()
+    if len(fragment_words) >= 3 and len(headline_words) >= len(fragment_words):
+        return " ".join(fragment_words[-3:]) in headline_normalized
+    return False

@@ -224,3 +224,8 @@
   Both have to be fixed together to reliably stop slides 2 and 4 from reusing near-identical photos.
 - CTA glitches on review-safe families are often a payload/render handshake problem. For light/device/card-style families, using `headline_short` as the rendered CTA display text is safer than forcing the full CTA headline into the last slide.
 - Slash slide references are best stored as structured metadata, not left embedded in free-text notes. The prompt path should get the cleaned text, while the archived review files should keep the resolved slide references and file paths.
+- CTA duplication on review carousels was not an LLM problem. It came from the payload builder reusing the CTA text as both headline and shortened body. The right fix is to suppress CTA body/supporting text when it is already semantically contained in the headline.
+- `device_mockup` works better as a media-conditional family:
+  - image slides can justify the phone shell
+  - text-only slides should not show a decorative empty device shell
+  This produces a cleaner family distinction and removes the “wonky thin phone on blank slides” failure mode.

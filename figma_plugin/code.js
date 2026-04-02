@@ -2232,9 +2232,9 @@ async function renderLightGrainBodySlide(frame, slide, payload) {
     x: textX,
     y: 126,
     width: textWidth,
-    maxHeight: 260,
-    maxSize: 90,
-    minSize: 34,
+    maxHeight: 236,
+    maxSize: 82,
+    minSize: 30,
     lineHeight: 1.02,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
@@ -2246,12 +2246,12 @@ async function renderLightGrainBodySlide(frame, slide, payload) {
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: textX,
-    y: 404,
+    y: 462,
     width: textWidth,
-    maxHeight: 420,
-    maxSize: 54,
-    minSize: 24,
-    lineHeight: 1.2,
+    maxHeight: 330,
+    maxSize: 40,
+    minSize: 20,
+    lineHeight: 1.22,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
@@ -2276,10 +2276,10 @@ async function renderLightGrainCtaSlide(frame, slide, payload) {
     fallbackStyle: "Bold",
     x: 96,
     y: 286,
-    width: 712,
-    maxHeight: 228,
-    maxSize: 82,
-    minSize: 34,
+    width: 684,
+    maxHeight: 208,
+    maxSize: 74,
+    minSize: 30,
     lineHeight: 1.0,
     color: tokens.text_dark,
     alignHorizontal: "CENTER"
@@ -2292,10 +2292,10 @@ async function renderLightGrainCtaSlide(frame, slide, payload) {
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 128,
-      y: 582,
+      y: 548,
       width: 648,
-      maxHeight: 140,
-      maxSize: 34,
+      maxHeight: 112,
+      maxSize: 28,
       minSize: 18,
       lineHeight: 1.14,
       color: tokens.text_dark,
@@ -2616,18 +2616,18 @@ async function renderDeviceMockupCoverSlide(frame, slide, payload) {
     fontFamily: payload.typography.cover_family,
     fontStyle: payload.typography.cover_style,
     fallbackStyle: "Bold",
-    x: 78,
-    y: 162,
-    width: 456,
+    x: 74,
+    y: 174,
+    width: 520,
     maxHeight: 560,
-    maxSize: 100,
+    maxSize: 104,
     minSize: 40,
     lineHeight: 0.98,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
 
-  await appendDeviceMockupShell(frame, slide, 650, 110, 312, 1040, tokens, {
+  await appendDeviceMockupShell(frame, slide, 612, 96, 382, 1092, tokens, {
     screenOpacity: 0.98,
     overlayOpacity: 0.04
   });
@@ -2651,21 +2651,26 @@ async function renderTwitterCardBodySlide(frame, slide, payload) {
 
 async function renderDeviceMockupBodySlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
+  const hasMedia = !!slide.image_asset;
   const deviceOnRight = slide.slide_number % 4 !== 0;
   appendSoftGradientBackdrop(frame, tokens, deviceOnRight ? "sky" : "peach");
-  await appendRemoteImageRect(frame, slide, {
-    x: 0,
-    y: 0,
-    width: 1080,
-    height: 1350,
-    opacity: 0.1,
-    overlayHex: "#FFFFFF",
-    overlayOpacity: 0.12,
-    effects: [{ type: "LAYER_BLUR", radius: 6, visible: true }]
-  });
+  if (hasMedia) {
+    await appendRemoteImageRect(frame, slide, {
+      x: 0,
+      y: 0,
+      width: 1080,
+      height: 1350,
+      opacity: 0.08,
+      overlayHex: "#FFFFFF",
+      overlayOpacity: 0.12,
+      effects: [{ type: "LAYER_BLUR", radius: 6, visible: true }]
+    });
+  }
 
-  const textX = deviceOnRight ? 86 : 594;
-  const deviceX = deviceOnRight ? 646 : 122;
+  const textX = hasMedia ? (deviceOnRight ? 86 : 612) : 92;
+  const textWidth = hasMedia ? 394 : 734;
+  const bodyWidth = hasMedia ? 382 : 700;
+  const deviceX = deviceOnRight ? 612 : 86;
   await appendLabelPill(frame, textX, 124, `0${slide.slide_number}`, tokens.accent_blue, tokens.text_dark);
   await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
@@ -2674,9 +2679,9 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
     fallbackStyle: "Bold",
     x: textX,
     y: 214,
-    width: 360,
-    maxHeight: 260,
-    maxSize: 76,
+    width: textWidth,
+    maxHeight: 240,
+    maxSize: hasMedia ? 70 : 84,
     minSize: 32,
     lineHeight: 1.02,
     color: tokens.text_dark,
@@ -2689,9 +2694,9 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: textX,
-    y: 494,
-    width: 350,
-    maxHeight: 280,
+    y: 468,
+    width: bodyWidth,
+    maxHeight: hasMedia ? 268 : 340,
     maxSize: 34,
     minSize: 18,
     lineHeight: 1.18,
@@ -2699,10 +2704,37 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
     alignHorizontal: "LEFT"
   });
 
-  await appendDeviceMockupShell(frame, slide, deviceX, 146, 312, 1002, tokens, {
-    screenOpacity: 0.98,
-    overlayOpacity: 0.04
-  });
+  if (hasMedia) {
+    await appendDeviceMockupShell(frame, slide, deviceX, 126, 382, 1048, tokens, {
+      screenOpacity: 0.98,
+      overlayOpacity: 0.03
+    });
+  } else {
+    const accent = appendSurfaceCard(frame, deviceOnRight ? 744 : 746, 934, 248, 216, {
+      fillHex: "#FFFFFF",
+      fillOpacity: 0.5,
+      cornerRadius: 34,
+      strokeHex: "#DDE5F4",
+      strokeOpacity: 0.6,
+      shadow: false
+    });
+    await appendLabelPill(accent, 26, 26, "Text-first", tokens.accent_blue, tokens.text_dark);
+    await createTextBlock(accent, {
+      text: "No phone frame on text-only slides.",
+      fontFamily: payload.typography.body_family,
+      fontStyle: payload.typography.body_style,
+      fallbackStyle: "Regular",
+      x: 24,
+      y: 94,
+      width: 198,
+      maxHeight: 86,
+      maxSize: 20,
+      minSize: 14,
+      lineHeight: 1.16,
+      color: "#52607B",
+      alignHorizontal: "LEFT"
+    });
+  }
 }
 
 async function renderTwitterCardCtaSlide(frame, slide, payload) {
@@ -2737,10 +2769,10 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
     x: 92,
-    y: 246,
-    width: 420,
-    maxHeight: 280,
-    maxSize: 82,
+    y: 226,
+    width: 470,
+    maxHeight: 250,
+    maxSize: 74,
     minSize: 34,
     lineHeight: 1.02,
     color: tokens.text_dark,
@@ -2754,10 +2786,10 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 92,
-      y: 560,
-      width: 384,
-      maxHeight: 150,
-      maxSize: 34,
+      y: 520,
+      width: 420,
+      maxHeight: 118,
+      maxSize: 28,
       minSize: 18,
       lineHeight: 1.16,
       color: tokens.text_dark,
@@ -2772,8 +2804,8 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 92,
-      y: 720,
-      width: 360,
+      y: 662,
+      width: 396,
       maxHeight: 80,
       maxSize: 24,
       minSize: 14,
@@ -2783,8 +2815,8 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
     });
   }
 
-  await appendLabelPill(frame, 92, 858, slide.button_label || "Follow for more", tokens.accent_blue, tokens.text_dark);
-  await appendDeviceMockupShell(frame, slide, 648, 170, 312, 1002, tokens, {
+  await appendLabelPill(frame, 92, 824, slide.button_label || "Follow for more", tokens.accent_blue, tokens.text_dark);
+  await appendDeviceMockupShell(frame, slide, 602, 142, 382, 1060, tokens, {
     screenOpacity: 1,
     overlayOpacity: 0,
     useDecorativeScreen: true

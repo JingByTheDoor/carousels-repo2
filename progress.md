@@ -322,3 +322,16 @@
   - `node --check studio_assets\\app.js`
   - `python -m compileall tools`
   - smoke test showing `/slide_7` resolves into a structured slide reference entry for the active variant
+- Applied the next review-note pass from `studio-20260402-141710-4371a1`:
+  - removed redundant CTA subcopy when the CTA body is just a substring of the CTA headline
+  - tightened `light_glow` body spacing and reduced headline/body max sizes to avoid overlap on dense slides
+  - widened `device_mockup` phone shells on cover and CTA slides
+  - changed `device_mockup` body slides so text-only slides no longer render a phone shell at all
+  - increased `device_mockup` text area widths to reduce the “too much blank space / too thin” effect
+- Re-verified slash references against the latest submitted review:
+  - latest review JSON contains structured slide refs for `/slide_7`, `/slide_2`, `/slide_4`, etc.
+  - refs include both preview and export URLs/paths
+- Verified:
+  - `node --check figma_plugin\\code.js`
+  - `python -m compileall tools`
+  - CTA copy smoke test: duplicate `Follow for more ...` body now collapses to `None`, while meaningful tails like `for busy teachers` survive

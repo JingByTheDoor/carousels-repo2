@@ -33,6 +33,10 @@ const FONT_FALLBACKS = {
 const PREVIEW_EXPORT_WIDTH = 720;
 const EXPORT_SCALE = 2;
 
+function postStatus(message) {
+  figma.ui.postMessage({ type: "status", message });
+}
+
 figma.ui.onmessage = async (message) => {
   if (!message || !message.type) {
     return;
@@ -59,7 +63,7 @@ figma.ui.onmessage = async (message) => {
 async function handleRenderPayload(message) {
   try {
     const payload = normalizePayload(message.payload);
-    figma.ui.postMessage({ type: "status", message: "Rendering carousel..." });
+    postStatus("Rendering carousel...");
     const result = await renderCarousel(payload);
     figma.notify(`Rendered ${payload.job_id} into ${result.page_name}`);
     figma.ui.postMessage({ type: "render-complete", result });
@@ -290,8 +294,11 @@ async function renderCarousel(payload) {
   }
 
   figma.viewport.scrollAndZoomIntoView(frames);
+  postStatus("Slides rendered. Exporting Studio previews...");
   const previewImages = await exportSlidePreviews(frames, payload.slides);
+  postStatus("Studio previews exported. Building full PNG exports...");
   const exportImages = await exportSlideImages(frames, payload.slides);
+  postStatus("Exports ready. Finalizing render result...");
   return {
     schema_version: "figma_plugin_result_v1",
     job_id: payload.job_id,
@@ -308,51 +315,53 @@ async function renderCarousel(payload) {
 }
 
 async function exportSlidePreviews(frames, slides) {
-  const previews = [];
-  for (let index = 0; index < frames.length; index += 1) {
+  const previewTasks = frames.map(async (frame, index) => {
     try {
-      const bytes = await frames[index].exportAsync({
+      const bytes = await frame.exportAsync({
         format: "PNG",
         constraint: {
           type: "WIDTH",
           value: PREVIEW_EXPORT_WIDTH
         }
       });
-      previews.push({
+      return {
         slide_number: slides[index] ? slides[index].slide_number : index + 1,
         mime_type: "image/png",
         data_base64: encodeBase64(bytes)
-      });
+      };
     } catch (error) {
       // Keep the render usable even if preview export fails.
+      return null;
     }
-  }
-  return previews;
+  });
+  const previews = await Promise.all(previewTasks);
+  return previews.filter(Boolean);
 }
 
 async function exportSlideImages(frames, slides) {
-  const exports = [];
-  for (let index = 0; index < frames.length; index += 1) {
+  const exportTasks = frames.map(async (frame, index) => {
     try {
       const slideNumber = slides[index] ? slides[index].slide_number : index + 1;
-      const bytes = await frames[index].exportAsync({
+      const bytes = await frame.exportAsync({
         format: "PNG",
         constraint: {
           type: "SCALE",
           value: EXPORT_SCALE
         }
       });
-      exports.push({
+      return {
         slide_number: slideNumber,
         file_name: `slide-${String(slideNumber).padStart(2, "0")}.png`,
         mime_type: "image/png",
         data_base64: encodeBase64(bytes)
-      });
+      };
     } catch (error) {
       // Keep the render usable even if export generation fails.
+      return null;
     }
-  }
-  return exports;
+  });
+  const exports = await Promise.all(exportTasks);
+  return exports.filter(Boolean);
 }
 
 async function renderSlide(frame, slide, payload) {

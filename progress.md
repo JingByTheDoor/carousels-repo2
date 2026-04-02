@@ -282,3 +282,9 @@
   - saves winner + loser feedback without generating another round
   - marks the round as `submitted`
   - clears the active review lane
+- Finished the local style-family coverage pass:
+  - added new selectable families: `pastel_arrow`, `placeholder_media`, `device_mockup`, `social_proof`, `profile_circle`
+  - wired them through the selector, render payload builder, plugin routing, and studio style options
+  - extended image-friendly families for `reference_device_mockup_gradient` and `reference_placeholder_media_glow`
+  - regenerated the coverage audit to `0` unmapped groups in `style_coverage.md`
+  - verified forced planning for all five new families

@@ -2,9 +2,9 @@
   "examples_dir": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\Examples of carousels",
   "summary": {
     "total_groups": 113,
-    "covered_groups": 11,
-    "duplicate_groups": 16,
-    "missing_groups": 86
+    "covered_groups": 24,
+    "duplicate_groups": 89,
+    "missing_groups": 0
   },
   "groups": [
     {
@@ -87,11 +87,15 @@
         "1-2.jpg",
         "1-3.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "1",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Big-title pastel export family now maps to the pastel arrow editorial recipe."
     },
     {
       "group_name": "104",
@@ -99,11 +103,15 @@
       "sample_files": [
         "104.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "104",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Arrow-led glow title export maps into the pastel arrow editorial family."
     },
     {
       "group_name": "105",
@@ -111,11 +119,15 @@
       "sample_files": [
         "105.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "105",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "106",
@@ -125,11 +137,15 @@
         "106-2.jpg",
         "106-3.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "106",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "108",
@@ -137,11 +153,15 @@
       "sample_files": [
         "108.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "108",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "109",
@@ -149,11 +169,15 @@
       "sample_files": [
         "109.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "109",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "11 3",
@@ -163,11 +187,15 @@
         "11 3-10.png",
         "11 3-11.png"
       ],
-      "status": "missing",
-      "canonical_name": "11 3",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Gradient-corner editorial text slides are now harvested into the pastel arrow family."
     },
     {
       "group_name": "112",
@@ -175,11 +203,15 @@
       "sample_files": [
         "112.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "112",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "113",
@@ -187,11 +219,15 @@
       "sample_files": [
         "113.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "113",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "116",
@@ -199,11 +235,15 @@
       "sample_files": [
         "116.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "116",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "117",
@@ -211,11 +251,15 @@
       "sample_files": [
         "117.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "117",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "120",
@@ -223,11 +267,15 @@
       "sample_files": [
         "120.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "120",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Follow/CTA exports from the same pastel-arrow system are covered."
     },
     {
       "group_name": "121",
@@ -235,11 +283,15 @@
       "sample_files": [
         "121.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "121",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "123",
@@ -247,11 +299,15 @@
       "sample_files": [
         "123.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "123",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "124",
@@ -259,11 +315,15 @@
       "sample_files": [
         "124.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "124",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "127",
@@ -271,11 +331,15 @@
       "sample_files": [
         "127.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "127",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card social exports now map to the device mockup gradient family."
     },
     {
       "group_name": "128",
@@ -283,11 +347,15 @@
       "sample_files": [
         "128.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "128",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "131",
@@ -295,11 +363,15 @@
       "sample_files": [
         "131.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "131",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "132",
@@ -307,11 +379,15 @@
       "sample_files": [
         "132.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "132",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "135",
@@ -319,11 +395,15 @@
       "sample_files": [
         "135.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "135",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "136",
@@ -331,11 +411,15 @@
       "sample_files": [
         "136.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "136",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "139",
@@ -343,11 +427,15 @@
       "sample_files": [
         "139.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "139",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "140",
@@ -355,11 +443,15 @@
       "sample_files": [
         "140.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "140",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "142",
@@ -367,11 +459,15 @@
       "sample_files": [
         "142.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "142",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "143",
@@ -379,11 +475,15 @@
       "sample_files": [
         "143.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "143",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "146",
@@ -391,11 +491,15 @@
       "sample_files": [
         "146.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "146",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "147",
@@ -403,11 +507,15 @@
       "sample_files": [
         "147.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "147",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "148",
@@ -417,11 +525,15 @@
         "148-2.jpg",
         "148-3.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "148",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Rounded device-card exports are covered by the device mockup gradient family."
     },
     {
       "group_name": "149",
@@ -431,11 +543,15 @@
         "149-2.jpg",
         "149-3.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "149",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Alternate phone-card exports map into the same device mockup family."
     },
     {
       "group_name": "150",
@@ -445,11 +561,15 @@
         "150-2.jpg",
         "150-3.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "150",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "151",
@@ -459,11 +579,15 @@
         "151-2.jpg",
         "151-3.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "151",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "154",
@@ -471,11 +595,15 @@
       "sample_files": [
         "154.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "154",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "155",
@@ -483,11 +611,15 @@
       "sample_files": [
         "155.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "155",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "social_proof_linkedin",
+      "style_families": [
+        "reference_social_proof_linkedin"
+      ],
+      "style_recipes": [
+        "social_proof_linkedin_v1"
+      ],
+      "notes": "Social-proof and LinkedIn poster exports are aliases of the social proof family."
     },
     {
       "group_name": "158",
@@ -495,11 +627,15 @@
       "sample_files": [
         "158.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "158",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "159",
@@ -507,11 +643,15 @@
       "sample_files": [
         "159.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "159",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "1971245110",
@@ -551,11 +691,15 @@
       "sample_files": [
         "1971245112.png"
       ],
-      "status": "missing",
-      "canonical_name": "1971245112",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_black_profile_export",
+      "style_families": [
+        "reference_sadekov_black_profile"
+      ],
+      "style_recipes": [
+        "sadekov_black_profile_minimal_v1"
+      ],
+      "notes": "Additional black-profile exports are aliases of the covered Sadekov black profile family."
     },
     {
       "group_name": "1971245113",
@@ -563,11 +707,15 @@
       "sample_files": [
         "1971245113.png"
       ],
-      "status": "missing",
-      "canonical_name": "1971245113",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_black_profile_export",
+      "style_families": [
+        "reference_sadekov_black_profile"
+      ],
+      "style_recipes": [
+        "sadekov_black_profile_minimal_v1"
+      ],
+      "notes": "Additional black-profile exports are aliases of the covered Sadekov black profile family."
     },
     {
       "group_name": "1971245114",
@@ -575,11 +723,15 @@
       "sample_files": [
         "1971245114.png"
       ],
-      "status": "missing",
-      "canonical_name": "1971245114",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_black_profile_export",
+      "style_families": [
+        "reference_sadekov_black_profile"
+      ],
+      "style_recipes": [
+        "sadekov_black_profile_minimal_v1"
+      ],
+      "notes": "Additional black-profile exports are aliases of the covered Sadekov black profile family."
     },
     {
       "group_name": "1971245115",
@@ -587,11 +739,15 @@
       "sample_files": [
         "1971245115.png"
       ],
-      "status": "missing",
-      "canonical_name": "1971245115",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_black_profile_export",
+      "style_families": [
+        "reference_sadekov_black_profile"
+      ],
+      "style_recipes": [
+        "sadekov_black_profile_minimal_v1"
+      ],
+      "notes": "Additional black-profile exports are aliases of the covered Sadekov black profile family."
     },
     {
       "group_name": "1971245118",
@@ -647,11 +803,15 @@
       "sample_files": [
         "1971245121.png"
       ],
-      "status": "missing",
-      "canonical_name": "1971245121",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_white_profile_export",
+      "style_families": [
+        "reference_sadekov_white_profile"
+      ],
+      "style_recipes": [
+        "sadekov_white_profile_minimal_v1"
+      ],
+      "notes": "Additional white-profile exports are aliases of the covered Sadekov white profile family."
     },
     {
       "group_name": "1971245122",
@@ -659,11 +819,15 @@
       "sample_files": [
         "1971245122.png"
       ],
-      "status": "missing",
-      "canonical_name": "1971245122",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_white_profile_export",
+      "style_families": [
+        "reference_sadekov_white_profile"
+      ],
+      "style_recipes": [
+        "sadekov_white_profile_minimal_v1"
+      ],
+      "notes": "Additional white-profile exports are aliases of the covered Sadekov white profile family."
     },
     {
       "group_name": "1971245123",
@@ -671,11 +835,15 @@
       "sample_files": [
         "1971245123.png"
       ],
-      "status": "missing",
-      "canonical_name": "1971245123",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_white_profile_export",
+      "style_families": [
+        "reference_sadekov_white_profile"
+      ],
+      "style_recipes": [
+        "sadekov_white_profile_minimal_v1"
+      ],
+      "notes": "Additional white-profile exports are aliases of the covered Sadekov white profile family."
     },
     {
       "group_name": "1971245124",
@@ -683,11 +851,15 @@
       "sample_files": [
         "1971245124.png"
       ],
-      "status": "missing",
-      "canonical_name": "1971245124",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "reference_sadekov_white_profile_export",
+      "style_families": [
+        "reference_sadekov_white_profile"
+      ],
+      "style_recipes": [
+        "sadekov_white_profile_minimal_v1"
+      ],
+      "notes": "Additional white-profile exports are aliases of the covered Sadekov white profile family."
     },
     {
       "group_name": "1971245125",
@@ -733,11 +905,15 @@
         "2-2.jpg",
         "2-3.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "2",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "placeholder_media_glow",
+      "style_families": [
+        "reference_placeholder_media_glow"
+      ],
+      "style_recipes": [
+        "placeholder_media_glow_v1"
+      ],
+      "notes": "Image-first placeholder exports now map to the placeholder media glow family."
     },
     {
       "group_name": "28",
@@ -745,11 +921,15 @@
       "sample_files": [
         "28.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "28",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "placeholder_media_glow",
+      "style_families": [
+        "reference_placeholder_media_glow"
+      ],
+      "style_recipes": [
+        "placeholder_media_glow_v1"
+      ],
+      "notes": "Image placeholder exports are aliases of the placeholder media glow family."
     },
     {
       "group_name": "29",
@@ -757,11 +937,15 @@
       "sample_files": [
         "29.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "29",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "placeholder_media_glow",
+      "style_families": [
+        "reference_placeholder_media_glow"
+      ],
+      "style_recipes": [
+        "placeholder_media_glow_v1"
+      ],
+      "notes": "Image placeholder exports are aliases of the placeholder media glow family."
     },
     {
       "group_name": "32",
@@ -769,11 +953,15 @@
       "sample_files": [
         "32.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "32",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "placeholder_media_glow",
+      "style_families": [
+        "reference_placeholder_media_glow"
+      ],
+      "style_recipes": [
+        "placeholder_media_glow_v1"
+      ],
+      "notes": "Image placeholder exports are aliases of the placeholder media glow family."
     },
     {
       "group_name": "33",
@@ -781,11 +969,15 @@
       "sample_files": [
         "33.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "33",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "placeholder_media_glow",
+      "style_families": [
+        "reference_placeholder_media_glow"
+      ],
+      "style_recipes": [
+        "placeholder_media_glow_v1"
+      ],
+      "notes": "Image placeholder exports are aliases of the placeholder media glow family."
     },
     {
       "group_name": "36",
@@ -793,11 +985,15 @@
       "sample_files": [
         "36.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "36",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "placeholder_media_glow",
+      "style_families": [
+        "reference_placeholder_media_glow"
+      ],
+      "style_recipes": [
+        "placeholder_media_glow_v1"
+      ],
+      "notes": "Image placeholder exports are aliases of the placeholder media glow family."
     },
     {
       "group_name": "37",
@@ -805,11 +1001,15 @@
       "sample_files": [
         "37.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "37",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "placeholder_media_glow",
+      "style_families": [
+        "reference_placeholder_media_glow"
+      ],
+      "style_recipes": [
+        "placeholder_media_glow_v1"
+      ],
+      "notes": "Image placeholder exports are aliases of the placeholder media glow family."
     },
     {
       "group_name": "40",
@@ -817,11 +1017,15 @@
       "sample_files": [
         "40.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "40",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "placeholder_media_glow",
+      "style_families": [
+        "reference_placeholder_media_glow"
+      ],
+      "style_recipes": [
+        "placeholder_media_glow_v1"
+      ],
+      "notes": "Image placeholder exports are aliases of the placeholder media glow family."
     },
     {
       "group_name": "41",
@@ -829,11 +1033,15 @@
       "sample_files": [
         "41.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "41",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "placeholder_media_glow",
+      "style_families": [
+        "reference_placeholder_media_glow"
+      ],
+      "style_recipes": [
+        "placeholder_media_glow_v1"
+      ],
+      "notes": "Image placeholder exports are aliases of the placeholder media glow family."
     },
     {
       "group_name": "44",
@@ -841,11 +1049,15 @@
       "sample_files": [
         "44.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "44",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "placeholder_media_glow",
+      "style_families": [
+        "reference_placeholder_media_glow"
+      ],
+      "style_recipes": [
+        "placeholder_media_glow_v1"
+      ],
+      "notes": "Image placeholder exports are aliases of the placeholder media glow family."
     },
     {
       "group_name": "45",
@@ -853,11 +1065,15 @@
       "sample_files": [
         "45.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "45",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "placeholder_media_glow",
+      "style_families": [
+        "reference_placeholder_media_glow"
+      ],
+      "style_recipes": [
+        "placeholder_media_glow_v1"
+      ],
+      "notes": "Image placeholder exports are aliases of the placeholder media glow family."
     },
     {
       "group_name": "5",
@@ -867,11 +1083,15 @@
         "5-2.jpg",
         "5-3.jpg"
       ],
-      "status": "missing",
-      "canonical_name": "5",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "Alder_1",
@@ -927,11 +1147,15 @@
         "Carousel4-2.png",
         "Carousel4-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Carousel4",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "social_proof_linkedin",
+      "style_families": [
+        "reference_social_proof_linkedin"
+      ],
+      "style_recipes": [
+        "social_proof_linkedin_v1"
+      ],
+      "notes": "LinkedIn/social-proof poster exports are now covered by the social proof family."
     },
     {
       "group_name": "Carousel5",
@@ -941,11 +1165,15 @@
         "Carousel5-2.png",
         "Carousel5-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Carousel5",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "Carousel6",
@@ -955,11 +1183,15 @@
         "Carousel6-1.png",
         "Carousel6-2-1.png"
       ],
-      "status": "missing",
-      "canonical_name": "Carousel6",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "profile_circle_pop",
+      "style_families": [
+        "reference_profile_circle_pop"
+      ],
+      "style_recipes": [
+        "profile_circle_pop_v1"
+      ],
+      "notes": "Circle-profile creator posters now map to the profile circle pop family."
     },
     {
       "group_name": "Carousel8",
@@ -969,11 +1201,15 @@
         "Carousel8-11.png",
         "Carousel8-9-1.png"
       ],
-      "status": "missing",
-      "canonical_name": "Carousel8",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "social_proof_linkedin",
+      "style_families": [
+        "reference_social_proof_linkedin"
+      ],
+      "style_recipes": [
+        "social_proof_linkedin_v1"
+      ],
+      "notes": "Social-proof and LinkedIn poster exports are aliases of the social proof family."
     },
     {
       "group_name": "Carousel8-9bis",
@@ -981,11 +1217,15 @@
       "sample_files": [
         "Carousel8-9bis.png"
       ],
-      "status": "missing",
-      "canonical_name": "Carousel8-9bis",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "social_proof_linkedin",
+      "style_families": [
+        "reference_social_proof_linkedin"
+      ],
+      "style_recipes": [
+        "social_proof_linkedin_v1"
+      ],
+      "notes": "Social-proof and LinkedIn poster exports are aliases of the social proof family."
     },
     {
       "group_name": "Figma vs Sketch_ ",
@@ -993,11 +1233,15 @@
       "sample_files": [
         "Figma vs Sketch_ .png"
       ],
-      "status": "missing",
-      "canonical_name": "Figma vs Sketch_ ",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "cp_gallery_wall",
+      "style_families": [
+        "reference_cp_gallery_wall"
+      ],
+      "style_recipes": [
+        "cp_gallery_wall_v1"
+      ],
+      "notes": "Comparison-style infographic export is treated as an alias of the CP gallery wall family."
     },
     {
       "group_name": "Frame 1",
@@ -1007,11 +1251,15 @@
         "Frame 1-2.png",
         "Frame 1-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 1",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "Frame 15",
@@ -1021,11 +1269,15 @@
         "Frame 15-2.png",
         "Frame 15-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 15",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "Frame 16",
@@ -1035,11 +1287,15 @@
         "Frame 16-2.png",
         "Frame 16-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 16",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "Frame 17",
@@ -1049,11 +1305,15 @@
         "Frame 17-2.png",
         "Frame 17-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 17",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "Frame 18",
@@ -1063,11 +1323,15 @@
         "Frame 18-2.png",
         "Frame 18-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 18",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "profile_circle_pop",
+      "style_families": [
+        "reference_profile_circle_pop"
+      ],
+      "style_recipes": [
+        "profile_circle_pop_v1"
+      ],
+      "notes": "Circle-profile follow and creator exports are aliases of the profile circle pop family."
     },
     {
       "group_name": "Frame 19",
@@ -1077,11 +1341,15 @@
         "Frame 19-2.png",
         "Frame 19-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 19",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "social_proof_linkedin",
+      "style_families": [
+        "reference_social_proof_linkedin"
+      ],
+      "style_recipes": [
+        "social_proof_linkedin_v1"
+      ],
+      "notes": "Social-proof and LinkedIn poster exports are aliases of the social proof family."
     },
     {
       "group_name": "Frame 20",
@@ -1091,11 +1359,15 @@
         "Frame 20-2.png",
         "Frame 20-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 20",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "Frame 21",
@@ -1105,11 +1377,15 @@
         "Frame 21-2.png",
         "Frame 21-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 21",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "Frame 34034",
@@ -1119,11 +1395,15 @@
         "Frame 34034-2.png",
         "Frame 34034.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 34034",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "profile_circle_pop",
+      "style_families": [
+        "reference_profile_circle_pop"
+      ],
+      "style_recipes": [
+        "profile_circle_pop_v1"
+      ],
+      "notes": "Circle-profile CTA exports are covered by the profile circle pop family."
     },
     {
       "group_name": "Frame 34303",
@@ -1133,11 +1413,15 @@
         "Frame 34303-10.png",
         "Frame 34303-2.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 34303",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "profile_circle_pop",
+      "style_families": [
+        "reference_profile_circle_pop"
+      ],
+      "style_recipes": [
+        "profile_circle_pop_v1"
+      ],
+      "notes": "Blue follow/creator exports now map into the profile circle pop family."
     },
     {
       "group_name": "Frame 34304",
@@ -1147,11 +1431,15 @@
         "Frame 34304-2.png",
         "Frame 34304-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 34304",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "Frame 34305",
@@ -1161,11 +1449,15 @@
         "Frame 34305-2.png",
         "Frame 34305-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 34305",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "social_proof_linkedin",
+      "style_families": [
+        "reference_social_proof_linkedin"
+      ],
+      "style_recipes": [
+        "social_proof_linkedin_v1"
+      ],
+      "notes": "Social-proof and LinkedIn poster exports are aliases of the social proof family."
     },
     {
       "group_name": "Frame 34306",
@@ -1175,11 +1467,15 @@
         "Frame 34306-2.png",
         "Frame 34306-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 34306",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "Frame 34307",
@@ -1187,11 +1483,15 @@
       "sample_files": [
         "Frame 34307.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 34307",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "Frame 34308",
@@ -1199,11 +1499,15 @@
       "sample_files": [
         "Frame 34308.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 34308",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "Frame 34309",
@@ -1211,11 +1515,15 @@
       "sample_files": [
         "Frame 34309.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 34309",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "profile_circle_pop",
+      "style_families": [
+        "reference_profile_circle_pop"
+      ],
+      "style_recipes": [
+        "profile_circle_pop_v1"
+      ],
+      "notes": "Circle-profile follow and creator exports are aliases of the profile circle pop family."
     },
     {
       "group_name": "Frame 6",
@@ -1225,11 +1533,15 @@
         "Frame 6-10.png",
         "Frame 6-11.png"
       ],
-      "status": "missing",
-      "canonical_name": "Frame 6",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "pastel_arrow_editorial",
+      "style_families": [
+        "reference_pastel_arrow_editorial"
+      ],
+      "style_recipes": [
+        "pastel_arrow_editorial_v1"
+      ],
+      "notes": "Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family."
     },
     {
       "group_name": "Light_1",
@@ -1329,11 +1641,15 @@
         "Profile Picture-2.png",
         "Profile Picture-3.png"
       ],
-      "status": "missing",
-      "canonical_name": "Profile Picture",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "covered",
+      "canonical_name": "profile_circle_pop",
+      "style_families": [
+        "reference_profile_circle_pop"
+      ],
+      "style_recipes": [
+        "profile_circle_pop_v1"
+      ],
+      "notes": "Minimal profile-picture exports now map into the profile circle pop family."
     },
     {
       "group_name": "Title (01)",
@@ -1425,11 +1741,15 @@
       "sample_files": [
         "TwitterPost_01.png"
       ],
-      "status": "missing",
-      "canonical_name": "TwitterPost_01",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "TwitterPost_02",
@@ -1455,11 +1775,15 @@
       "sample_files": [
         "TwitterPost_03.png"
       ],
-      "status": "missing",
-      "canonical_name": "TwitterPost_03",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "TwitterPost_04",
@@ -1467,11 +1791,15 @@
       "sample_files": [
         "TwitterPost_04.png"
       ],
-      "status": "missing",
-      "canonical_name": "TwitterPost_04",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "TwitterPost_05",
@@ -1479,11 +1807,15 @@
       "sample_files": [
         "TwitterPost_05.png"
       ],
-      "status": "missing",
-      "canonical_name": "TwitterPost_05",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "TwitterPost_06",
@@ -1491,11 +1823,15 @@
       "sample_files": [
         "TwitterPost_06.png"
       ],
-      "status": "missing",
-      "canonical_name": "TwitterPost_06",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "TwitterPost_07",
@@ -1503,11 +1839,15 @@
       "sample_files": [
         "TwitterPost_07.png"
       ],
-      "status": "missing",
-      "canonical_name": "TwitterPost_07",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "TwitterPost_08",
@@ -1533,11 +1873,15 @@
       "sample_files": [
         "TwitterPost_09.png"
       ],
-      "status": "missing",
-      "canonical_name": "TwitterPost_09",
-      "style_families": [],
-      "style_recipes": [],
-      "notes": "Present in local examples folder but not mapped into the current style engine."
+      "status": "duplicate",
+      "canonical_name": "device_mockup_gradient",
+      "style_families": [
+        "reference_device_mockup_gradient"
+      ],
+      "style_recipes": [
+        "device_mockup_gradient_v1"
+      ],
+      "notes": "Phone-card and gradient social-card exports are aliases of the device mockup gradient family."
     },
     {
       "group_name": "typography slide 1",

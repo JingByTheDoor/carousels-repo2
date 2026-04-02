@@ -3409,15 +3409,26 @@ function isCreatorMonoMinimal(payload) {
 }
 
 function isLightGrainGlow(payload) {
-  return payload && payload.style_recipe === "light_grain_glow_v1";
+  return payload && [
+    "light_grain_glow_v1",
+    "pastel_arrow_editorial_v1",
+    "placeholder_media_glow_v1"
+  ].includes(payload.style_recipe);
 }
 
 function isRetroSwipeCreator(payload) {
-  return payload && payload.style_recipe === "retro_swipe_creator_v1";
+  return payload && [
+    "retro_swipe_creator_v1",
+    "social_proof_linkedin_v1",
+    "profile_circle_pop_v1"
+  ].includes(payload.style_recipe);
 }
 
 function isTwitterCardSoft(payload) {
-  return payload && payload.style_recipe === "twitter_card_soft_v1";
+  return payload && [
+    "twitter_card_soft_v1",
+    "device_mockup_gradient_v1"
+  ].includes(payload.style_recipe);
 }
 
 function cleanText(value) {

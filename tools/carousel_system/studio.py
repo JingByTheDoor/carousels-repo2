@@ -34,7 +34,9 @@ REVIEW_NICHE_LABEL = "Materials helpful to English teachers"
 REVIEW_DEFAULT_CTA = "Follow for more English teaching materials"
 REVIEW_SAFE_STYLE_VALUES: tuple[str, ...] = (
     "alder_split_right",
+    "placeholder_media",
     "light_glow",
+    "device_mockup",
     "twitter_card",
 )
 REVIEW_COPY_SEQUENCE: tuple["StudioCopyLength", ...] = ("tight", "balanced", "expanded")
@@ -77,8 +79,13 @@ STYLE_OPTIONS: tuple[tuple[str, str], ...] = (
     ("sadekov_light", "Sadekov White Profile"),
     ("typography_light", "Typography Editorial Light"),
     ("creator_mono", "Creator Mono Minimal"),
+    ("pastel_arrow", "Pastel Arrow Editorial"),
+    ("placeholder_media", "Placeholder Media Glow"),
     ("light_glow", "Light Grain Glow"),
+    ("device_mockup", "Device Mockup Gradient"),
     ("retro_swipe", "Retro Swipe Creator"),
+    ("social_proof", "Social Proof LinkedIn"),
+    ("profile_circle", "Profile Circle Pop"),
     ("twitter_card", "Twitter Card Soft"),
 )
 STYLE_LABELS = {value: label for value, label in STYLE_OPTIONS}
@@ -99,8 +106,13 @@ STYLE_POOL_VALUES: dict[StudioStylePool, tuple[str, ...]] = {
     ),
     "local": (
         "creator_mono",
+        "pastel_arrow",
+        "placeholder_media",
         "light_glow",
+        "device_mockup",
         "retro_swipe",
+        "social_proof",
+        "profile_circle",
         "twitter_card",
     ),
 }

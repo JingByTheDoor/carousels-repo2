@@ -195,3 +195,14 @@
   This makes the "must include 4 images" rule realistic instead of hoping every style can absorb media cleanly.
 - Review feedback is more useful when the winner can carry a note too. The next round should not only know what failed; it should also know what was promising but still imperfect.
 - Review notes need a durable home outside `.tmp`. A persistent `notes/review_feedback/` folder is a better place for future system-change decisions than ephemeral round files alone.
+- The remaining local-example gap was mostly not "dozens of unique missing systems." It collapsed into five real missing families plus many aliases:
+  - pastel arrow/editorial glow
+  - placeholder media glow
+  - device mockup gradient
+  - social proof / LinkedIn poster
+  - profile-circle pop
+- The local audit is only trustworthy if it classifies the exported numeric groups too. Extra export groups like `1971245112`-`1971245115` and `1971245121`-`1971245124` are not new families; they are aliases of the already covered Sadekov black/white profile families.
+- Several local groups are better treated as aliases than standalone renderers:
+  - `TwitterPost_01`, `TwitterPost_03`-`TwitterPost_09` fit the device/mockup tweet family
+  - `Frame 15`-`Frame 17`, `Frame 20`-`Frame 21`, `Frame 34304`, `Frame 34306`, `158`, and `159` fit the pastel arrow/editorial family
+  - `Carousel6-*`, `Frame 18`, `Frame 34303`, `Frame 34309`, and `Profile Picture` fit the profile-circle family

@@ -4,9 +4,9 @@ This report is generated from the local `Examples of carousels` folder and the c
 
 ## Summary
 - Total grouped example families: 113
-- Covered groups: 11
-- Duplicate/alias groups: 16
-- Missing or unmapped groups: 86
+- Covered groups: 24
+- Duplicate/alias groups: 89
+- Missing or unmapped groups: 0
 
 ## Covered
 - `01 – Long Title` (9 files)
@@ -33,6 +33,54 @@ This report is generated from the local `Examples of carousels` folder and the c
   Recipes: creator_mono_minimal_v1
   Samples: 05 – Call to Action-1.png, 05 – Call to Action-2.png, 05 – Call to Action-3.png
   Notes: CTA exports now map to the same minimal creator family.
+- `1` (5 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 1-1.jpg, 1-2.jpg, 1-3.jpg
+  Notes: Big-title pastel export family now maps to the pastel arrow editorial recipe.
+- `104` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 104.jpg
+  Notes: Arrow-led glow title export maps into the pastel arrow editorial family.
+- `11 3` (15 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 11 3-1.png, 11 3-10.png, 11 3-11.png
+  Notes: Gradient-corner editorial text slides are now harvested into the pastel arrow family.
+- `120` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 120.jpg
+  Notes: Follow/CTA exports from the same pastel-arrow system are covered.
+- `127` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 127.jpg
+  Notes: Phone-card social exports now map to the device mockup gradient family.
+- `148` (4 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 148-1.jpg, 148-2.jpg, 148-3.jpg
+  Notes: Rounded device-card exports are covered by the device mockup gradient family.
+- `149` (4 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 149-1.jpg, 149-2.jpg, 149-3.jpg
+  Notes: Alternate phone-card exports map into the same device mockup family.
+- `2` (5 files)
+  Canonical: `placeholder_media_glow`
+  Style families: reference_placeholder_media_glow
+  Recipes: placeholder_media_glow_v1
+  Samples: 2-1.jpg, 2-2.jpg, 2-3.jpg
+  Notes: Image-first placeholder exports now map to the placeholder media glow family.
 - `Alder_1` (12 files)
   Canonical: `Alder_1`
   Style families: reference_mix_alder_portrait, reference_alder_split_media, reference_alder_text_only
@@ -45,12 +93,42 @@ This report is generated from the local `Examples of carousels` folder and the c
   Recipes: cp_split_minimal_statement_v1, cp_split_longform_v1, cp_gallery_wall_v1
   Samples: CP_3-1.png, CP_3-2.png, CP_3-3.png
   Notes: Minimal split, longform split, and gallery variants are already implemented.
+- `Carousel4` (7 files)
+  Canonical: `social_proof_linkedin`
+  Style families: reference_social_proof_linkedin
+  Recipes: social_proof_linkedin_v1
+  Samples: Carousel4-1.png, Carousel4-2.png, Carousel4-3.png
+  Notes: LinkedIn/social-proof poster exports are now covered by the social proof family.
+- `Carousel6` (16 files)
+  Canonical: `profile_circle_pop`
+  Style families: reference_profile_circle_pop
+  Recipes: profile_circle_pop_v1
+  Samples: Carousel6-1-1.png, Carousel6-1.png, Carousel6-2-1.png
+  Notes: Circle-profile creator posters now map to the profile circle pop family.
+- `Frame 34034` (3 files)
+  Canonical: `profile_circle_pop`
+  Style families: reference_profile_circle_pop
+  Recipes: profile_circle_pop_v1
+  Samples: Frame 34034-1.png, Frame 34034-2.png, Frame 34034.png
+  Notes: Circle-profile CTA exports are covered by the profile circle pop family.
+- `Frame 34303` (11 files)
+  Canonical: `profile_circle_pop`
+  Style families: reference_profile_circle_pop
+  Recipes: profile_circle_pop_v1
+  Samples: Frame 34303-1.png, Frame 34303-10.png, Frame 34303-2.png
+  Notes: Blue follow/creator exports now map into the profile circle pop family.
 - `Light_1` (20 files)
   Canonical: `light_grain_glow`
   Style families: reference_light_grain_glow
   Recipes: light_grain_glow_v1
   Samples: Light_1-1.jpg, Light_1-10.jpg, Light_1-11.jpg
   Notes: Primary light-grain hero set is now mapped into the light glow family.
+- `Profile Picture` (5 files)
+  Canonical: `profile_circle_pop`
+  Style families: reference_profile_circle_pop
+  Recipes: profile_circle_pop_v1
+  Samples: Profile Picture-1.png, Profile Picture-2.png, Profile Picture-3.png
+  Notes: Minimal profile-picture exports now map into the profile circle pop family.
 - `Title (01)` (15 files)
   Canonical: `retro_swipe_creator`
   Style families: reference_retro_swipe_creator
@@ -77,6 +155,174 @@ This report is generated from the local `Examples of carousels` folder and the c
   Notes: Used as the current CTA/end-card reference family.
 
 ## Duplicate Or Alias
+- `105` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 105.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `106` (4 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 106-1.jpg, 106-2.jpg, 106-3.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `108` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 108.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `109` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 109.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `112` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 112.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `113` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 113.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `116` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 116.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `117` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 117.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `121` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 121.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `123` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 123.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `124` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 124.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `128` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 128.jpg
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `131` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 131.jpg
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `132` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 132.jpg
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `135` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 135.jpg
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `136` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 136.jpg
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `139` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 139.jpg
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `140` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 140.jpg
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `142` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 142.jpg
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `143` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 143.jpg
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `146` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 146.jpg
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `147` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: 147.jpg
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `150` (5 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 150-1.jpg, 150-2.jpg, 150-3.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `151` (5 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 151-1.jpg, 151-2.jpg, 151-3.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `154` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 154.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `155` (1 files)
+  Canonical: `social_proof_linkedin`
+  Style families: reference_social_proof_linkedin
+  Recipes: social_proof_linkedin_v1
+  Samples: 155.jpg
+  Notes: Social-proof and LinkedIn poster exports are aliases of the social proof family.
+- `158` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 158.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `159` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 159.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
 - `1971245110` (1 files)
   Canonical: `reference_sadekov_black_profile_cover_export`
   Style families: reference_sadekov_black_profile
@@ -89,6 +335,30 @@ This report is generated from the local `Examples of carousels` folder and the c
   Recipes: sadekov_black_profile_minimal_v1
   Samples: 1971245111.png
   Notes: Exported black-profile body slide already mapped to node 1:9076.
+- `1971245112` (1 files)
+  Canonical: `reference_sadekov_black_profile_export`
+  Style families: reference_sadekov_black_profile
+  Recipes: sadekov_black_profile_minimal_v1
+  Samples: 1971245112.png
+  Notes: Additional black-profile exports are aliases of the covered Sadekov black profile family.
+- `1971245113` (1 files)
+  Canonical: `reference_sadekov_black_profile_export`
+  Style families: reference_sadekov_black_profile
+  Recipes: sadekov_black_profile_minimal_v1
+  Samples: 1971245113.png
+  Notes: Additional black-profile exports are aliases of the covered Sadekov black profile family.
+- `1971245114` (1 files)
+  Canonical: `reference_sadekov_black_profile_export`
+  Style families: reference_sadekov_black_profile
+  Recipes: sadekov_black_profile_minimal_v1
+  Samples: 1971245114.png
+  Notes: Additional black-profile exports are aliases of the covered Sadekov black profile family.
+- `1971245115` (1 files)
+  Canonical: `reference_sadekov_black_profile_export`
+  Style families: reference_sadekov_black_profile
+  Recipes: sadekov_black_profile_minimal_v1
+  Samples: 1971245115.png
+  Notes: Additional black-profile exports are aliases of the covered Sadekov black profile family.
 - `1971245118` (1 files)
   Canonical: `reference_sadekov_black_profile_cta_export`
   Style families: reference_sadekov_black_profile
@@ -107,6 +377,30 @@ This report is generated from the local `Examples of carousels` folder and the c
   Recipes: sadekov_white_profile_minimal_v1
   Samples: 1971245120.png
   Notes: Exported white-profile body slide already mapped to node 1:9086.
+- `1971245121` (1 files)
+  Canonical: `reference_sadekov_white_profile_export`
+  Style families: reference_sadekov_white_profile
+  Recipes: sadekov_white_profile_minimal_v1
+  Samples: 1971245121.png
+  Notes: Additional white-profile exports are aliases of the covered Sadekov white profile family.
+- `1971245122` (1 files)
+  Canonical: `reference_sadekov_white_profile_export`
+  Style families: reference_sadekov_white_profile
+  Recipes: sadekov_white_profile_minimal_v1
+  Samples: 1971245122.png
+  Notes: Additional white-profile exports are aliases of the covered Sadekov white profile family.
+- `1971245123` (1 files)
+  Canonical: `reference_sadekov_white_profile_export`
+  Style families: reference_sadekov_white_profile
+  Recipes: sadekov_white_profile_minimal_v1
+  Samples: 1971245123.png
+  Notes: Additional white-profile exports are aliases of the covered Sadekov white profile family.
+- `1971245124` (1 files)
+  Canonical: `reference_sadekov_white_profile_export`
+  Style families: reference_sadekov_white_profile
+  Recipes: sadekov_white_profile_minimal_v1
+  Samples: 1971245124.png
+  Notes: Additional white-profile exports are aliases of the covered Sadekov white profile family.
 - `1971245125` (1 files)
   Canonical: `reference_sadekov_white_profile_cta_export`
   Style families: reference_sadekov_white_profile
@@ -119,6 +413,186 @@ This report is generated from the local `Examples of carousels` folder and the c
   Recipes: None
   Samples: 1971245499.png
   Notes: Single exported portrait layout reference already used as a shared sizing/layout anchor.
+- `28` (1 files)
+  Canonical: `placeholder_media_glow`
+  Style families: reference_placeholder_media_glow
+  Recipes: placeholder_media_glow_v1
+  Samples: 28.jpg
+  Notes: Image placeholder exports are aliases of the placeholder media glow family.
+- `29` (1 files)
+  Canonical: `placeholder_media_glow`
+  Style families: reference_placeholder_media_glow
+  Recipes: placeholder_media_glow_v1
+  Samples: 29.jpg
+  Notes: Image placeholder exports are aliases of the placeholder media glow family.
+- `32` (1 files)
+  Canonical: `placeholder_media_glow`
+  Style families: reference_placeholder_media_glow
+  Recipes: placeholder_media_glow_v1
+  Samples: 32.jpg
+  Notes: Image placeholder exports are aliases of the placeholder media glow family.
+- `33` (1 files)
+  Canonical: `placeholder_media_glow`
+  Style families: reference_placeholder_media_glow
+  Recipes: placeholder_media_glow_v1
+  Samples: 33.jpg
+  Notes: Image placeholder exports are aliases of the placeholder media glow family.
+- `36` (1 files)
+  Canonical: `placeholder_media_glow`
+  Style families: reference_placeholder_media_glow
+  Recipes: placeholder_media_glow_v1
+  Samples: 36.jpg
+  Notes: Image placeholder exports are aliases of the placeholder media glow family.
+- `37` (1 files)
+  Canonical: `placeholder_media_glow`
+  Style families: reference_placeholder_media_glow
+  Recipes: placeholder_media_glow_v1
+  Samples: 37.jpg
+  Notes: Image placeholder exports are aliases of the placeholder media glow family.
+- `40` (1 files)
+  Canonical: `placeholder_media_glow`
+  Style families: reference_placeholder_media_glow
+  Recipes: placeholder_media_glow_v1
+  Samples: 40.jpg
+  Notes: Image placeholder exports are aliases of the placeholder media glow family.
+- `41` (1 files)
+  Canonical: `placeholder_media_glow`
+  Style families: reference_placeholder_media_glow
+  Recipes: placeholder_media_glow_v1
+  Samples: 41.jpg
+  Notes: Image placeholder exports are aliases of the placeholder media glow family.
+- `44` (1 files)
+  Canonical: `placeholder_media_glow`
+  Style families: reference_placeholder_media_glow
+  Recipes: placeholder_media_glow_v1
+  Samples: 44.jpg
+  Notes: Image placeholder exports are aliases of the placeholder media glow family.
+- `45` (1 files)
+  Canonical: `placeholder_media_glow`
+  Style families: reference_placeholder_media_glow
+  Recipes: placeholder_media_glow_v1
+  Samples: 45.jpg
+  Notes: Image placeholder exports are aliases of the placeholder media glow family.
+- `5` (5 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: 5-1.jpg, 5-2.jpg, 5-3.jpg
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `Carousel5` (7 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: Carousel5-1.png, Carousel5-2.png, Carousel5-3.png
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `Carousel8` (7 files)
+  Canonical: `social_proof_linkedin`
+  Style families: reference_social_proof_linkedin
+  Recipes: social_proof_linkedin_v1
+  Samples: Carousel8-1.png, Carousel8-11.png, Carousel8-9-1.png
+  Notes: Social-proof and LinkedIn poster exports are aliases of the social proof family.
+- `Carousel8-9bis` (1 files)
+  Canonical: `social_proof_linkedin`
+  Style families: reference_social_proof_linkedin
+  Recipes: social_proof_linkedin_v1
+  Samples: Carousel8-9bis.png
+  Notes: Social-proof and LinkedIn poster exports are aliases of the social proof family.
+- `Figma vs Sketch_ ` (1 files)
+  Canonical: `cp_gallery_wall`
+  Style families: reference_cp_gallery_wall
+  Recipes: cp_gallery_wall_v1
+  Samples: Figma vs Sketch_ .png
+  Notes: Comparison-style infographic export is treated as an alias of the CP gallery wall family.
+- `Frame 1` (8 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: Frame 1-1.png, Frame 1-2.png, Frame 1-3.png
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `Frame 15` (8 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: Frame 15-1.png, Frame 15-2.png, Frame 15-3.png
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `Frame 16` (5 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: Frame 16-1.png, Frame 16-2.png, Frame 16-3.png
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `Frame 17` (5 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: Frame 17-1.png, Frame 17-2.png, Frame 17-3.png
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `Frame 18` (5 files)
+  Canonical: `profile_circle_pop`
+  Style families: reference_profile_circle_pop
+  Recipes: profile_circle_pop_v1
+  Samples: Frame 18-1.png, Frame 18-2.png, Frame 18-3.png
+  Notes: Circle-profile follow and creator exports are aliases of the profile circle pop family.
+- `Frame 19` (5 files)
+  Canonical: `social_proof_linkedin`
+  Style families: reference_social_proof_linkedin
+  Recipes: social_proof_linkedin_v1
+  Samples: Frame 19-1.png, Frame 19-2.png, Frame 19-3.png
+  Notes: Social-proof and LinkedIn poster exports are aliases of the social proof family.
+- `Frame 20` (5 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: Frame 20-1.png, Frame 20-2.png, Frame 20-3.png
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `Frame 21` (5 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: Frame 21-1.png, Frame 21-2.png, Frame 21-3.png
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `Frame 34304` (4 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: Frame 34304-1.png, Frame 34304-2.png, Frame 34304-3.png
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `Frame 34305` (7 files)
+  Canonical: `social_proof_linkedin`
+  Style families: reference_social_proof_linkedin
+  Recipes: social_proof_linkedin_v1
+  Samples: Frame 34305-1.png, Frame 34305-2.png, Frame 34305-3.png
+  Notes: Social-proof and LinkedIn poster exports are aliases of the social proof family.
+- `Frame 34306` (8 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: Frame 34306-1.png, Frame 34306-2.png, Frame 34306-3.png
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `Frame 34307` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: Frame 34307.png
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `Frame 34308` (1 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: Frame 34308.png
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
+- `Frame 34309` (1 files)
+  Canonical: `profile_circle_pop`
+  Style families: reference_profile_circle_pop
+  Recipes: profile_circle_pop_v1
+  Samples: Frame 34309.png
+  Notes: Circle-profile follow and creator exports are aliases of the profile circle pop family.
+- `Frame 6` (30 files)
+  Canonical: `pastel_arrow_editorial`
+  Style families: reference_pastel_arrow_editorial
+  Recipes: pastel_arrow_editorial_v1
+  Samples: Frame 6-1.png, Frame 6-10.png, Frame 6-11.png
+  Notes: Pastel glow titles, numbered cards, and follow/thank-you exports are aliases of the pastel arrow family.
 - `Light_2` (4 files)
   Canonical: `light_grain_glow`
   Style families: reference_light_grain_glow
@@ -161,533 +635,60 @@ This report is generated from the local `Examples of carousels` folder and the c
   Recipes: twitter_card_soft_v1
   Samples: Twitter Post - Lights Out.png
   Notes: Theme variation of the same tweet-card structure.
+- `TwitterPost_01` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: TwitterPost_01.png
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
 - `TwitterPost_02` (7 files)
   Canonical: `twitter_card_soft`
   Style families: reference_twitter_card_soft
   Recipes: twitter_card_soft_v1
   Samples: TwitterPost_02-1.png, TwitterPost_02-2.png, TwitterPost_02-3.png
   Notes: Soft-gradient tweet card export treated as a high-confidence alias of the covered tweet-card family.
+- `TwitterPost_03` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: TwitterPost_03.png
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `TwitterPost_04` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: TwitterPost_04.png
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `TwitterPost_05` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: TwitterPost_05.png
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `TwitterPost_06` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: TwitterPost_06.png
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
+- `TwitterPost_07` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: TwitterPost_07.png
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
 - `TwitterPost_08` (28 files)
   Canonical: `twitter_card_soft`
   Style families: reference_twitter_card_soft
   Recipes: twitter_card_soft_v1
   Samples: TwitterPost_08-1.png, TwitterPost_08-10.png, TwitterPost_08-11.png
   Notes: Repeated soft-card tweet exports grouped into the same tweet-card family for now.
+- `TwitterPost_09` (1 files)
+  Canonical: `device_mockup_gradient`
+  Style families: reference_device_mockup_gradient
+  Recipes: device_mockup_gradient_v1
+  Samples: TwitterPost_09.png
+  Notes: Phone-card and gradient social-card exports are aliases of the device mockup gradient family.
 
 ## Missing Or Unmapped
-- `1` (5 files)
-  Canonical: `1`
-  Style families: None
-  Recipes: None
-  Samples: 1-1.jpg, 1-2.jpg, 1-3.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `104` (1 files)
-  Canonical: `104`
-  Style families: None
-  Recipes: None
-  Samples: 104.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `105` (1 files)
-  Canonical: `105`
-  Style families: None
-  Recipes: None
-  Samples: 105.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `106` (4 files)
-  Canonical: `106`
-  Style families: None
-  Recipes: None
-  Samples: 106-1.jpg, 106-2.jpg, 106-3.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `108` (1 files)
-  Canonical: `108`
-  Style families: None
-  Recipes: None
-  Samples: 108.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `109` (1 files)
-  Canonical: `109`
-  Style families: None
-  Recipes: None
-  Samples: 109.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `11 3` (15 files)
-  Canonical: `11 3`
-  Style families: None
-  Recipes: None
-  Samples: 11 3-1.png, 11 3-10.png, 11 3-11.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `112` (1 files)
-  Canonical: `112`
-  Style families: None
-  Recipes: None
-  Samples: 112.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `113` (1 files)
-  Canonical: `113`
-  Style families: None
-  Recipes: None
-  Samples: 113.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `116` (1 files)
-  Canonical: `116`
-  Style families: None
-  Recipes: None
-  Samples: 116.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `117` (1 files)
-  Canonical: `117`
-  Style families: None
-  Recipes: None
-  Samples: 117.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `120` (1 files)
-  Canonical: `120`
-  Style families: None
-  Recipes: None
-  Samples: 120.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `121` (1 files)
-  Canonical: `121`
-  Style families: None
-  Recipes: None
-  Samples: 121.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `123` (1 files)
-  Canonical: `123`
-  Style families: None
-  Recipes: None
-  Samples: 123.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `124` (1 files)
-  Canonical: `124`
-  Style families: None
-  Recipes: None
-  Samples: 124.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `127` (1 files)
-  Canonical: `127`
-  Style families: None
-  Recipes: None
-  Samples: 127.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `128` (1 files)
-  Canonical: `128`
-  Style families: None
-  Recipes: None
-  Samples: 128.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `131` (1 files)
-  Canonical: `131`
-  Style families: None
-  Recipes: None
-  Samples: 131.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `132` (1 files)
-  Canonical: `132`
-  Style families: None
-  Recipes: None
-  Samples: 132.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `135` (1 files)
-  Canonical: `135`
-  Style families: None
-  Recipes: None
-  Samples: 135.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `136` (1 files)
-  Canonical: `136`
-  Style families: None
-  Recipes: None
-  Samples: 136.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `139` (1 files)
-  Canonical: `139`
-  Style families: None
-  Recipes: None
-  Samples: 139.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `140` (1 files)
-  Canonical: `140`
-  Style families: None
-  Recipes: None
-  Samples: 140.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `142` (1 files)
-  Canonical: `142`
-  Style families: None
-  Recipes: None
-  Samples: 142.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `143` (1 files)
-  Canonical: `143`
-  Style families: None
-  Recipes: None
-  Samples: 143.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `146` (1 files)
-  Canonical: `146`
-  Style families: None
-  Recipes: None
-  Samples: 146.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `147` (1 files)
-  Canonical: `147`
-  Style families: None
-  Recipes: None
-  Samples: 147.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `148` (4 files)
-  Canonical: `148`
-  Style families: None
-  Recipes: None
-  Samples: 148-1.jpg, 148-2.jpg, 148-3.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `149` (4 files)
-  Canonical: `149`
-  Style families: None
-  Recipes: None
-  Samples: 149-1.jpg, 149-2.jpg, 149-3.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `150` (5 files)
-  Canonical: `150`
-  Style families: None
-  Recipes: None
-  Samples: 150-1.jpg, 150-2.jpg, 150-3.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `151` (5 files)
-  Canonical: `151`
-  Style families: None
-  Recipes: None
-  Samples: 151-1.jpg, 151-2.jpg, 151-3.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `154` (1 files)
-  Canonical: `154`
-  Style families: None
-  Recipes: None
-  Samples: 154.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `155` (1 files)
-  Canonical: `155`
-  Style families: None
-  Recipes: None
-  Samples: 155.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `158` (1 files)
-  Canonical: `158`
-  Style families: None
-  Recipes: None
-  Samples: 158.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `159` (1 files)
-  Canonical: `159`
-  Style families: None
-  Recipes: None
-  Samples: 159.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `1971245112` (1 files)
-  Canonical: `1971245112`
-  Style families: None
-  Recipes: None
-  Samples: 1971245112.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `1971245113` (1 files)
-  Canonical: `1971245113`
-  Style families: None
-  Recipes: None
-  Samples: 1971245113.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `1971245114` (1 files)
-  Canonical: `1971245114`
-  Style families: None
-  Recipes: None
-  Samples: 1971245114.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `1971245115` (1 files)
-  Canonical: `1971245115`
-  Style families: None
-  Recipes: None
-  Samples: 1971245115.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `1971245121` (1 files)
-  Canonical: `1971245121`
-  Style families: None
-  Recipes: None
-  Samples: 1971245121.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `1971245122` (1 files)
-  Canonical: `1971245122`
-  Style families: None
-  Recipes: None
-  Samples: 1971245122.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `1971245123` (1 files)
-  Canonical: `1971245123`
-  Style families: None
-  Recipes: None
-  Samples: 1971245123.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `1971245124` (1 files)
-  Canonical: `1971245124`
-  Style families: None
-  Recipes: None
-  Samples: 1971245124.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `2` (5 files)
-  Canonical: `2`
-  Style families: None
-  Recipes: None
-  Samples: 2-1.jpg, 2-2.jpg, 2-3.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `28` (1 files)
-  Canonical: `28`
-  Style families: None
-  Recipes: None
-  Samples: 28.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `29` (1 files)
-  Canonical: `29`
-  Style families: None
-  Recipes: None
-  Samples: 29.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `32` (1 files)
-  Canonical: `32`
-  Style families: None
-  Recipes: None
-  Samples: 32.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `33` (1 files)
-  Canonical: `33`
-  Style families: None
-  Recipes: None
-  Samples: 33.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `36` (1 files)
-  Canonical: `36`
-  Style families: None
-  Recipes: None
-  Samples: 36.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `37` (1 files)
-  Canonical: `37`
-  Style families: None
-  Recipes: None
-  Samples: 37.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `40` (1 files)
-  Canonical: `40`
-  Style families: None
-  Recipes: None
-  Samples: 40.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `41` (1 files)
-  Canonical: `41`
-  Style families: None
-  Recipes: None
-  Samples: 41.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `44` (1 files)
-  Canonical: `44`
-  Style families: None
-  Recipes: None
-  Samples: 44.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `45` (1 files)
-  Canonical: `45`
-  Style families: None
-  Recipes: None
-  Samples: 45.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `5` (5 files)
-  Canonical: `5`
-  Style families: None
-  Recipes: None
-  Samples: 5-1.jpg, 5-2.jpg, 5-3.jpg
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Carousel4` (7 files)
-  Canonical: `Carousel4`
-  Style families: None
-  Recipes: None
-  Samples: Carousel4-1.png, Carousel4-2.png, Carousel4-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Carousel5` (7 files)
-  Canonical: `Carousel5`
-  Style families: None
-  Recipes: None
-  Samples: Carousel5-1.png, Carousel5-2.png, Carousel5-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Carousel6` (16 files)
-  Canonical: `Carousel6`
-  Style families: None
-  Recipes: None
-  Samples: Carousel6-1-1.png, Carousel6-1.png, Carousel6-2-1.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Carousel8` (7 files)
-  Canonical: `Carousel8`
-  Style families: None
-  Recipes: None
-  Samples: Carousel8-1.png, Carousel8-11.png, Carousel8-9-1.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Carousel8-9bis` (1 files)
-  Canonical: `Carousel8-9bis`
-  Style families: None
-  Recipes: None
-  Samples: Carousel8-9bis.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Figma vs Sketch_ ` (1 files)
-  Canonical: `Figma vs Sketch_ `
-  Style families: None
-  Recipes: None
-  Samples: Figma vs Sketch_ .png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 1` (8 files)
-  Canonical: `Frame 1`
-  Style families: None
-  Recipes: None
-  Samples: Frame 1-1.png, Frame 1-2.png, Frame 1-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 15` (8 files)
-  Canonical: `Frame 15`
-  Style families: None
-  Recipes: None
-  Samples: Frame 15-1.png, Frame 15-2.png, Frame 15-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 16` (5 files)
-  Canonical: `Frame 16`
-  Style families: None
-  Recipes: None
-  Samples: Frame 16-1.png, Frame 16-2.png, Frame 16-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 17` (5 files)
-  Canonical: `Frame 17`
-  Style families: None
-  Recipes: None
-  Samples: Frame 17-1.png, Frame 17-2.png, Frame 17-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 18` (5 files)
-  Canonical: `Frame 18`
-  Style families: None
-  Recipes: None
-  Samples: Frame 18-1.png, Frame 18-2.png, Frame 18-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 19` (5 files)
-  Canonical: `Frame 19`
-  Style families: None
-  Recipes: None
-  Samples: Frame 19-1.png, Frame 19-2.png, Frame 19-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 20` (5 files)
-  Canonical: `Frame 20`
-  Style families: None
-  Recipes: None
-  Samples: Frame 20-1.png, Frame 20-2.png, Frame 20-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 21` (5 files)
-  Canonical: `Frame 21`
-  Style families: None
-  Recipes: None
-  Samples: Frame 21-1.png, Frame 21-2.png, Frame 21-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 34034` (3 files)
-  Canonical: `Frame 34034`
-  Style families: None
-  Recipes: None
-  Samples: Frame 34034-1.png, Frame 34034-2.png, Frame 34034.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 34303` (11 files)
-  Canonical: `Frame 34303`
-  Style families: None
-  Recipes: None
-  Samples: Frame 34303-1.png, Frame 34303-10.png, Frame 34303-2.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 34304` (4 files)
-  Canonical: `Frame 34304`
-  Style families: None
-  Recipes: None
-  Samples: Frame 34304-1.png, Frame 34304-2.png, Frame 34304-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 34305` (7 files)
-  Canonical: `Frame 34305`
-  Style families: None
-  Recipes: None
-  Samples: Frame 34305-1.png, Frame 34305-2.png, Frame 34305-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 34306` (8 files)
-  Canonical: `Frame 34306`
-  Style families: None
-  Recipes: None
-  Samples: Frame 34306-1.png, Frame 34306-2.png, Frame 34306-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 34307` (1 files)
-  Canonical: `Frame 34307`
-  Style families: None
-  Recipes: None
-  Samples: Frame 34307.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 34308` (1 files)
-  Canonical: `Frame 34308`
-  Style families: None
-  Recipes: None
-  Samples: Frame 34308.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 34309` (1 files)
-  Canonical: `Frame 34309`
-  Style families: None
-  Recipes: None
-  Samples: Frame 34309.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Frame 6` (30 files)
-  Canonical: `Frame 6`
-  Style families: None
-  Recipes: None
-  Samples: Frame 6-1.png, Frame 6-10.png, Frame 6-11.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `Profile Picture` (5 files)
-  Canonical: `Profile Picture`
-  Style families: None
-  Recipes: None
-  Samples: Profile Picture-1.png, Profile Picture-2.png, Profile Picture-3.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `TwitterPost_01` (1 files)
-  Canonical: `TwitterPost_01`
-  Style families: None
-  Recipes: None
-  Samples: TwitterPost_01.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `TwitterPost_03` (1 files)
-  Canonical: `TwitterPost_03`
-  Style families: None
-  Recipes: None
-  Samples: TwitterPost_03.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `TwitterPost_04` (1 files)
-  Canonical: `TwitterPost_04`
-  Style families: None
-  Recipes: None
-  Samples: TwitterPost_04.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `TwitterPost_05` (1 files)
-  Canonical: `TwitterPost_05`
-  Style families: None
-  Recipes: None
-  Samples: TwitterPost_05.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `TwitterPost_06` (1 files)
-  Canonical: `TwitterPost_06`
-  Style families: None
-  Recipes: None
-  Samples: TwitterPost_06.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `TwitterPost_07` (1 files)
-  Canonical: `TwitterPost_07`
-  Style families: None
-  Recipes: None
-  Samples: TwitterPost_07.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
-- `TwitterPost_09` (1 files)
-  Canonical: `TwitterPost_09`
-  Style families: None
-  Recipes: None
-  Samples: TwitterPost_09.png
-  Notes: Present in local examples folder but not mapped into the current style engine.
+- None

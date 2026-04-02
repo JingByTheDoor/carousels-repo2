@@ -26,11 +26,15 @@ IMAGE_FRIENDLY_FAMILIES = {
     "reference_alder_split_media",
     "reference_twitter_card_soft",
     "reference_light_grain_glow",
+    "reference_device_mockup_gradient",
+    "reference_placeholder_media_glow",
 }
 STANDARD_IMAGE_SLOT_BY_FAMILY = {
     "reference_alder_split_media": ("cover_media", "mask"),
     "reference_twitter_card_soft": ("cover_media", "card_embed"),
     "reference_light_grain_glow": ("cover_media", "blur_glow"),
+    "reference_device_mockup_gradient": ("cover_media", "card_embed"),
+    "reference_placeholder_media_glow": ("cover_media", "blur_glow"),
 }
 REVIEW_IMAGE_SLOT_BY_FAMILY = {
     "reference_alder_split_media": {
@@ -50,6 +54,18 @@ REVIEW_IMAGE_SLOT_BY_FAMILY = {
         2: ("body_media", "card_embed"),
         4: ("body_media", "card_embed"),
         6: ("body_media", "card_embed"),
+    },
+    "reference_device_mockup_gradient": {
+        1: ("cover_media", "card_embed"),
+        2: ("body_media", "card_embed"),
+        4: ("body_media", "card_embed"),
+        6: ("body_media", "card_embed"),
+    },
+    "reference_placeholder_media_glow": {
+        1: ("cover_media", "blur_glow"),
+        2: ("body_media", "blur_glow"),
+        4: ("body_media", "blur_glow"),
+        6: ("body_media", "blur_glow"),
     },
 }
 LOCALE_BY_LANGUAGE = {

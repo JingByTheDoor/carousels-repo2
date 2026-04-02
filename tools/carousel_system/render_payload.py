@@ -17,6 +17,21 @@ from carousel_system.models import (
 )
 from carousel_system.style_library import select_style_recipe
 
+LIGHT_GLOW_STYLE_RECIPES = {
+    "light_grain_glow_v1",
+    "pastel_arrow_editorial_v1",
+    "placeholder_media_glow_v1",
+}
+TWITTER_CARD_STYLE_RECIPES = {
+    "twitter_card_soft_v1",
+    "device_mockup_gradient_v1",
+}
+RETRO_SWIPE_STYLE_RECIPES = {
+    "retro_swipe_creator_v1",
+    "social_proof_linkedin_v1",
+    "profile_circle_pop_v1",
+}
+
 
 EN_STOPWORDS = {
     "the",
@@ -167,11 +182,11 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             hook_limit = 52
         elif style_recipe == "creator_mono_minimal_v1":
             hook_limit = 68
-        elif style_recipe == "light_grain_glow_v1":
+        elif style_recipe in LIGHT_GLOW_STYLE_RECIPES:
             hook_limit = 62
-        elif style_recipe == "retro_swipe_creator_v1":
+        elif style_recipe in RETRO_SWIPE_STYLE_RECIPES:
             hook_limit = 60
-        elif style_recipe == "twitter_card_soft_v1":
+        elif style_recipe in TWITTER_CARD_STYLE_RECIPES:
             hook_limit = 52
         else:
             hook_limit = 42
@@ -180,9 +195,9 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             slide.headline
             if style_recipe in {
                 "creator_mono_minimal_v1",
-                "light_grain_glow_v1",
-                "retro_swipe_creator_v1",
-                "twitter_card_soft_v1",
+                *LIGHT_GLOW_STYLE_RECIPES,
+                *RETRO_SWIPE_STYLE_RECIPES,
+                *TWITTER_CARD_STYLE_RECIPES,
             }
             else headline_short
             if len(slide.headline) > hook_limit
@@ -197,9 +212,9 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
                 "sadekov_white_profile_minimal_v1",
                 "typography_editorial_light_v1",
                 "creator_mono_minimal_v1",
-                "light_grain_glow_v1",
-                "retro_swipe_creator_v1",
-                "twitter_card_soft_v1",
+                *LIGHT_GLOW_STYLE_RECIPES,
+                *RETRO_SWIPE_STYLE_RECIPES,
+                *TWITTER_CARD_STYLE_RECIPES,
             }
             else "cover_tall_text"
         )
@@ -211,8 +226,13 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             "typography_editorial_light_v1": "editorial_corner_cards",
             "creator_mono_minimal_v1": "creator_footer_minimal",
             "light_grain_glow_v1": "grain_glow_corner",
+            "pastel_arrow_editorial_v1": "arrow_gradient_flow",
+            "placeholder_media_glow_v1": "arrow_gradient_flow",
             "retro_swipe_creator_v1": "swipe_footer_button",
+            "social_proof_linkedin_v1": "social_proof_tiles",
+            "profile_circle_pop_v1": "profile_circle_pop",
             "twitter_card_soft_v1": "tweet_card_soft",
+            "device_mockup_gradient_v1": "device_card_mock",
         }.get(style_recipe, "geometric_cluster")
         return RenderSlideSpec(
             slide_number=slide.slide_number,
@@ -236,7 +256,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
                 4
                 if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}
                 else 4
-                if style_recipe in {"light_grain_glow_v1", "retro_swipe_creator_v1", "twitter_card_soft_v1"}
+                if style_recipe in LIGHT_GLOW_STYLE_RECIPES | RETRO_SWIPE_STYLE_RECIPES | TWITTER_CARD_STYLE_RECIPES
                 else 5
                 if style_recipe == "creator_mono_minimal_v1"
                 else 5
@@ -253,11 +273,11 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
         cta_source = slide.body or record.normalized_input.cta_text or ""
         cta_headline_limit = (
             50
-            if style_recipe in {"creator_mono_minimal_v1", "retro_swipe_creator_v1"}
+            if style_recipe in {"creator_mono_minimal_v1"} | RETRO_SWIPE_STYLE_RECIPES
             else 52
-            if style_recipe == "light_grain_glow_v1"
+            if style_recipe in LIGHT_GLOW_STYLE_RECIPES
             else 44
-            if style_recipe == "twitter_card_soft_v1"
+            if style_recipe in TWITTER_CARD_STYLE_RECIPES
             else 38
         )
         headline_short = _shorten_headline(slide.headline, language, hard_limit=cta_headline_limit)
@@ -269,8 +289,8 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
                 "sadekov_white_profile_minimal_v1",
                 "typography_editorial_light_v1",
                 "creator_mono_minimal_v1",
-                "light_grain_glow_v1",
-                "twitter_card_soft_v1",
+                *LIGHT_GLOW_STYLE_RECIPES,
+                *TWITTER_CARD_STYLE_RECIPES,
             }
             else _build_cta_button_label(language)
         )
@@ -307,8 +327,8 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
                     "sadekov_black_profile_minimal_v1",
                     "sadekov_white_profile_minimal_v1",
                     "creator_mono_minimal_v1",
-                    "retro_swipe_creator_v1",
-                    "twitter_card_soft_v1",
+                    *RETRO_SWIPE_STYLE_RECIPES,
+                    *TWITTER_CARD_STYLE_RECIPES,
                 }
                 else 4
             ),
@@ -319,10 +339,20 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
                 if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}
                 else "creator_footer_minimal"
                 if style_recipe == "creator_mono_minimal_v1"
+                else "arrow_gradient_flow"
+                if style_recipe == "pastel_arrow_editorial_v1"
+                else "arrow_gradient_flow"
+                if style_recipe == "placeholder_media_glow_v1"
                 else "grain_glow_corner"
                 if style_recipe == "light_grain_glow_v1"
+                else "social_proof_tiles"
+                if style_recipe == "social_proof_linkedin_v1"
+                else "profile_circle_pop"
+                if style_recipe == "profile_circle_pop_v1"
                 else "swipe_footer_button"
                 if style_recipe == "retro_swipe_creator_v1"
+                else "device_card_mock"
+                if style_recipe == "device_mockup_gradient_v1"
                 else "tweet_card_soft"
                 if style_recipe == "twitter_card_soft_v1"
                 else "cta_signal_lines"
@@ -344,13 +374,13 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
     elif style_recipe == "creator_mono_minimal_v1":
         headline_limit = 54
         body_limit = 124
-    elif style_recipe == "light_grain_glow_v1":
+    elif style_recipe in LIGHT_GLOW_STYLE_RECIPES:
         headline_limit = 54
         body_limit = 96
-    elif style_recipe == "retro_swipe_creator_v1":
+    elif style_recipe in RETRO_SWIPE_STYLE_RECIPES:
         headline_limit = 42
         body_limit = 104
-    elif style_recipe == "twitter_card_soft_v1":
+    elif style_recipe in TWITTER_CARD_STYLE_RECIPES:
         headline_limit = 42
         body_limit = 90
     else:
@@ -370,9 +400,9 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             and style_recipe
             not in {
                 "creator_mono_minimal_v1",
-                "light_grain_glow_v1",
-                "retro_swipe_creator_v1",
-                "twitter_card_soft_v1",
+                *LIGHT_GLOW_STYLE_RECIPES,
+                *RETRO_SWIPE_STYLE_RECIPES,
+                *TWITTER_CARD_STYLE_RECIPES,
             }
         )
         or layout_variant == "body_mask_band_left"
@@ -390,9 +420,9 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             and style_recipe
             not in {
                 "creator_mono_minimal_v1",
-                "light_grain_glow_v1",
-                "retro_swipe_creator_v1",
-                "twitter_card_soft_v1",
+                *LIGHT_GLOW_STYLE_RECIPES,
+                *RETRO_SWIPE_STYLE_RECIPES,
+                *TWITTER_CARD_STYLE_RECIPES,
             }
         )
         else body_text
@@ -421,7 +451,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             5
             if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}
             else 5
-            if style_recipe in {"creator_mono_minimal_v1", "light_grain_glow_v1", "retro_swipe_creator_v1", "twitter_card_soft_v1"}
+            if style_recipe in {"creator_mono_minimal_v1"} | LIGHT_GLOW_STYLE_RECIPES | RETRO_SWIPE_STYLE_RECIPES | TWITTER_CARD_STYLE_RECIPES
             else 6
             if style_recipe == "typography_editorial_light_v1"
             else _max_body_lines(layout_variant, text_density)
@@ -502,9 +532,9 @@ def _body_layout_variant(slide_number: int, body: str, style_recipe: str) -> str
         "sadekov_white_profile_minimal_v1",
         "typography_editorial_light_v1",
         "creator_mono_minimal_v1",
-        "light_grain_glow_v1",
-        "retro_swipe_creator_v1",
-        "twitter_card_soft_v1",
+        *LIGHT_GLOW_STYLE_RECIPES,
+        *RETRO_SWIPE_STYLE_RECIPES,
+        *TWITTER_CARD_STYLE_RECIPES,
     }:
         return "body_editorial_bullet"
     if style_recipe == "typography_signal_glow_v1":
@@ -532,10 +562,20 @@ def _body_accent_motif(slide_number: int, body: str, style_recipe: str) -> str:
         return "creator_footer_minimal"
     if style_recipe == "light_grain_glow_v1":
         return "grain_glow_corner"
+    if style_recipe == "pastel_arrow_editorial_v1":
+        return "arrow_gradient_flow"
+    if style_recipe == "placeholder_media_glow_v1":
+        return "arrow_gradient_flow"
     if style_recipe == "retro_swipe_creator_v1":
         return "swipe_footer_button"
+    if style_recipe == "social_proof_linkedin_v1":
+        return "social_proof_tiles"
+    if style_recipe == "profile_circle_pop_v1":
+        return "profile_circle_pop"
     if style_recipe == "twitter_card_soft_v1":
         return "tweet_card_soft"
+    if style_recipe == "device_mockup_gradient_v1":
+        return "device_card_mock"
     if style_recipe == "typography_signal_glow_v1":
         return "signal_glow_panel" if slide_number in {3, 5} else "signal_footer_lines"
     if style_recipe == "cp_split_minimal_statement_v1":

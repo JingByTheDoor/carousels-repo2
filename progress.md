@@ -312,3 +312,13 @@
   - smoke test showing `placeholder_media` now resolves to `reference_placeholder_media_glow`
   - smoke test showing `device_mockup` now resolves to `reference_device_mockup_gradient`
   - smoke test showing review image queries differ across slides 1, 2, 4, and 6
+- Added slash slide references in Studio review notes:
+  - note text can now include tokens like `/slide_4`
+  - submit / next-round save paths resolve those tokens to the actual slide preview/export files for that variant
+  - resolved slide references are written into `notes/review_feedback/*.json` and `.md`
+  - slash tokens are stripped out before winner/loser notes are reused for prompt context, so they do not pollute generation prompts
+  - Studio note boxes now include a visible `/slide_4` usage hint
+- Verified:
+  - `node --check studio_assets\\app.js`
+  - `python -m compileall tools`
+  - smoke test showing `/slide_7` resolves into a structured slide reference entry for the active variant

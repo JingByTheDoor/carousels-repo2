@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path
@@ -63,6 +64,7 @@ StudioImageMode = Literal["auto", "none", "stock", "ai", "hybrid"]
 StudioRoundMode = Literal["advanced", "review"]
 StudioReviewStatus = Literal["drafting", "rendering", "ready_for_review", "winner_selected", "submitted", "error"]
 LayoutDensityLabel = Literal["Minimal", "Mixed", "Dense"]
+SLIDE_REFERENCE_PATTERN = re.compile(r"(?<![A-Za-z0-9])/slide[_-]?([1-7])\b", re.IGNORECASE)
 
 
 STYLE_OPTIONS: tuple[tuple[str, str], ...] = (
@@ -290,6 +292,7 @@ class StudioVariantRecord(BaseModel):
     figma_url: str | None = None
     figma_page_name: str | None = None
     figma_page_url: str | None = None
+    feedback_slide_references: list["StudioSlideReference"] = Field(default_factory=list)
     export_paths: list[str] = Field(default_factory=list)
     export_urls: list[str] = Field(default_factory=list)
     pdf_export_path: str | None = None
@@ -359,6 +362,23 @@ class StudioState(BaseModel):
     latest_round_id: str | None = None
 
 
+class StudioSlideReference(BaseModel):
+    token: str
+    slide_number: int = Field(ge=1, le=7)
+    export_path: str | None = None
+    export_url: str | None = None
+    preview_path: str | None = None
+    preview_url: str | None = None
+
+    @field_validator("token", "export_path", "export_url", "preview_path", "preview_url", mode="before")
+    @classmethod
+    def _clean_reference_optional_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(value.strip().split())
+        return cleaned or None
+
+
 class StudioRateRequest(BaseModel):
     rating: StudioRating
     note: str | None = None
@@ -370,6 +390,9 @@ class StudioRateRequest(BaseModel):
             return None
         cleaned = " ".join(value.strip().split())
         return cleaned or None
+
+
+StudioVariantRecord.model_rebuild()
 
 
 class _VariantSpec(BaseModel):
@@ -563,16 +586,20 @@ def save_review_winner(round_id: str, request: ReviewWinnerRequest) -> StudioRou
     round_record.winner_variant_id = request.winner_variant_id
     for variant in round_record.variants:
         if variant.variant_id == request.winner_variant_id:
+            cleaned_winner_feedback = _strip_slide_reference_tokens(request.winner_feedback)
             variant.rating = "love"
-            variant.rating_note = request.winner_feedback
-            variant.winner_feedback = request.winner_feedback
+            variant.rating_note = cleaned_winner_feedback
+            variant.winner_feedback = cleaned_winner_feedback
             variant.rejection_note = None
+            variant.feedback_slide_references = _extract_slide_references(request.winner_feedback, variant)
         else:
             note = request.loser_feedback.get(variant.variant_id)
+            cleaned_note = _strip_slide_reference_tokens(note)
             variant.rating = "bad"
-            variant.rating_note = note
+            variant.rating_note = cleaned_note
             variant.winner_feedback = None
-            variant.rejection_note = note
+            variant.rejection_note = cleaned_note
+            variant.feedback_slide_references = _extract_slide_references(note, variant)
 
     save_round(round_record)
     _write_review_feedback_notes(round_record)
@@ -1199,6 +1226,42 @@ def _payload_image_count(payload: PluginRenderPayload) -> int:
     return sum(1 for slide in payload.slides if slide.image_slot != "none")
 
 
+def _extract_slide_references(note: str | None, variant: StudioVariantRecord) -> list[StudioSlideReference]:
+    if not note:
+        return []
+
+    references: list[StudioSlideReference] = []
+    seen: set[int] = set()
+    for match in SLIDE_REFERENCE_PATTERN.finditer(note):
+        slide_number = int(match.group(1))
+        if slide_number in seen:
+            continue
+        seen.add(slide_number)
+        export_path = variant.export_paths[slide_number - 1] if len(variant.export_paths) >= slide_number else None
+        export_url = variant.export_urls[slide_number - 1] if len(variant.export_urls) >= slide_number else None
+        preview_path = variant.preview_image_paths[slide_number - 1] if len(variant.preview_image_paths) >= slide_number else None
+        preview_url = variant.preview_image_urls[slide_number - 1] if len(variant.preview_image_urls) >= slide_number else None
+        references.append(
+            StudioSlideReference(
+                token=f"/slide_{slide_number}",
+                slide_number=slide_number,
+                export_path=export_path,
+                export_url=export_url,
+                preview_path=preview_path,
+                preview_url=preview_url,
+            )
+        )
+    return references
+
+
+def _strip_slide_reference_tokens(note: str | None) -> str | None:
+    if not note:
+        return None
+    stripped = SLIDE_REFERENCE_PATTERN.sub(" ", note)
+    cleaned = " ".join(stripped.strip().split())
+    return cleaned or None
+
+
 def _rejection_notes(previous_round: StudioRoundRecord | None) -> list[str]:
     if previous_round is None:
         return []
@@ -1230,6 +1293,9 @@ def _write_review_feedback_notes(round_record: StudioRoundRecord) -> None:
             "feedback": winner.winner_feedback if winner else None,
             "figma_url": winner.figma_url if winner else None,
             "figma_page_url": winner.figma_page_url if winner else None,
+            "slide_references": [reference.model_dump(mode="json") for reference in winner.feedback_slide_references]
+            if winner
+            else [],
         },
         "losers": [
             {
@@ -1241,6 +1307,7 @@ def _write_review_feedback_notes(round_record: StudioRoundRecord) -> None:
                 "feedback": variant.rejection_note,
                 "figma_url": variant.figma_url,
                 "figma_page_url": variant.figma_page_url,
+                "slide_references": [reference.model_dump(mode="json") for reference in variant.feedback_slide_references],
             }
             for variant in losers
         ],
@@ -1268,6 +1335,11 @@ def _write_review_feedback_notes(round_record: StudioRoundRecord) -> None:
                 f"- Winner note: {winner.winner_feedback or 'n/a'}",
             ]
         )
+        if winner.feedback_slide_references:
+            markdown_lines.append("- Slide refs:")
+            for reference in winner.feedback_slide_references:
+                target = reference.export_url or reference.preview_url or reference.export_path or reference.preview_path or "n/a"
+                markdown_lines.append(f"  - {reference.token}: {target}")
 
     markdown_lines.extend(["", "## Rejected Variants"])
     for variant in losers:
@@ -1277,6 +1349,11 @@ def _write_review_feedback_notes(round_record: StudioRoundRecord) -> None:
                 f"  Feedback: {variant.rejection_note or 'n/a'}",
             ]
         )
+        if variant.feedback_slide_references:
+            markdown_lines.append("  Slide refs:")
+            for reference in variant.feedback_slide_references:
+                target = reference.export_url or reference.preview_url or reference.export_path or reference.preview_path or "n/a"
+                markdown_lines.append(f"    - {reference.token}: {target}")
 
     markdown_lines.extend(
         [

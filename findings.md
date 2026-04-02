@@ -223,3 +223,4 @@
   - stock selection that always picks the top candidate without considering what was already used in the same job
   Both have to be fixed together to reliably stop slides 2 and 4 from reusing near-identical photos.
 - CTA glitches on review-safe families are often a payload/render handshake problem. For light/device/card-style families, using `headline_short` as the rendered CTA display text is safer than forcing the full CTA headline into the last slide.
+- Slash slide references are best stored as structured metadata, not left embedded in free-text notes. The prompt path should get the cleaned text, while the archived review files should keep the resolved slide references and file paths.

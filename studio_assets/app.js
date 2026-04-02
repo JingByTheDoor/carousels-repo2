@@ -271,8 +271,8 @@ function renderVariantGrid(round) {
     const feedbackDisabled = !isRoundReadyForReview(round) || state.isBusy;
     const feedbackLabel = isWinner ? "What is good here or still not perfect?" : "What is wrong with this one?";
     const feedbackPlaceholder = isWinner
-      ? "Example: strong cover, better image choice, but CTA could be clearer"
-      : "Example: too much text, weaker cover, image feels generic";
+      ? "Example: strong cover, better image choice, but CTA could be clearer. Use /slide_7 if needed."
+      : "Example: too much text, weaker cover, image feels generic. Use /slide_4 if needed.";
     const exportMarkup = buildExportLinksMarkup(variant);
 
     card.innerHTML = `
@@ -324,6 +324,7 @@ function renderVariantGrid(round) {
           placeholder="${escapeHtml(feedbackPlaceholder)}"
           ${feedbackDisabled ? "disabled" : ""}
         >${escapeHtml(feedbackValue)}</textarea>
+        <small class="feedback-hint">Tip: use <code>/slide_4</code> to attach a specific slide reference to this note.</small>
       </label>
     `;
 

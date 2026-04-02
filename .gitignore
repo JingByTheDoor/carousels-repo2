@@ -7,5 +7,6 @@ service-account*.json
 .tmp/jobs/
 .tmp/render-jobs/
 .tmp/render-results/
+.tmp/exports/
 .tmp/image-assets/
 .tmp/studio/

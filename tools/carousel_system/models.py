@@ -165,8 +165,9 @@ class FigmaOutput(BaseModel):
 
 
 class ExportArtifact(BaseModel):
-    format: Literal["png"]
+    format: Literal["png", "pdf"]
     path_or_url: str
+    slide_number: int | None = None
 
 
 class ImageStrategy(BaseModel):
@@ -375,6 +376,23 @@ class PluginPreviewImage(BaseModel):
         return cleaned or None
 
 
+class PluginExportImage(BaseModel):
+    slide_number: int
+    file_name: str | None = None
+    mime_type: Literal["image/png"] = "image/png"
+    data_base64: str | None = None
+    path: str | None = None
+    url: str | None = None
+
+    @field_validator("file_name", "data_base64", "path", "url", mode="before")
+    @classmethod
+    def _normalize_optional_export_strings(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = value.strip()
+        return cleaned or None
+
+
 class PluginRenderResult(BaseModel):
     schema_version: Literal["figma_plugin_result_v1"] = "figma_plugin_result_v1"
     job_id: str
@@ -385,6 +403,7 @@ class PluginRenderResult(BaseModel):
     page_url: str | None = None
     slide_node_ids: list[str] = Field(default_factory=list)
     preview_images: list[PluginPreviewImage] = Field(default_factory=list)
+    export_images: list[PluginExportImage] = Field(default_factory=list)
     rendered_at: str
 
 

@@ -290,6 +290,10 @@ class StudioVariantRecord(BaseModel):
     figma_url: str | None = None
     figma_page_name: str | None = None
     figma_page_url: str | None = None
+    export_paths: list[str] = Field(default_factory=list)
+    export_urls: list[str] = Field(default_factory=list)
+    pdf_export_path: str | None = None
+    pdf_export_url: str | None = None
     preview_image_paths: list[str] = Field(default_factory=list)
     preview_image_urls: list[str] = Field(default_factory=list)
     rendered_at: str | None = None
@@ -304,6 +308,8 @@ class StudioVariantRecord(BaseModel):
         "figma_url",
         "figma_page_name",
         "figma_page_url",
+        "pdf_export_path",
+        "pdf_export_url",
         "rendered_at",
         "error",
         mode="before",
@@ -587,7 +593,9 @@ def load_round(round_id: str | None) -> StudioRoundRecord | None:
     path = STUDIO_ROUNDS_DIR / f"{round_id}.json"
     if not path.exists():
         return None
-    return StudioRoundRecord.model_validate_json(path.read_text(encoding="utf-8"))
+    round_record = StudioRoundRecord.model_validate_json(path.read_text(encoding="utf-8"))
+    _rehydrate_round_variants(round_record)
+    return round_record
 
 
 def load_latest_round() -> StudioRoundRecord | None:
@@ -602,6 +610,7 @@ def load_latest_review_round() -> StudioRoundRecord | None:
 
     for round_path in _iter_round_paths():
         round_record = StudioRoundRecord.model_validate_json(round_path.read_text(encoding="utf-8"))
+        _rehydrate_round_variants(round_record)
         if round_record.round_mode == "review" and round_record.review_status != "submitted":
             return round_record
     return None
@@ -644,6 +653,30 @@ def save_round(round_record: StudioRoundRecord) -> Path:
     STUDIO_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
     STUDIO_STATE_PATH.write_text(state.model_dump_json(indent=2), encoding="utf-8")
     return path
+
+
+def _rehydrate_round_variants(round_record: StudioRoundRecord) -> None:
+    updated = False
+    for variant in round_record.variants:
+        if variant.render_status != "complete":
+            continue
+        artifact_path = Path(variant.job_artifact_path)
+        if not artifact_path.exists():
+            continue
+        job_record = CarouselOutput.model_validate_json(artifact_path.read_text(encoding="utf-8"))
+        expected_export_paths = [export.path_or_url for export in job_record.exports if export.format == "png"]
+        expected_pdf_path = next((export.path_or_url for export in job_record.exports if export.format == "pdf"), None)
+        if variant.export_paths == expected_export_paths and variant.pdf_export_path == expected_pdf_path:
+            continue
+        _apply_render_snapshot_to_variant(
+            variant,
+            job_record=job_record,
+            render_result_path=variant.render_result_path,
+            preview_image_paths=variant.preview_image_paths,
+        )
+        updated = True
+    if updated:
+        save_round(round_record)
 
 
 def _clear_active_round(round_id: str) -> None:
@@ -699,9 +732,13 @@ def sync_variant_render_result(
 ) -> None:
     def _apply(variant: StudioVariantRecord) -> None:
         preview_paths = [str(path) for path in preview_image_paths]
+        job_record = None
+        artifact_path = Path(variant.job_artifact_path)
+        if artifact_path.exists():
+            job_record = CarouselOutput.model_validate_json(artifact_path.read_text(encoding="utf-8"))
         _apply_render_snapshot_to_variant(
             variant,
-            job_record=None,
+            job_record=job_record,
             render_result_path=str(render_result_path),
             preview_image_paths=preview_paths,
             result=result,
@@ -1105,6 +1142,18 @@ def _apply_render_snapshot_to_variant(
     )
     variant.preview_image_paths = preview_image_paths
     variant.preview_image_urls = [_preview_url_from_path(path) for path in preview_image_paths]
+    export_paths: list[str] = []
+    pdf_path: str | None = None
+    if job_record:
+        for export in job_record.exports:
+            if export.format == "png":
+                export_paths.append(export.path_or_url)
+            elif export.format == "pdf":
+                pdf_path = export.path_or_url
+    variant.export_paths = export_paths
+    variant.export_urls = [_tmp_url_from_path(path) for path in export_paths]
+    variant.pdf_export_path = pdf_path
+    variant.pdf_export_url = _tmp_url_from_path(pdf_path) if pdf_path else None
     variant.rendered_at = source_result.rendered_at if source_result else None
 
 
@@ -1248,3 +1297,11 @@ def _preview_url_from_path(path: str) -> str:
     resolved = Path(path).resolve()
     relative = resolved.relative_to(STUDIO_DIR.resolve())
     return f"{STUDIO_OUTPUT_URL_PREFIX}/{relative.as_posix()}"
+
+
+def _tmp_url_from_path(path: str | None) -> str | None:
+    if not path:
+        return None
+    resolved = Path(path).resolve()
+    relative = resolved.relative_to((ROOT_DIR / ".tmp").resolve())
+    return f"/tmp-output/{relative.as_posix()}"

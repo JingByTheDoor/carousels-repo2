@@ -273,6 +273,7 @@ function renderVariantGrid(round) {
     const feedbackPlaceholder = isWinner
       ? "Example: strong cover, better image choice, but CTA could be clearer"
       : "Example: too much text, weaker cover, image feels generic";
+    const exportMarkup = buildExportLinksMarkup(variant);
 
     card.innerHTML = `
       <div class="variant-header">
@@ -312,6 +313,8 @@ function renderVariantGrid(round) {
         }
       </div>
 
+      ${exportMarkup}
+
       <label class="feedback-block ${isWinner ? "winner-note" : ""}">
         <span>${escapeHtml(feedbackLabel)}</span>
         <textarea
@@ -345,6 +348,35 @@ function renderVariantGrid(round) {
 
     elements.reviewGrid.appendChild(card);
   });
+}
+
+function buildExportLinksMarkup(variant) {
+  const hasPngExports = Array.isArray(variant.export_urls) && variant.export_urls.length > 0;
+  const hasPdfExport = Boolean(variant.pdf_export_url);
+  if (!hasPngExports && !hasPdfExport) {
+    return "";
+  }
+
+  const pngLinks = (variant.export_urls || [])
+    .map((url, index) => {
+      const slideLabel = `Slide ${index + 1}`;
+      return `<a class="chip-link export-link" href="${escapeAttribute(url)}" download target="_blank" rel="noreferrer">${escapeHtml(slideLabel)}</a>`;
+    })
+    .join("");
+
+  const pdfLink = hasPdfExport
+    ? `<a class="chip-link export-link" href="${escapeAttribute(variant.pdf_export_url)}" download target="_blank" rel="noreferrer">PDF</a>`
+    : "";
+
+  return `
+    <div class="variant-exports">
+      <span class="exports-label">Exports</span>
+      <div class="export-links">
+        ${pdfLink}
+        ${pngLinks}
+      </div>
+    </div>
+  `;
 }
 
 function buildPreviewMarkup(variant) {

@@ -236,6 +236,24 @@ textarea {
   gap: 10px;
 }
 
+.variant-exports {
+  display: grid;
+  gap: 10px;
+}
+
+.export-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.exports-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 .round-meta {
   margin-top: 16px;
 }
@@ -261,6 +279,10 @@ textarea {
 
 .chip-link {
   color: var(--text);
+}
+
+.export-link {
+  font-weight: 700;
 }
 
 .hidden {

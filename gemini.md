@@ -145,8 +145,9 @@ Status: `Approved and implemented`
   },
   "exports": [
     {
-      "format": "png",
-      "path_or_url": "string"
+      "format": "png|pdf",
+      "path_or_url": "string",
+      "slide_number": "integer|null"
     }
   ],
   "source_sync": {
@@ -167,8 +168,8 @@ Status: `Approved and implemented`
   "page_name": "string",
   "prompt_version": "baseline_v2",
   "language": "string",
-  "style_family": "reference_mix_alder_portrait|reference_alder_split_media|reference_alder_text_only|reference_typography_signal|reference_cp_minimal_split|reference_cp_longform_split|reference_cp_gallery_wall|reference_sadekov_black_profile|reference_sadekov_white_profile|reference_typography_editorial_light|reference_creator_mono_minimal|reference_light_grain_glow|reference_retro_swipe_creator|reference_twitter_card_soft",
-  "style_recipe": "alder_portrait_editorial_mix_v1|alder_portrait_editorial_dense_v1|alder_split_media_right_v1|alder_split_media_left_v1|alder_text_only_air_v1|typography_signal_glow_v1|cp_split_minimal_statement_v1|cp_split_longform_v1|cp_gallery_wall_v1|sadekov_black_profile_minimal_v1|sadekov_white_profile_minimal_v1|typography_editorial_light_v1|creator_mono_minimal_v1|light_grain_glow_v1|retro_swipe_creator_v1|twitter_card_soft_v1",
+  "style_family": "reference_mix_alder_portrait|reference_alder_split_media|reference_alder_text_only|reference_typography_signal|reference_cp_minimal_split|reference_cp_longform_split|reference_cp_gallery_wall|reference_sadekov_black_profile|reference_sadekov_white_profile|reference_typography_editorial_light|reference_creator_mono_minimal|reference_light_grain_glow|reference_retro_swipe_creator|reference_twitter_card_soft|reference_pastel_arrow_editorial|reference_placeholder_media_glow|reference_device_mockup_gradient|reference_social_proof_linkedin|reference_profile_circle_pop",
+  "style_recipe": "alder_portrait_editorial_mix_v1|alder_portrait_editorial_dense_v1|alder_split_media_right_v1|alder_split_media_left_v1|alder_text_only_air_v1|typography_signal_glow_v1|cp_split_minimal_statement_v1|cp_split_longform_v1|cp_gallery_wall_v1|sadekov_black_profile_minimal_v1|sadekov_white_profile_minimal_v1|typography_editorial_light_v1|creator_mono_minimal_v1|light_grain_glow_v1|retro_swipe_creator_v1|twitter_card_soft_v1|pastel_arrow_editorial_v1|placeholder_media_glow_v1|device_mockup_gradient_v1|social_proof_linkedin_v1|profile_circle_pop_v1",
   "source_artifact_path": "string",
   "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
   "reference_node_ids": ["1:46227", "1:46232", "1:46239", "1:46288", "1:46485"],
@@ -256,6 +257,16 @@ Status: `Approved and implemented`
   "preview_images": [
     {
       "slide_number": "integer",
+      "mime_type": "image/png",
+      "data_base64": "string|null",
+      "path": "string|null",
+      "url": "string|null"
+    }
+  ],
+  "export_images": [
+    {
+      "slide_number": "integer",
+      "file_name": "string|null",
       "mime_type": "image/png",
       "data_base64": "string|null",
       "path": "string|null",
@@ -371,7 +382,8 @@ Status: `Approved and implemented`
 - The plugin render result may include thumbnail previews for each slide; the bridge is responsible for moving those thumbnails out of inline base64 and into `.tmp/studio/previews/`.
 - Input language should be preserved when possible; if no language is supplied, the system infers one for rendering metadata.
 - The plugin payload must carry render-aware display text and truncation metadata so the renderer does not infer layout-critical text decisions from raw copy alone.
-- The style engine may choose among the approved families `reference_mix_alder_portrait`, `reference_alder_split_media`, `reference_alder_text_only`, `reference_typography_signal`, `reference_cp_minimal_split`, `reference_cp_longform_split`, `reference_cp_gallery_wall`, `reference_sadekov_black_profile`, `reference_sadekov_white_profile`, `reference_typography_editorial_light`, `reference_creator_mono_minimal`, `reference_light_grain_glow`, `reference_retro_swipe_creator`, and `reference_twitter_card_soft` based on content density and a deterministic content signature.
+- The style engine may choose among the approved families `reference_mix_alder_portrait`, `reference_alder_split_media`, `reference_alder_text_only`, `reference_typography_signal`, `reference_cp_minimal_split`, `reference_cp_longform_split`, `reference_cp_gallery_wall`, `reference_sadekov_black_profile`, `reference_sadekov_white_profile`, `reference_typography_editorial_light`, `reference_creator_mono_minimal`, `reference_light_grain_glow`, `reference_retro_swipe_creator`, `reference_twitter_card_soft`, `reference_pastel_arrow_editorial`, `reference_placeholder_media_glow`, `reference_device_mockup_gradient`, `reference_social_proof_linkedin`, and `reference_profile_circle_pop` based on content density and a deterministic content signature.
+- The render bridge must save full-size slide PNG exports under `.tmp/exports/<job_id>/` and may also build a combined PDF from those PNGs.
 - The local review studio is allowed to generate review rounds outside Google Sheets, but each variant must still emit the canonical job artifact and render payload.
 - Studio ratings may influence the next round, but they must not overwrite prior round artifacts.
 - Studio variants may also track their render lifecycle and rendered outputs independently of Google Sheets.

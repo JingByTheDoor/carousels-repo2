@@ -193,6 +193,12 @@ When the local Figma plugin is open in auto mode, studio-generated variants are 
 - `render_result_path`
 - exported slide thumbnail previews from the plugin result
 
+When a render completes, the bridge now also writes:
+- per-slide PNG files to `.tmp/exports/<job_id>/slide-01.png` through `slide-07.png`
+- a combined PDF at `.tmp/exports/<job_id>/carousel.pdf`
+
+For Google Sheets jobs, the `export_paths` column is updated to the generated export files after completion.
+
 ## Rebuild render payloads for existing jobs
 ```powershell
 .venv\Scripts\python tools\build_render_payload.py --job-id <job_id>
@@ -210,9 +216,9 @@ That command:
 - caches selected images in `.tmp/image-assets/<job_id>/`
 
 Current image render support:
-- image-friendly families can now render a hook-slide image when the payload includes a resolved stock asset
-- the plugin currently places images on cover slides only
-- body-slide image placement is still not implemented
+- image-friendly families can render hook-slide images when the payload includes resolved stock assets
+- review-safe image families can now place images on slide 1 and selected info slides
+- body-slide image placement is still selective by family, not universal across every style
 
 ## Style coverage audit
 Use this when new local examples are added and you want to verify whether the style engine actually covers them:
@@ -231,10 +237,9 @@ The audit is intentionally conservative:
 - `missing` means the local group exists but is not yet mapped confidently into the engine
 
 ## Current limitations
-- PNG export automation is still not implemented in the local toolchain.
 - The plugin bridge still depends on a live Figma desktop session with the development plugin running.
 - The review studio now shows only real rendered thumbnails or a waiting state. It intentionally does not show payload-only fake previews.
-- The style engine now covers the harvested Figma families plus the first local-example batch: mono minimal creator slides, light grain/glow slides, retro swipe creator slides, and soft tweet-card slides. It still does not cover every local example family in `Examples of carousels/`.
+- The style engine now covers the harvested Figma families plus the local example families audited in `style_coverage.md`; the audit currently reports `0` unmapped groups by treating true exports and duplicates as aliases.
 - Only stock acquisition through `Pexels` is implemented right now. AI image generation and hybrid fallback are defined in the schema but not wired yet.
 - Image placement is currently limited to cover slides in image-friendly families.
 

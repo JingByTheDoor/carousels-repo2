@@ -206,3 +206,10 @@
   - `TwitterPost_01`, `TwitterPost_03`-`TwitterPost_09` fit the device/mockup tweet family
   - `Frame 15`-`Frame 17`, `Frame 20`-`Frame 21`, `Frame 34304`, `Frame 34306`, `158`, and `159` fit the pastel arrow/editorial family
   - `Carousel6-*`, `Frame 18`, `Frame 34303`, `Frame 34309`, and `Profile Picture` fit the profile-circle family
+- The clean export point is the plugin render result, not the browser UI. The plugin already has access to the actual rendered Figma frames, so that is the right place to export full-size slide PNGs while still sending smaller thumbnails to Studio.
+- `export_paths` in Google Sheets can safely switch from \"job artifact path while planned\" to \"real exported files after completion\" because planned rows are hydrated from job ID / render payload path before completion.
+- PDF generation is simplest on the Python side after the PNGs are saved. Building PDF in the plugin would be the wrong boundary.
+- Studio should not invent another export pipeline. The correct UX is to surface the files already written by the bridge:
+  - PNG links per slide
+  - one PDF link
+  This keeps Studio as a viewer/controller, not a second renderer.

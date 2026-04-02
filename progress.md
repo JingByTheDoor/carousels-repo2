@@ -288,3 +288,14 @@
   - extended image-friendly families for `reference_device_mockup_gradient` and `reference_placeholder_media_glow`
   - regenerated the coverage audit to `0` unmapped groups in `style_coverage.md`
   - verified forced planning for all five new families
+- Added export automation:
+  - plugin render results now carry full-size `export_images` in addition to Studio preview thumbnails
+  - bridge writes per-slide PNGs to `.tmp/exports/<job_id>/slide-01.png` through `slide-07.png`
+  - bridge builds `.tmp/exports/<job_id>/carousel.pdf`
+  - completed jobs now store export artifacts in the canonical job JSON and update Google Sheets `export_paths` on completion
+  - added `Pillow` to support PDF generation from exported PNGs
+  - verified with a synthetic render-result smoke test that wrote PNG and PDF outputs successfully
+- Added Studio download links for exports:
+  - variant cards now expose direct download links for per-slide PNGs and the combined PDF when export artifacts exist
+  - Studio now mounts `.tmp` export files under `/tmp-output`
+  - completed review rounds can rehydrate export links from their job artifacts on load

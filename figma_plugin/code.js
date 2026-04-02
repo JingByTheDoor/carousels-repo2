@@ -31,6 +31,7 @@ const FONT_FALLBACKS = {
   Montserrat: ["Black", "Bold", "SemiBold", "Regular"]
 };
 const PREVIEW_EXPORT_WIDTH = 720;
+const EXPORT_SCALE = 2;
 
 figma.ui.onmessage = async (message) => {
   if (!message || !message.type) {
@@ -290,6 +291,7 @@ async function renderCarousel(payload) {
 
   figma.viewport.scrollAndZoomIntoView(frames);
   const previewImages = await exportSlidePreviews(frames, payload.slides);
+  const exportImages = await exportSlideImages(frames, payload.slides);
   return {
     schema_version: "figma_plugin_result_v1",
     job_id: payload.job_id,
@@ -300,6 +302,7 @@ async function renderCarousel(payload) {
     page_url: typeof figma.fileKey === "string" ? `https://www.figma.com/design/${figma.fileKey}?page-id=${encodeURIComponent(page.id)}` : null,
     slide_node_ids: nodeIds,
     preview_images: previewImages,
+    export_images: exportImages,
     rendered_at: new Date().toISOString()
   };
 }
@@ -325,6 +328,31 @@ async function exportSlidePreviews(frames, slides) {
     }
   }
   return previews;
+}
+
+async function exportSlideImages(frames, slides) {
+  const exports = [];
+  for (let index = 0; index < frames.length; index += 1) {
+    try {
+      const slideNumber = slides[index] ? slides[index].slide_number : index + 1;
+      const bytes = await frames[index].exportAsync({
+        format: "PNG",
+        constraint: {
+          type: "SCALE",
+          value: EXPORT_SCALE
+        }
+      });
+      exports.push({
+        slide_number: slideNumber,
+        file_name: `slide-${String(slideNumber).padStart(2, "0")}.png`,
+        mime_type: "image/png",
+        data_base64: encodeBase64(bytes)
+      });
+    } catch (error) {
+      // Keep the render usable even if export generation fails.
+    }
+  }
+  return exports;
 }
 
 async function renderSlide(frame, slide, payload) {

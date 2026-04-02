@@ -37,8 +37,10 @@ This folder contains the local renderer that replaces the chat-bound Figma MCP r
   - `1:46288`
   - `1:46485`
 - Writes a result JSON with page and slide node IDs
+- Exports both:
+  - Studio preview thumbnails
+  - full-size slide PNGs for the local export pipeline
 
 ## Known limitations
 - Auto mode still depends on Figma desktop staying open with the development plugin running.
-- PNG export is not automated yet.
 - The style engine is a curated first pass, not a full reference-file harvesting system.

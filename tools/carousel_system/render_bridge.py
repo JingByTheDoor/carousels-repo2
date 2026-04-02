@@ -4,10 +4,19 @@ from dataclasses import dataclass
 from base64 import b64decode
 from pathlib import Path
 
+from PIL import Image
+
 from carousel_system.config import ROOT_DIR, Settings
 from carousel_system.google_sheets import GoogleSheetsQueue, QueueRow
 from carousel_system.image_assets import resolve_image_assets
-from carousel_system.models import CarouselOutput, FigmaOutput, PluginRenderPayload, PluginRenderResult, SourceSync
+from carousel_system.models import (
+    CarouselOutput,
+    ExportArtifact,
+    FigmaOutput,
+    PluginRenderPayload,
+    PluginRenderResult,
+    SourceSync,
+)
 from carousel_system.payload import build_output_record, write_output_record
 from carousel_system.planner import PROMPT_VERSION, generate_carousel_plan
 from carousel_system.render_payload import (
@@ -26,6 +35,7 @@ from carousel_system.studio import (
 
 
 RENDER_RESULTS_DIR = ROOT_DIR / ".tmp" / "render-results"
+EXPORTS_DIR = ROOT_DIR / ".tmp" / "exports"
 
 
 @dataclass(frozen=True)
@@ -197,6 +207,7 @@ def hydrate_planned_row(settings: Settings, queue: GoogleSheetsQueue, row: Queue
 
 def save_render_result(result: PluginRenderResult) -> Path:
     _save_preview_images(result)
+    _save_export_images(result)
     result_path = RENDER_RESULTS_DIR / f"{result.job_id}.render-result.json"
     result_path.parent.mkdir(parents=True, exist_ok=True)
     result_path.write_text(result.model_dump_json(indent=2), encoding="utf-8")
@@ -229,6 +240,8 @@ def apply_render_result(
         slide_node_ids=result.slide_node_ids,
     )
     record.render_artifact.result_path = str(result_path)
+    export_artifacts = _build_export_artifacts(result)
+    record.exports = export_artifacts
     write_output_record(job_path, record)
 
     if queue is None and settings.google_service_account_json and settings.google_spreadsheet_id:
@@ -240,7 +253,7 @@ def apply_render_result(
             {
                 "status": "complete",
                 "figma_url": result.file_url or "",
-                "export_paths": str(job_path),
+                "export_paths": ",".join(export.path_or_url for export in export_artifacts),
                 "render_result_path": str(result_path),
                 "error": "",
             },
@@ -309,6 +322,61 @@ def _save_preview_images(result: PluginRenderResult) -> None:
         preview.path = str(preview_path)
         preview.url = _preview_url_from_path(preview_path)
         preview.data_base64 = None
+
+
+def _save_export_images(result: PluginRenderResult) -> None:
+    export_dir = EXPORTS_DIR / result.job_id
+    for export_image in result.export_images:
+        if not export_image.data_base64:
+            continue
+        export_dir.mkdir(parents=True, exist_ok=True)
+        file_name = export_image.file_name or f"slide-{str(export_image.slide_number).zfill(2)}.png"
+        export_path = export_dir / file_name
+        export_path.write_bytes(b64decode(export_image.data_base64))
+        export_image.path = str(export_path)
+        export_image.url = str(export_path)
+        export_image.data_base64 = None
+
+
+def _build_export_artifacts(result: PluginRenderResult) -> list[ExportArtifact]:
+    artifacts: list[ExportArtifact] = []
+    png_paths: list[Path] = []
+    for export_image in sorted(result.export_images, key=lambda item: item.slide_number):
+        if not export_image.path:
+            continue
+        image_path = Path(export_image.path)
+        png_paths.append(image_path)
+        artifacts.append(
+            ExportArtifact(
+                format="png",
+                path_or_url=str(image_path),
+                slide_number=export_image.slide_number,
+            )
+        )
+
+    pdf_path = _build_pdf_export(result.job_id, png_paths)
+    if pdf_path:
+        artifacts.append(ExportArtifact(format="pdf", path_or_url=str(pdf_path)))
+    return artifacts
+
+
+def _build_pdf_export(job_id: str, png_paths: list[Path]) -> Path | None:
+    if not png_paths:
+        return None
+
+    rgb_images: list[Image.Image] = []
+    try:
+        for path in png_paths:
+            image = Image.open(path)
+            rgb_images.append(image.convert("RGB"))
+        pdf_path = EXPORTS_DIR / job_id / "carousel.pdf"
+        pdf_path.parent.mkdir(parents=True, exist_ok=True)
+        lead, *rest = rgb_images
+        lead.save(pdf_path, "PDF", resolution=300.0, save_all=True, append_images=rest)
+        return pdf_path
+    finally:
+        for image in rgb_images:
+            image.close()
 
 
 def _preview_url_from_path(path: Path) -> str:

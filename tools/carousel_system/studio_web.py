@@ -35,6 +35,7 @@ def create_app() -> FastAPI:
     app = FastAPI(title="Carousel Review Studio", version="0.1.0")
     app.mount("/studio-assets", StaticFiles(directory=ASSETS_DIR), name="studio-assets")
     app.mount("/studio-output", StaticFiles(directory=STUDIO_DIR), name="studio-output")
+    app.mount("/tmp-output", StaticFiles(directory=ROOT_DIR / ".tmp"), name="tmp-output")
 
     @app.get("/health")
     def health() -> dict:

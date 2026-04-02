@@ -72,6 +72,18 @@ LOCALE_BY_LANGUAGE = {
     "ru": "ru-RU",
     "en": "en-US",
 }
+REVIEW_VISUAL_SUFFIX_BY_SLIDE = {
+    1: "teacher portrait classroom",
+    2: "lesson planning desk materials",
+    4: "students classroom activity",
+    6: "worksheets flashcards materials",
+}
+DEFAULT_VISUAL_SUFFIX_BY_SLIDE = {
+    1: "portrait",
+    2: "workspace",
+    4: "collaboration",
+    6: "materials closeup",
+}
 
 
 @dataclass(frozen=True)
@@ -124,8 +136,16 @@ def resolve_image_assets(settings: Settings, record: CarouselOutput, payload: Pl
         return
 
     assets: list[ImageAsset] = []
+    used_photo_ids: set[int] = set()
+    used_alt_signatures: set[str] = set()
     for image_request in requests:
-        asset = _find_and_cache_pexels_asset(settings, record, image_request)
+        asset = _find_and_cache_pexels_asset(
+            settings,
+            record,
+            image_request,
+            used_photo_ids=used_photo_ids,
+            used_alt_signatures=used_alt_signatures,
+        )
         if asset is None and strategy.mode in {"ai", "hybrid"} and record.normalized_input.allow_ai_fallback:
             asset = _generate_ai_asset(settings, record, image_request)
         if asset:
@@ -273,13 +293,21 @@ def _build_query(record: CarouselOutput, slide_number: int) -> str:
     keywords = _compact_keywords(source)
     focus = record.normalized_input.image_focus
     niche = "english teacher materials" if record.normalized_input.generation_mode == "review" else "education"
+    visual_suffix = _visual_suffix(record, slide_number)
+    base = f"{keywords} {role} {niche} {visual_suffix}".strip()
     if focus == "brand_safe":
-        return f"{keywords} {role} {niche} professional clean"
+        return f"{base} professional clean"
     if focus == "literal":
-        return f"{keywords} {role} {niche} realistic"
+        return f"{base} realistic"
     if focus == "abstract":
-        return f"{keywords} {role} {niche} conceptual"
-    return f"{keywords} {role} {niche} editorial"
+        return f"{base} conceptual"
+    return f"{base} editorial"
+
+
+def _visual_suffix(record: CarouselOutput, slide_number: int) -> str:
+    if record.normalized_input.generation_mode == "review":
+        return REVIEW_VISUAL_SUFFIX_BY_SLIDE.get(slide_number, "teaching materials")
+    return DEFAULT_VISUAL_SUFFIX_BY_SLIDE.get(slide_number, "editorial scene")
 
 
 def _compact_keywords(text: str, *, max_words: int = 6) -> str:
@@ -293,6 +321,9 @@ def _find_and_cache_pexels_asset(
     settings: Settings,
     record: CarouselOutput,
     image_request: ImageRequest,
+    *,
+    used_photo_ids: set[int],
+    used_alt_signatures: set[str],
 ) -> ImageAsset | None:
     candidates = _search_pexels_candidates(
         settings,
@@ -302,7 +333,29 @@ def _find_and_cache_pexels_asset(
     if not candidates:
         return None
 
-    best = max(candidates, key=lambda candidate: _score_candidate(candidate, image_request.query))
+    ranked = sorted(candidates, key=lambda candidate: _score_candidate(candidate, image_request.query), reverse=True)
+    best = None
+    for candidate in ranked:
+        if candidate.photo_id in used_photo_ids:
+            continue
+        alt_signature = _compact_keywords(candidate.alt_text, max_words=8)
+        if alt_signature and alt_signature in used_alt_signatures:
+            continue
+        best = candidate
+        break
+    if best is None:
+        for candidate in ranked:
+            if candidate.photo_id not in used_photo_ids:
+                best = candidate
+                break
+    if best is None:
+        best = ranked[0]
+
+    used_photo_ids.add(best.photo_id)
+    alt_signature = _compact_keywords(best.alt_text, max_words=8)
+    if alt_signature:
+        used_alt_signatures.add(alt_signature)
+
     asset_dir = IMAGE_ASSETS_DIR / record.job_id
     asset_dir.mkdir(parents=True, exist_ok=True)
     extension = _detect_extension(best.download_url)
@@ -376,10 +429,11 @@ def _backfill_missing_review_assets(requests: list[ImageRequest], assets: list[I
     if not requests or not assets:
         return assets
     asset_map = {asset.slide_number: asset for asset in assets}
-    fallback_asset = asset_map.get(1) or assets[0]
+    fallback_assets = list({asset.local_path: asset for asset in assets}.values())
     for request in requests:
         if request.slide_number in asset_map:
             continue
+        fallback_asset = fallback_assets[(request.slide_number - 1) % len(fallback_assets)]
         asset_map[request.slide_number] = ImageAsset(
             slide_number=request.slide_number,
             role=request.role,

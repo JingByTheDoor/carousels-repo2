@@ -309,6 +309,8 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
                     "sadekov_black_profile_minimal_v1",
                     "sadekov_white_profile_minimal_v1",
                     "typography_editorial_light_v1",
+                    *LIGHT_GLOW_STYLE_RECIPES,
+                    *TWITTER_CARD_STYLE_RECIPES,
                 }
                 else slide.headline
             ),
@@ -320,7 +322,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             text_density=_cta_density(slide.headline, cta_source),
             visual_priority="cta",
             safe_area_profile="cta_center_stack",
-            max_headline_lines=4,
+            max_headline_lines=3 if style_recipe in LIGHT_GLOW_STYLE_RECIPES | TWITTER_CARD_STYLE_RECIPES else 4,
             max_body_lines=(
                 3
                 if style_recipe in {

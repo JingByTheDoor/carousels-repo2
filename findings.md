@@ -213,3 +213,13 @@
   - PNG links per slide
   - one PDF link
   This keeps Studio as a viewer/controller, not a second renderer.
+- Review-mode style forcing must be enforced at the style-library level, not only in Studio UI. If `select_style_recipe()` only knows about a subset of “safe” review styles, the user can see one style label in Studio while the payload renders a different family.
+- The biggest recent review complaints were renderer-bound, not planner-bound:
+  - `placeholder_media` needed its own CTA/body layouts instead of inheriting the light-glow renderer
+  - `device_mockup` needed its own device-first layout instead of inheriting the Twitter-card renderer
+  - `light_glow` needed larger type and a denser card-based CTA/body composition
+- Duplicate-looking review images come from two places at once:
+  - slide queries that are too similar
+  - stock selection that always picks the top candidate without considering what was already used in the same job
+  Both have to be fixed together to reliably stop slides 2 and 4 from reusing near-identical photos.
+- CTA glitches on review-safe families are often a payload/render handshake problem. For light/device/card-style families, using `headline_short` as the rendered CTA display text is safer than forcing the full CTA headline into the last slide.

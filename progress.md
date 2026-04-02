@@ -299,3 +299,16 @@
   - variant cards now expose direct download links for per-slide PNGs and the combined PDF when export artifacts exist
   - Studio now mounts `.tmp` export files under `/tmp-output`
   - completed review rounds can rehydrate export links from their job artifacts on load
+- Applied renderer fixes from real Studio review notes:
+  - fixed a review-mode style-selection bug where `placeholder_media` and `device_mockup` could be labeled in Studio but silently resolve to a different family in the payload
+  - split `placeholder_media` and `device_mockup` out of the shared `light_glow` / `twitter_card` render paths and gave them dedicated cover, body, and CTA renderers
+  - increased `light_glow` body and CTA typography scale and replaced its sparse CTA stack with a denser centered card treatment
+  - removed shared Twitter-style action chrome from non-Twitter CTA paths by giving `device_mockup` and `placeholder_media` their own CTA layouts
+  - improved review-mode stock-image diversification by adding slide-specific visual suffixes and duplicate-candidate avoidance when picking Pexels assets
+  - adjusted CTA payload shortening so light/device/card families use `headline_short` as the rendered display text when needed
+- Verified:
+  - `node --check figma_plugin\\code.js`
+  - `python -m compileall tools`
+  - smoke test showing `placeholder_media` now resolves to `reference_placeholder_media_glow`
+  - smoke test showing `device_mockup` now resolves to `reference_device_mockup_gradient`
+  - smoke test showing review image queries differ across slides 1, 2, 4, and 6

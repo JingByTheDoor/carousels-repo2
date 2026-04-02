@@ -387,6 +387,11 @@ async function renderCoverSlide(frame, slide, payload) {
     return;
   }
 
+  if (isPlaceholderMedia(payload)) {
+    await renderPlaceholderMediaCoverSlide(frame, slide, payload);
+    return;
+  }
+
   if (isLightGrainGlow(payload)) {
     await renderLightGrainCoverSlide(frame, slide, payload);
     return;
@@ -394,6 +399,11 @@ async function renderCoverSlide(frame, slide, payload) {
 
   if (isRetroSwipeCreator(payload)) {
     await renderRetroSwipeCoverSlide(frame, slide, payload);
+    return;
+  }
+
+  if (isDeviceMockup(payload)) {
+    await renderDeviceMockupCoverSlide(frame, slide, payload);
     return;
   }
 
@@ -497,6 +507,11 @@ async function renderEditorialBodySlide(frame, slide, payload) {
     return;
   }
 
+  if (isPlaceholderMedia(payload)) {
+    await renderPlaceholderMediaBodySlide(frame, slide, payload);
+    return;
+  }
+
   if (isLightGrainGlow(payload)) {
     await renderLightGrainBodySlide(frame, slide, payload);
     return;
@@ -504,6 +519,11 @@ async function renderEditorialBodySlide(frame, slide, payload) {
 
   if (isRetroSwipeCreator(payload)) {
     await renderRetroSwipeBodySlide(frame, slide, payload);
+    return;
+  }
+
+  if (isDeviceMockup(payload)) {
+    await renderDeviceMockupBodySlide(frame, slide, payload);
     return;
   }
 
@@ -783,6 +803,11 @@ async function renderCtaSlide(frame, slide, payload) {
     return;
   }
 
+  if (isPlaceholderMedia(payload)) {
+    await renderPlaceholderMediaCtaSlide(frame, slide, payload);
+    return;
+  }
+
   if (isLightGrainGlow(payload)) {
     await renderLightGrainCtaSlide(frame, slide, payload);
     return;
@@ -790,6 +815,11 @@ async function renderCtaSlide(frame, slide, payload) {
 
   if (isRetroSwipeCreator(payload)) {
     await renderRetroSwipeCtaSlide(frame, slide, payload);
+    return;
+  }
+
+  if (isDeviceMockup(payload)) {
+    await renderDeviceMockupCtaSlide(frame, slide, payload);
     return;
   }
 
@@ -2068,6 +2098,75 @@ async function renderLightGrainCoverSlide(frame, slide, payload) {
   });
 }
 
+async function renderPlaceholderMediaCoverSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  appendSoftGradientBackdrop(frame, tokens, "violet");
+  await appendRemoteImageRect(frame, slide, {
+    x: 0,
+    y: 0,
+    width: 1080,
+    height: 1350,
+    opacity: 0.16,
+    overlayHex: "#FFFFFF",
+    overlayOpacity: 0.18,
+    effects: [{ type: "LAYER_BLUR", radius: 6, visible: true }]
+  });
+
+  const card = appendSurfaceCard(frame, 72, 106, 936, 1138, {
+    fillHex: "#FFFFFF",
+    fillOpacity: 0.94,
+    cornerRadius: 42,
+    strokeHex: "#E7EBF5",
+    strokeOpacity: 1
+  });
+
+  await appendLabelPill(card, 40, 42, "Cover", tokens.accent_navy, "#FFFFFF");
+  await appendRemoteImageRect(card, slide, {
+    x: 36,
+    y: 108,
+    width: 864,
+    height: 462,
+    cornerRadius: 30,
+    opacity: 0.96,
+    overlayHex: "#FFFFFF",
+    overlayOpacity: 0.04
+  });
+
+  await createTextBlock(card, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.cover_family,
+    fontStyle: payload.typography.cover_style,
+    fallbackStyle: "Bold",
+    x: 58,
+    y: 632,
+    width: 780,
+    maxHeight: 330,
+    maxSize: 94,
+    minSize: 38,
+    lineHeight: 1.0,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+
+  if (slide.body_display || slide.body) {
+    await createTextBlock(card, {
+      text: slide.body_display || slide.body,
+      fontFamily: payload.typography.body_family,
+      fontStyle: payload.typography.body_style,
+      fallbackStyle: "Regular",
+      x: 58,
+      y: 986,
+      width: 700,
+      maxHeight: 80,
+      maxSize: 28,
+      minSize: 16,
+      lineHeight: 1.14,
+      color: "#60657B",
+      alignHorizontal: "LEFT"
+    });
+  }
+}
+
 async function renderLightGrainBodySlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   appendSoftGradientBackdrop(frame, tokens, slide.slide_number % 2 === 0 ? "green" : "violet");
@@ -2082,114 +2181,283 @@ async function renderLightGrainBodySlide(frame, slide, payload) {
     effects: [{ type: "LAYER_BLUR", radius: 10, visible: true }]
   });
 
-  const number = await createTextBlock(frame, {
+  const panel = appendSurfaceCard(frame, 72, 126, 936, 1086, {
+    fillHex: "#FFFFFF",
+    fillOpacity: 0.72,
+    cornerRadius: 40,
+    strokeHex: "#F1F2F8",
+    strokeOpacity: 0.92
+  });
+
+  const number = await createTextBlock(panel, {
     text: String(slide.slide_number - 1),
     fontFamily: "Inter",
     fontStyle: "Black",
     fallbackStyle: "Bold",
-    x: 58,
-    y: 142,
-    width: 176,
-    maxHeight: 300,
-    maxSize: 196,
-    minSize: 112,
+    x: 46,
+    y: 30,
+    width: 140,
+    maxHeight: 180,
+    maxSize: 138,
+    minSize: 84,
     lineHeight: 0.9,
     color: tokens.accent_navy,
     alignHorizontal: "LEFT"
   });
-  number.opacity = 0.06;
+  number.opacity = 0.08;
 
-  await createTextBlock(frame, {
+  const hasMedia = !!slide.image_asset;
+  const mediaOnRight = slide.slide_number % 4 !== 2;
+  const mediaX = mediaOnRight ? 612 : 40;
+  const textX = hasMedia ? (mediaOnRight ? 62 : 390) : 62;
+  const textWidth = hasMedia ? 470 : 812;
+  if (hasMedia) {
+    await appendRemoteImageRect(panel, slide, {
+      x: mediaX,
+      y: 608,
+      width: 284,
+      height: 404,
+      cornerRadius: 28,
+      opacity: 0.96,
+      overlayHex: "#FFFFFF",
+      overlayOpacity: 0.03
+    });
+  }
+
+  await createTextBlock(panel, {
     text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
-    x: 232,
-    y: 172,
-    width: 710,
+    x: textX,
+    y: 126,
+    width: textWidth,
     maxHeight: 260,
-    maxSize: 78,
-    minSize: 30,
+    maxSize: 90,
+    minSize: 34,
     lineHeight: 1.02,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
 
-  await createTextBlock(frame, {
+  await createTextBlock(panel, {
     text: slide.body_display || slide.body || slide.headline_display || slide.headline,
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
-    x: 232,
-    y: 438,
-    width: 694,
+    x: textX,
+    y: 404,
+    width: textWidth,
     maxHeight: 420,
-    maxSize: 46,
-    minSize: 22,
-    lineHeight: 1.18,
+    maxSize: 54,
+    minSize: 24,
+    lineHeight: 1.2,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
-
-  await appendLightCreatorFooter(frame, tokens);
 }
 
 async function renderLightGrainCtaSlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   appendSoftGradientBackdrop(frame, tokens, "violet");
-  appendGenericCreatorAvatar(frame, 96, 232, 192, "#FFFFFF", "#161616", "#8086B5");
+  const card = appendSurfaceCard(frame, 88, 186, 904, 944, {
+    fillHex: "#FFFFFF",
+    fillOpacity: 0.84,
+    cornerRadius: 44,
+    strokeHex: "#EEF1FA",
+    strokeOpacity: 0.92
+  });
+  appendGenericCreatorAvatar(card, 376, 74, 150, "#FFFFFF", "#161616", "#8086B5");
 
-  await createTextBlock(frame, {
-    text: slide.headline_display || slide.headline,
+  await createTextBlock(card, {
+    text: slide.headline_display || slide.headline_short || slide.headline,
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
-    x: 84,
-    y: 516,
-    width: 880,
-    maxHeight: 190,
-    maxSize: 88,
-    minSize: 32,
+    x: 96,
+    y: 286,
+    width: 712,
+    maxHeight: 228,
+    maxSize: 82,
+    minSize: 34,
     lineHeight: 1.0,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "CENTER"
   });
 
   if (slide.body_display || slide.body) {
-    await createTextBlock(frame, {
+    await createTextBlock(card, {
       text: slide.body_display || slide.body,
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
-      x: 86,
-      y: 740,
-      width: 808,
+      x: 128,
+      y: 582,
+      width: 648,
       maxHeight: 140,
       maxSize: 34,
-      minSize: 16,
+      minSize: 18,
       lineHeight: 1.14,
       color: tokens.text_dark,
-      alignHorizontal: "LEFT"
+      alignHorizontal: "CENTER"
     });
   }
 
   if (slide.supporting_text) {
-    await createTextBlock(frame, {
+    await createTextBlock(card, {
       text: slide.supporting_text,
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
-      x: 86,
-      y: 902,
-      width: 760,
+      x: 160,
+      y: 716,
+      width: 584,
       maxHeight: 78,
       maxSize: 24,
       minSize: 14,
       lineHeight: 1.14,
       color: "#40455E",
-      alignHorizontal: "LEFT"
+      alignHorizontal: "CENTER"
     });
   }
+
+  await appendLabelPill(card, 324, 818, slide.button_label || "Follow for more", tokens.accent_navy, "#FFFFFF");
+}
+
+async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  appendSoftGradientBackdrop(frame, tokens, slide.slide_number % 4 === 0 ? "green" : "violet");
+  await appendRemoteImageRect(frame, slide, {
+    x: 0,
+    y: 0,
+    width: 1080,
+    height: 1350,
+    opacity: 0.12,
+    overlayHex: "#FFFFFF",
+    overlayOpacity: 0.2,
+    effects: [{ type: "LAYER_BLUR", radius: 5, visible: true }]
+  });
+
+  const card = appendSurfaceCard(frame, 72, 112, 936, 1114, {
+    fillHex: "#FFFFFF",
+    fillOpacity: 0.95,
+    cornerRadius: 40,
+    strokeHex: "#EAEFF8",
+    strokeOpacity: 1
+  });
+
+  await appendLabelPill(card, 744, 44, `0${slide.slide_number}`, tokens.accent_navy, "#FFFFFF");
+
+  await createTextBlock(card, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.body_heading_family,
+    fontStyle: payload.typography.body_heading_style,
+    fallbackStyle: "Bold",
+    x: 56,
+    y: 82,
+    width: 780,
+    maxHeight: 200,
+    maxSize: 76,
+    minSize: 32,
+    lineHeight: 1.04,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+
+  await createTextBlock(card, {
+    text: slide.body_display || slide.body || "",
+    fontFamily: payload.typography.body_family,
+    fontStyle: payload.typography.body_style,
+    fallbackStyle: "Regular",
+    x: 56,
+    y: 286,
+    width: 760,
+    maxHeight: 228,
+    maxSize: 42,
+    minSize: 22,
+    lineHeight: 1.2,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+
+  await appendRemoteImageRect(card, slide, {
+    x: 56,
+    y: 598,
+    width: 824,
+    height: 362,
+    cornerRadius: 32,
+    opacity: 0.98,
+    overlayHex: "#FFFFFF",
+    overlayOpacity: 0.02
+  });
+}
+
+async function renderPlaceholderMediaCtaSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  appendSoftGradientBackdrop(frame, tokens, "violet");
+  const card = appendSurfaceCard(frame, 104, 184, 872, 978, {
+    fillHex: "#FFFFFF",
+    fillOpacity: 0.96,
+    cornerRadius: 42,
+    strokeHex: "#E9EEF8",
+    strokeOpacity: 1
+  });
+
+  await appendLabelPill(card, 308, 66, "Keep following", tokens.accent_blue, tokens.text_dark);
+
+  await createTextBlock(card, {
+    text: slide.headline_display || slide.headline_short || slide.headline,
+    fontFamily: payload.typography.cta_heading_family,
+    fontStyle: payload.typography.cta_heading_style,
+    fallbackStyle: "Bold",
+    x: 96,
+    y: 186,
+    width: 680,
+    maxHeight: 240,
+    maxSize: 82,
+    minSize: 34,
+    lineHeight: 1.02,
+    color: tokens.text_dark,
+    alignHorizontal: "CENTER"
+  });
+
+  if (slide.body_display || slide.body) {
+    await createTextBlock(card, {
+      text: slide.body_display || slide.body,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 122,
+      y: 502,
+      width: 628,
+      maxHeight: 140,
+      maxSize: 34,
+      minSize: 18,
+      lineHeight: 1.16,
+      color: tokens.text_dark,
+      alignHorizontal: "CENTER"
+    });
+  }
+
+  if (slide.supporting_text) {
+    await createTextBlock(card, {
+      text: slide.supporting_text,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 154,
+      y: 660,
+      width: 564,
+      maxHeight: 72,
+      maxSize: 24,
+      minSize: 14,
+      lineHeight: 1.14,
+      color: "#5A6075",
+      alignHorizontal: "CENTER"
+    });
+  }
+
+  await appendLabelPill(card, 280, 806, slide.button_label || "Follow for more", tokens.accent_navy, "#FFFFFF");
 }
 
 async function renderRetroSwipeCoverSlide(frame, slide, payload) {
@@ -2340,6 +2608,31 @@ async function renderTwitterCardCoverSlide(frame, slide, payload) {
   await appendTweetCard(frame, 36, 154, 1008, 820, slide, tokens, payload, true);
 }
 
+async function renderDeviceMockupCoverSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  appendSoftGradientBackdrop(frame, tokens, "peach");
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.cover_family,
+    fontStyle: payload.typography.cover_style,
+    fallbackStyle: "Bold",
+    x: 78,
+    y: 162,
+    width: 456,
+    maxHeight: 560,
+    maxSize: 100,
+    minSize: 40,
+    lineHeight: 0.98,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+
+  await appendDeviceMockupShell(frame, slide, 650, 110, 312, 1040, tokens, {
+    screenOpacity: 0.98,
+    overlayOpacity: 0.04
+  });
+}
+
 async function renderTwitterCardBodySlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   appendSoftGradientBackdrop(frame, tokens, slide.slide_number % 2 === 0 ? "sky" : "peach");
@@ -2354,6 +2647,62 @@ async function renderTwitterCardBodySlide(frame, slide, payload) {
     effects: [{ type: "LAYER_BLUR", radius: 8, visible: true }]
   });
   await appendTweetCard(frame, 34, 140, 1012, 900, slide, tokens, payload, false);
+}
+
+async function renderDeviceMockupBodySlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  const deviceOnRight = slide.slide_number % 4 !== 0;
+  appendSoftGradientBackdrop(frame, tokens, deviceOnRight ? "sky" : "peach");
+  await appendRemoteImageRect(frame, slide, {
+    x: 0,
+    y: 0,
+    width: 1080,
+    height: 1350,
+    opacity: 0.1,
+    overlayHex: "#FFFFFF",
+    overlayOpacity: 0.12,
+    effects: [{ type: "LAYER_BLUR", radius: 6, visible: true }]
+  });
+
+  const textX = deviceOnRight ? 86 : 594;
+  const deviceX = deviceOnRight ? 646 : 122;
+  await appendLabelPill(frame, textX, 124, `0${slide.slide_number}`, tokens.accent_blue, tokens.text_dark);
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline,
+    fontFamily: payload.typography.body_heading_family,
+    fontStyle: payload.typography.body_heading_style,
+    fallbackStyle: "Bold",
+    x: textX,
+    y: 214,
+    width: 360,
+    maxHeight: 260,
+    maxSize: 76,
+    minSize: 32,
+    lineHeight: 1.02,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+
+  await createTextBlock(frame, {
+    text: slide.body_display || slide.body || "",
+    fontFamily: payload.typography.body_family,
+    fontStyle: payload.typography.body_style,
+    fallbackStyle: "Regular",
+    x: textX,
+    y: 494,
+    width: 350,
+    maxHeight: 280,
+    maxSize: 34,
+    minSize: 18,
+    lineHeight: 1.18,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+
+  await appendDeviceMockupShell(frame, slide, deviceX, 146, 312, 1002, tokens, {
+    screenOpacity: 0.98,
+    overlayOpacity: 0.04
+  });
 }
 
 async function renderTwitterCardCtaSlide(frame, slide, payload) {
@@ -2375,6 +2724,70 @@ async function renderTwitterCardCtaSlide(frame, slide, payload) {
     lineHeight: 1.16,
     color: tokens.text_dark,
     alignHorizontal: "CENTER"
+  });
+}
+
+async function renderDeviceMockupCtaSlide(frame, slide, payload) {
+  const tokens = payload.style_tokens;
+  appendSoftGradientBackdrop(frame, tokens, "sky");
+
+  await createTextBlock(frame, {
+    text: slide.headline_display || slide.headline_short || slide.headline,
+    fontFamily: payload.typography.cta_heading_family,
+    fontStyle: payload.typography.cta_heading_style,
+    fallbackStyle: "Bold",
+    x: 92,
+    y: 246,
+    width: 420,
+    maxHeight: 280,
+    maxSize: 82,
+    minSize: 34,
+    lineHeight: 1.02,
+    color: tokens.text_dark,
+    alignHorizontal: "LEFT"
+  });
+
+  if (slide.body_display || slide.body) {
+    await createTextBlock(frame, {
+      text: slide.body_display || slide.body,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 92,
+      y: 560,
+      width: 384,
+      maxHeight: 150,
+      maxSize: 34,
+      minSize: 18,
+      lineHeight: 1.16,
+      color: tokens.text_dark,
+      alignHorizontal: "LEFT"
+    });
+  }
+
+  if (slide.supporting_text) {
+    await createTextBlock(frame, {
+      text: slide.supporting_text,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 92,
+      y: 720,
+      width: 360,
+      maxHeight: 80,
+      maxSize: 24,
+      minSize: 14,
+      lineHeight: 1.14,
+      color: "#596177",
+      alignHorizontal: "LEFT"
+    });
+  }
+
+  await appendLabelPill(frame, 92, 858, slide.button_label || "Follow for more", tokens.accent_blue, tokens.text_dark);
+  await appendDeviceMockupShell(frame, slide, 648, 170, 312, 1002, tokens, {
+    screenOpacity: 1,
+    overlayOpacity: 0,
+    useDecorativeScreen: true
   });
 }
 
@@ -3018,6 +3431,52 @@ function appendSoftGradientBackdrop(frame, tokens, mode) {
   }
 }
 
+function appendSurfaceCard(frame, x, y, width, height, options) {
+  const card = figma.createFrame();
+  card.resize(width, height);
+  card.x = x;
+  card.y = y;
+  card.cornerRadius = options.cornerRadius || 36;
+  card.clipsContent = true;
+  card.fills = [solidPaint(options.fillHex || "#FFFFFF", typeof options.fillOpacity === "number" ? options.fillOpacity : 1)];
+  if (options.strokeHex) {
+    card.strokes = [solidPaint(options.strokeHex, typeof options.strokeOpacity === "number" ? options.strokeOpacity : 1)];
+    card.strokeWeight = options.strokeWeight || 2;
+  }
+  if (options.shadow !== false) {
+    card.effects = [dropShadow("#111111", 0.12, 0, 18, 42)];
+  }
+  frame.appendChild(card);
+  return card;
+}
+
+async function appendLabelPill(frame, x, y, text, fillHex, textHex) {
+  const width = Math.max(164, Math.min(360, 42 + text.length * 13));
+  const pill = figma.createRectangle();
+  pill.resize(width, 58);
+  pill.x = x;
+  pill.y = y;
+  pill.cornerRadius = 999;
+  pill.fills = [solidPaint(fillHex)];
+  frame.appendChild(pill);
+
+  await createTextBlock(frame, {
+    text: text,
+    fontFamily: "Inter",
+    fontStyle: "Semi Bold",
+    fallbackStyle: "Bold",
+    x: x + 18,
+    y: y + 14,
+    width: width - 36,
+    maxHeight: 26,
+    maxSize: 22,
+    minSize: 14,
+    lineHeight: 1.0,
+    color: textHex,
+    alignHorizontal: "CENTER"
+  });
+}
+
 function appendGenericCreatorAvatar(frame, x, y, size, outerHex, innerHex, rimHex) {
   const outer = figma.createEllipse();
   outer.resize(size, size);
@@ -3146,6 +3605,70 @@ async function appendLightCreatorFooter(frame, tokens) {
     color: tokens.text_light,
     alignHorizontal: "CENTER"
   });
+}
+
+async function appendDeviceMockupShell(frame, slide, x, y, width, height, tokens, options) {
+  const shell = figma.createFrame();
+  shell.name = "Device Mockup";
+  shell.resize(width, height);
+  shell.x = x;
+  shell.y = y;
+  shell.cornerRadius = 56;
+  shell.clipsContent = false;
+  shell.fills = [solidPaint("#11151C")];
+  shell.strokes = [solidPaint("#FFFFFF", 0.08)];
+  shell.strokeWeight = 2;
+  shell.effects = [dropShadow("#111111", 0.18, 0, 20, 46)];
+  frame.appendChild(shell);
+
+  const speaker = figma.createRectangle();
+  speaker.resize(96, 10);
+  speaker.x = Math.round((width - 96) / 2);
+  speaker.y = 20;
+  speaker.cornerRadius = 999;
+  speaker.fills = [solidPaint("#242A33")];
+  shell.appendChild(speaker);
+
+  const screen = figma.createFrame();
+  screen.name = "Device Screen";
+  screen.resize(width - 36, height - 78);
+  screen.x = 18;
+  screen.y = 44;
+  screen.cornerRadius = 40;
+  screen.clipsContent = true;
+  screen.fills = [solidPaint("#F6F7FB")];
+  shell.appendChild(screen);
+
+  if (options.useDecorativeScreen) {
+    const base = figma.createRectangle();
+    base.resize(width - 36, height - 78);
+    base.x = 0;
+    base.y = 0;
+    base.fills = [solidPaint("#EEF2FB")];
+    screen.appendChild(base);
+    appendGlow(screen, -80, 40, 260, tokens.accent_gold, 0.18);
+    appendGlow(screen, 120, 120, 320, tokens.accent_purple, 0.18);
+    appendGlow(screen, 20, 580, 260, tokens.accent_blue, 0.2);
+  } else {
+    await appendRemoteImageRect(screen, slide, {
+      x: 0,
+      y: 0,
+      width: width - 36,
+      height: height - 78,
+      cornerRadius: 40,
+      opacity: typeof options.screenOpacity === "number" ? options.screenOpacity : 0.98,
+      overlayHex: "#FFFFFF",
+      overlayOpacity: typeof options.overlayOpacity === "number" ? options.overlayOpacity : 0.04
+    });
+  }
+
+  const homeBar = figma.createRectangle();
+  homeBar.resize(118, 8);
+  homeBar.x = Math.round((width - 118) / 2);
+  homeBar.y = height - 24;
+  homeBar.cornerRadius = 999;
+  homeBar.fills = [solidPaint("#2D3440")];
+  shell.appendChild(homeBar);
 }
 
 function appendRetroTexture(frame, tokens) {
@@ -3439,9 +3962,12 @@ function isCreatorMonoMinimal(payload) {
 function isLightGrainGlow(payload) {
   return payload && [
     "light_grain_glow_v1",
-    "pastel_arrow_editorial_v1",
-    "placeholder_media_glow_v1"
+    "pastel_arrow_editorial_v1"
   ].includes(payload.style_recipe);
+}
+
+function isPlaceholderMedia(payload) {
+  return payload && payload.style_recipe === "placeholder_media_glow_v1";
 }
 
 function isRetroSwipeCreator(payload) {
@@ -3454,9 +3980,12 @@ function isRetroSwipeCreator(payload) {
 
 function isTwitterCardSoft(payload) {
   return payload && [
-    "twitter_card_soft_v1",
-    "device_mockup_gradient_v1"
+    "twitter_card_soft_v1"
   ].includes(payload.style_recipe);
+}
+
+function isDeviceMockup(payload) {
+  return payload && payload.style_recipe === "device_mockup_gradient_v1";
 }
 
 function cleanText(value) {

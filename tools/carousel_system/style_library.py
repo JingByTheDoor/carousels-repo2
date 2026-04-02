@@ -559,13 +559,19 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
     if record.normalized_input.generation_mode == "review":
         if preference in {"alder_split_right", "alder_right"}:
             return ALDER_SPLIT_RIGHT_RECIPE
+        if preference in {"placeholder_media", "image_placeholder", "glow_placeholder", "reference_placeholder_media_glow"}:
+            return PLACEHOLDER_MEDIA_RECIPE
         if preference in {"light_glow", "light_grain", "soft_light", "reference_light_grain_glow"}:
             return LIGHT_GRAIN_GLOW_RECIPE
+        if preference in {"device_mockup", "phone_card", "mockup_gradient", "reference_device_mockup_gradient"}:
+            return DEVICE_MOCKUP_RECIPE
         if preference in {"twitter_card", "tweet", "twitter_post", "reference_twitter_card_soft"}:
             return TWITTER_CARD_SOFT_RECIPE
         review_candidates = [
             ALDER_SPLIT_RIGHT_RECIPE,
+            PLACEHOLDER_MEDIA_RECIPE,
             LIGHT_GRAIN_GLOW_RECIPE,
+            DEVICE_MOCKUP_RECIPE,
             TWITTER_CARD_SOFT_RECIPE,
         ]
         return review_candidates[_content_signature(record) % len(review_candidates)]

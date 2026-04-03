@@ -969,8 +969,8 @@ async function renderAlderSplitMediaBodySlide(frame, slide, payload, orientation
   const mediaOnLeft = orientation === "left" || orientation === "left-tight";
   const mediaWidth = orientation.endsWith("tight") ? 404 : 432;
   const mediaX = mediaOnLeft ? 44 : 1080 - mediaWidth - 44;
-  const textX = mediaOnLeft ? 514 : 84;
-  const textWidth = mediaOnLeft ? 478 : 508;
+  const textX = mediaOnLeft ? 500 : 78;
+  const textWidth = mediaOnLeft ? 502 : 474;
 
   const mediaRect = await appendRemoteImageRect(frame, slide, {
     x: mediaX,
@@ -1002,7 +1002,7 @@ async function renderAlderSplitMediaBodySlide(frame, slide, payload, orientation
   dot.fills = [solidPaint(tokens.text_dark)];
   frame.appendChild(dot);
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
@@ -1010,26 +1010,27 @@ async function renderAlderSplitMediaBodySlide(frame, slide, payload, orientation
     x: textX + 30,
     y: 82,
     width: textWidth - 30,
-    maxHeight: 220,
-    maxSize: 60,
-    minSize: 30,
+    maxHeight: 280,
+    maxSize: 68,
+    minSize: 34,
     lineHeight: 1.05,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
 
+  const bodyY = headlineNode.y + headlineNode.height + 34;
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: textX,
-    y: 330,
+    y: bodyY,
     width: textWidth,
-    maxHeight: 780,
-    maxSize: 30,
-    minSize: 18,
-    lineHeight: 1.28,
+    maxHeight: 820,
+    maxSize: 36,
+    minSize: 22,
+    lineHeight: 1.24,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
@@ -1049,34 +1050,35 @@ async function renderAlderTextOnlyBodySlide(frame, slide, payload) {
   lead.fills = [solidPaint(tokens.accent_orange)];
   frame.appendChild(lead);
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
     x: 126,
     y: 122,
-    width: 840,
-    maxHeight: 220,
-    maxSize: 66,
-    minSize: 30,
+    width: 740,
+    maxHeight: 300,
+    maxSize: 76,
+    minSize: 34,
     lineHeight: 1.05,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
 
+  const bodyY = headlineNode.y + headlineNode.height + 42;
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: 126,
-    y: 398,
-    width: 860,
-    maxHeight: 720,
-    maxSize: 34,
-    minSize: 18,
-    lineHeight: 1.38,
+    y: bodyY,
+    width: 720,
+    maxHeight: 760,
+    maxSize: 40,
+    minSize: 22,
+    lineHeight: 1.3,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
@@ -2737,21 +2739,23 @@ async function renderTwitterCardCtaSlide(frame, slide, payload) {
   appendSoftGradientBackdrop(frame, tokens, "sky");
   await appendTweetCard(frame, 50, 148, 980, 836, slide, tokens, payload, false);
 
-  await createTextBlock(frame, {
-    text: slide.supporting_text || "Save or repost the main point.",
-    fontFamily: payload.typography.cta_body_family,
-    fontStyle: payload.typography.cta_body_style,
-    fallbackStyle: "Regular",
-    x: 126,
-    y: 1030,
-    width: 828,
-    maxHeight: 72,
-    maxSize: 24,
-    minSize: 14,
-    lineHeight: 1.16,
-    color: tokens.text_dark,
-    alignHorizontal: "CENTER"
-  });
+  if (slide.supporting_text) {
+    await createTextBlock(frame, {
+      text: slide.supporting_text,
+      fontFamily: payload.typography.cta_body_family,
+      fontStyle: payload.typography.cta_body_style,
+      fallbackStyle: "Regular",
+      x: 126,
+      y: 1030,
+      width: 828,
+      maxHeight: 72,
+      maxSize: 24,
+      minSize: 14,
+      lineHeight: 1.16,
+      color: tokens.text_dark,
+      alignHorizontal: "CENTER"
+    });
+  }
 }
 
 async function renderDeviceMockupCtaSlide(frame, slide, payload) {

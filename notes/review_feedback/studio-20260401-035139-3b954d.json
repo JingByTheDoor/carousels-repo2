@@ -4,25 +4,45 @@
   "round_number": 1,
   "generated_brief": "Low-prep writing activities that help English students think faster",
   "winner": {
-    "variant_id": "studio-20260401-035139-3b954d-variant-1",
-    "ordinal": 1,
-    "style": "Light Grain Glow",
-    "style_family": "reference_light_grain_glow",
-    "copy_length": "Balanced",
-    "feedback": "Strong cover and better structure, but tighten the CTA.",
+    "variant_id": "studio-20260401-035139-3b954d-variant-2",
+    "ordinal": 2,
+    "style": "Twitter Card Soft",
+    "style_family": "reference_twitter_card_soft",
+    "copy_length": "Expanded",
+    "feedback": "cta text problem where the small info text reapeats the bold title",
     "figma_url": null,
-    "figma_page_url": null
+    "figma_page_url": null,
+    "slide_references": [
+      {
+        "token": "/slide_7",
+        "slide_number": 7,
+        "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260401-035139-3b954d-v2\\slide-07.png",
+        "export_url": "/tmp-output/exports/studio-20260401-035139-3b954d-v2/slide-07.png",
+        "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260401-035139-3b954d-v2\\slide-07.png",
+        "preview_url": "/studio-output/previews/studio-20260401-035139-3b954d-v2/slide-07.png"
+      }
+    ]
   },
   "losers": [
     {
-      "variant_id": "studio-20260401-035139-3b954d-variant-2",
-      "ordinal": 2,
-      "style": "Twitter Card Soft",
-      "style_family": "reference_twitter_card_soft",
-      "copy_length": "Expanded",
-      "feedback": "loser note 2",
+      "variant_id": "studio-20260401-035139-3b954d-variant-1",
+      "ordinal": 1,
+      "style": "Light Grain Glow",
+      "style_family": "reference_light_grain_glow",
+      "copy_length": "Balanced",
+      "feedback": "the images could have been much more interesting, and diverse and same cta problem where the info text repeats the same thing as the title, just delete the little info text for all cta carousels",
       "figma_url": null,
-      "figma_page_url": null
+      "figma_page_url": null,
+      "slide_references": [
+        {
+          "token": "/slide_7",
+          "slide_number": 7,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260401-035139-3b954d-v1\\slide-07.png",
+          "export_url": "/tmp-output/exports/studio-20260401-035139-3b954d-v1/slide-07.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260401-035139-3b954d-v1\\slide-07.png",
+          "preview_url": "/studio-output/previews/studio-20260401-035139-3b954d-v1/slide-07.png"
+        }
+      ]
     },
     {
       "variant_id": "studio-20260401-035139-3b954d-variant-3",
@@ -30,9 +50,10 @@
       "style": "Alder Split Right",
       "style_family": "reference_alder_split_media",
       "copy_length": "Tight",
-      "feedback": "loser note 3",
+      "feedback": "too much white space not enough text fitted into the space I feel",
       "figma_url": null,
-      "figma_page_url": null
+      "figma_page_url": null,
+      "slide_references": []
     }
   ]
 }

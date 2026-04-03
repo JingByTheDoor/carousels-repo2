@@ -466,3 +466,7 @@ Status: `Approved and implemented`
 - Added winner-feedback support and persistent review-note exports under `notes/review_feedback/`.
 - Added a dedicated submit path so review notes can be saved and the active review lane cleared without generating the next round.
 - Added review-round compatibility handling so older stored rounds do not break the new studio UI.
+- Locked the CTA default tighter for reviewed carousels:
+  - CTA slides should render as headline-first by default
+  - payload builders should omit CTA body/supporting subcopy unless a future style explicitly reintroduces it
+  - renderers should not inject fallback CTA helper text when payload subcopy is absent

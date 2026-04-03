@@ -315,10 +315,10 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
                 }
                 else slide.headline
             ),
-            body=cta_source or None,
-            body_short=body_display,
-            body_display=body_display,
-            supporting_text=supporting_text,
+            body=None,
+            body_short=None,
+            body_display=None,
+            supporting_text=None,
             button_label=button_label,
             text_density=_cta_density(slide.headline, cta_source),
             visual_priority="cta",

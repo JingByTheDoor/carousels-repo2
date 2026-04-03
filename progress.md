@@ -347,3 +347,10 @@
 - Verified:
   - `node --check figma_plugin\\code.js`
   - `python -m compileall tools`
+- Applied the latest touched saved review pass from `studio-20260401-035139-3b954d`:
+  - CTA payloads now omit body/supporting subcopy by default across families, matching the repeated review request to keep CTA slides headline-only
+  - `twitter_card` CTA rendering no longer invents fallback helper text when payload subcopy is absent
+  - `Alder Split Right` body and text-only layouts now use larger, tighter typography with headline-measured body placement so short-copy rounds fill more of the canvas
+- Verified:
+  - `node --check figma_plugin\\code.js`
+  - `python -m compileall tools`

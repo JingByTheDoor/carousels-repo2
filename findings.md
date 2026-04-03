@@ -230,3 +230,5 @@
   - text-only slides should not show a decorative empty device shell
   This produces a cleaner family distinction and removes the “wonky thin phone on blank slides” failure mode.
 - The placeholder-media family cannot rely on fixed text Y positions. Long headlines need downstream body/image blocks to anchor off measured text height, otherwise dense review-safe copy produces headline/body overlap and cover overflow.
+- The CTA cleanest-default rule is broader than one family: review feedback keeps converging on headline-only CTA slides, so the payload should omit CTA subcopy by default and renderers should never invent fallback CTA helper text on their own.
+- `Alder Split Right` needs larger, tighter text composition for short-copy rounds. Its split/text-only body layouts looked structurally correct but underfilled because the text column was too small in presence and too fixed in vertical placement.

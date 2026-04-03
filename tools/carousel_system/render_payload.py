@@ -155,6 +155,7 @@ def build_plugin_render_payload(
     return PluginRenderPayload(
         job_id=record.job_id,
         page_name=f"{record.job_id}-plugin-render",
+        include_download_exports="png" in record.normalized_input.output_modes,
         prompt_version=record.prompt_version,
         language=language,
         style_family=recipe.style_family,

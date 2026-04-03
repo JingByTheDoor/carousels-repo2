@@ -340,6 +340,7 @@ class PluginRenderPayload(BaseModel):
     backend: Literal["figma_plugin_file_import"] = DEFAULT_RENDER_BACKEND
     job_id: str
     page_name: str
+    include_download_exports: bool = True
     prompt_version: str = DEFAULT_PROMPT_VERSION
     language: str = "unknown"
     style_family: str = DEFAULT_STYLE_FAMILY

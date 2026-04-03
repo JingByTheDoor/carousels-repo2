@@ -335,3 +335,8 @@
   - `node --check figma_plugin\\code.js`
   - `python -m compileall tools`
   - CTA copy smoke test: duplicate `Follow for more ...` body now collapses to `None`, while meaningful tails like `for busy teachers` survive
+- Reduced review-mode post-render overhead:
+  - Studio review rounds now generate payloads with `output_modes=["figma"]`
+  - plugin payloads now carry `include_download_exports`
+  - review-mode plugin renders still export Studio previews, but they skip downloadable per-slide PNG exports and downstream PDF generation
+  - plugin status text now reflects the shorter preview-only completion path for review rounds

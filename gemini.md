@@ -166,6 +166,7 @@ Status: `Approved and implemented`
   "backend": "figma_plugin_file_import",
   "job_id": "string",
   "page_name": "string",
+  "include_download_exports": "boolean",
   "prompt_version": "baseline_v2",
   "language": "string",
   "style_family": "reference_mix_alder_portrait|reference_alder_split_media|reference_alder_text_only|reference_typography_signal|reference_cp_minimal_split|reference_cp_longform_split|reference_cp_gallery_wall|reference_sadekov_black_profile|reference_sadekov_white_profile|reference_typography_editorial_light|reference_creator_mono_minimal|reference_light_grain_glow|reference_retro_swipe_creator|reference_twitter_card_soft|reference_pastel_arrow_editorial|reference_placeholder_media_glow|reference_device_mockup_gradient|reference_social_proof_linkedin|reference_profile_circle_pop",
@@ -390,6 +391,7 @@ Status: `Approved and implemented`
 - Review mode may omit both `topic` and `script`; when that happens the system must auto-generate the brief inside the fixed niche preset `english_teacher_materials`.
 - Default review mode must create exactly 3 variants.
 - Default review mode must use only review-safe, image-capable families.
+- Default review mode must keep Studio previews but omit downloadable PNG/PDF exports unless explicitly re-enabled later.
 - Default review mode must not show payload-only fake previews in the browser UI; it may show a waiting state until real rendered previews exist.
 - The saved review decision must support both:
   - winner feedback

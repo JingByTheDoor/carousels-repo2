@@ -490,7 +490,7 @@ def create_review_round(
             language=resolved_request.language,
             image_mode=resolved_request.image_mode,
             aspect_ratio="portrait_1080x1350",
-            output_modes=["figma", "png"],
+            output_modes=["figma"] if resolved_request.review_mode else ["figma", "png"],
             reference_style=spec.requested_style,
             reference_file_key=settings.figma_reference_file_key,
             notes=spec.planner_notes,

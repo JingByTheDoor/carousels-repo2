@@ -223,6 +223,7 @@ function normalizePayload(payload) {
 
   return Object.assign({}, payload, {
     canvas: Object.assign({}, DEFAULT_CANVAS, payload.canvas || {}),
+    include_download_exports: payload.include_download_exports !== false,
     image_strategy: Object.assign({ mode: "none", provider: null }, payload.image_strategy || {}),
     style_tokens: Object.assign({}, DEFAULT_TOKENS, payload.style_tokens || {}),
     typography: Object.assign({}, DEFAULT_TYPOGRAPHY, payload.typography || {}),
@@ -296,9 +297,14 @@ async function renderCarousel(payload) {
   figma.viewport.scrollAndZoomIntoView(frames);
   postStatus("Slides rendered. Exporting Studio previews...");
   const previewImages = await exportSlidePreviews(frames, payload.slides);
-  postStatus("Studio previews exported. Building full PNG exports...");
-  const exportImages = await exportSlideImages(frames, payload.slides);
-  postStatus("Exports ready. Finalizing render result...");
+  let exportImages = [];
+  if (payload.include_download_exports) {
+    postStatus("Studio previews exported. Building full PNG exports...");
+    exportImages = await exportSlideImages(frames, payload.slides);
+    postStatus("Exports ready. Finalizing render result...");
+  } else {
+    postStatus("Studio previews exported. Finalizing render result...");
+  }
   return {
     schema_version: "figma_plugin_result_v1",
     job_id: payload.job_id,

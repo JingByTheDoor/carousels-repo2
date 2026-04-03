@@ -133,7 +133,8 @@ select:disabled {
 }
 
 .primary-button,
-.secondary-button {
+.secondary-button,
+.ghost-button {
   font-weight: 700;
 }
 
@@ -146,6 +147,12 @@ select:disabled {
   background: linear-gradient(120deg, rgba(127, 214, 208, 0.24), rgba(127, 214, 208, 0.08));
   color: var(--text);
   border: 1px solid rgba(127, 214, 208, 0.24);
+}
+
+.ghost-button {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .status-strip {

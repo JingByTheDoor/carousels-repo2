@@ -13,6 +13,7 @@ const elements = {
   generateButton: document.getElementById("generate-button"),
   nextRoundButton: document.getElementById("next-round-button"),
   submitButton: document.getElementById("submit-button"),
+  resetButton: document.getElementById("reset-button"),
   statusText: document.getElementById("status-text"),
   topic: document.getElementById("topic"),
   script: document.getElementById("script"),
@@ -61,6 +62,7 @@ function bindEvents() {
   elements.generateButton.addEventListener("click", onGenerateRound);
   elements.nextRoundButton.addEventListener("click", onGenerateNextRound);
   elements.submitButton.addEventListener("click", onSubmitReview);
+  elements.resetButton.addEventListener("click", onResetStudio);
   window.addEventListener("keydown", onGlobalKeydown);
 }
 
@@ -177,6 +179,26 @@ async function onSubmitReview() {
   }
 }
 
+async function onResetStudio() {
+  try {
+    toggleBusy(true);
+    setStatus("Resetting Studio and discarding the current review round...");
+    await requestJson("/api/review-rounds/reset", {
+      method: "POST",
+      body: JSON.stringify({
+        round_id: state.currentRound?.round_id || null,
+      }),
+    });
+    clearCurrentRound();
+    resetAdvancedInputs();
+    setStatus("Studio reset. Generate 3 to start from a clean state.", "success");
+  } catch (error) {
+    setStatus(error.message || String(error), true);
+  } finally {
+    toggleBusy(false);
+  }
+}
+
 function buildReviewRequestPayload() {
   return compactObject({
     topic: cleanValue(elements.topic.value),
@@ -236,6 +258,19 @@ function clearCurrentRound() {
   state.fullscreenVariantId = null;
   renderFullscreenViewer();
   renderEmptyState();
+}
+
+function resetAdvancedInputs() {
+  elements.topic.value = "";
+  elements.script.value = "";
+  elements.ctaText.value = "";
+  elements.notes.value = "";
+  elements.language.value = "";
+  if (state.bootstrap) {
+    elements.preferredStyle.value = state.bootstrap.review_defaults.preferred_style;
+    elements.baseCopyLength.value = state.bootstrap.review_defaults.base_copy_length;
+    elements.imageMode.value = state.bootstrap.review_defaults.image_mode;
+  }
 }
 
 function renderRoundSummary(round) {
@@ -748,6 +783,7 @@ function toggleBusy(isBusy) {
   elements.generateButton.disabled = isBusy;
   elements.nextRoundButton.disabled = true;
   elements.submitButton.disabled = true;
+  elements.resetButton.disabled = isBusy;
   [
     elements.topic,
     elements.script,

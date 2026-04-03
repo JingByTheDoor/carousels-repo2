@@ -62,7 +62,7 @@ StudioRating = Literal["unrated", "love", "good", "bad"]
 StudioStylePool = Literal["all", "core", "local"]
 StudioImageMode = Literal["auto", "none", "stock", "ai", "hybrid"]
 StudioRoundMode = Literal["advanced", "review"]
-StudioReviewStatus = Literal["drafting", "rendering", "ready_for_review", "winner_selected", "submitted", "error"]
+StudioReviewStatus = Literal["drafting", "rendering", "ready_for_review", "winner_selected", "submitted", "discarded", "error"]
 LayoutDensityLabel = Literal["Minimal", "Mixed", "Dense"]
 SLIDE_REFERENCE_PATTERN = re.compile(r"(?<![A-Za-z0-9])/slide[_-]?([1-7])\b", re.IGNORECASE)
 
@@ -260,6 +260,18 @@ class ReviewWinnerRequest(BaseModel):
     @field_validator("winner_feedback", mode="before")
     @classmethod
     def _clean_winner_feedback(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(str(value).strip().split())
+        return cleaned or None
+
+
+class ReviewResetRequest(BaseModel):
+    round_id: str | None = None
+
+    @field_validator("round_id", mode="before")
+    @classmethod
+    def _clean_round_id(cls, value: str | None) -> str | None:
         if value is None:
             return None
         cleaned = " ".join(str(value).strip().split())
@@ -614,6 +626,18 @@ def submit_review_round(round_id: str, request: ReviewWinnerRequest) -> StudioRo
     return round_record
 
 
+def reset_review_round(round_id: str | None = None) -> StudioRoundRecord | None:
+    round_record = load_round(round_id) if round_id else load_latest_review_round()
+    if round_record is None:
+        _clear_active_round(None)
+        return None
+    round_record.review_status = "discarded"
+    round_record.winner_variant_id = None
+    save_round(round_record)
+    _clear_active_round(round_record.round_id)
+    return round_record
+
+
 def load_round(round_id: str | None) -> StudioRoundRecord | None:
     if not round_id:
         return None
@@ -632,13 +656,13 @@ def load_latest_round() -> StudioRoundRecord | None:
 
 def load_latest_review_round() -> StudioRoundRecord | None:
     latest_round = load_latest_round()
-    if latest_round and latest_round.round_mode == "review" and latest_round.review_status != "submitted":
+    if latest_round and latest_round.round_mode == "review" and latest_round.review_status not in {"submitted", "discarded"}:
         return latest_round
 
     for round_path in _iter_round_paths():
         round_record = StudioRoundRecord.model_validate_json(round_path.read_text(encoding="utf-8"))
         _rehydrate_round_variants(round_record)
-        if round_record.round_mode == "review" and round_record.review_status != "submitted":
+        if round_record.round_mode == "review" and round_record.review_status not in {"submitted", "discarded"}:
             return round_record
     return None
 
@@ -706,9 +730,9 @@ def _rehydrate_round_variants(round_record: StudioRoundRecord) -> None:
         save_round(round_record)
 
 
-def _clear_active_round(round_id: str) -> None:
+def _clear_active_round(round_id: str | None) -> None:
     state = load_state()
-    if state.latest_round_id != round_id:
+    if round_id is not None and state.latest_round_id != round_id:
         return
     STUDIO_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
     STUDIO_STATE_PATH.write_text(StudioState(latest_round_id=None).model_dump_json(indent=2), encoding="utf-8")
@@ -1186,7 +1210,7 @@ def _apply_render_snapshot_to_variant(
 
 def _refresh_round_summary(round_record: StudioRoundRecord) -> None:
     round_record.figma_file_url = next((variant.figma_url for variant in round_record.variants if variant.figma_url), None)
-    if round_record.review_status == "submitted":
+    if round_record.review_status in {"submitted", "discarded"}:
         return
     has_error = any(variant.render_status == "error" for variant in round_record.variants)
     all_complete = bool(round_record.variants) and all(variant.render_status == "complete" for variant in round_record.variants)

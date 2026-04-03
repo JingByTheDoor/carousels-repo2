@@ -20,6 +20,7 @@ Provide a minimal local review loop for generating 3 real Figma variants, pickin
 7. The browser shows only real rendered thumbnails or a waiting state. It must not show payload-only fake slides in default review mode.
 8. User picks 1 winning variant and writes short rejection notes for the other 2.
 9. Studio generates the next round using the winner plus loser notes as the anchor.
+10. If the current round gets stuck or is no longer useful, `Reset Studio` discards the active review round and clears the browser back to a clean `Generate 3` state.
 
 ## Deterministic Rules
 - Review mode always creates exactly 3 variants.
@@ -52,6 +53,7 @@ Provide a minimal local review loop for generating 3 real Figma variants, pickin
 - The studio is a review/orchestration layer, not a replacement for the canonical job artifact.
 - Review mode is isolated from Google Sheets when started through `tools/start_studio.py`; the bridge runs in `studio_only` mode for the default launcher path.
 - Ratings and winner selection do not overwrite previous artifacts.
+- Resetting Studio discards the active review round from the default review lane, but it does not delete the saved round file from disk.
 - The studio may bias the next round, but it must not silently mutate previous results.
 - The studio is allowed to sit above Google Sheets; the sheet remains valid as backend plumbing, not the primary UX.
 

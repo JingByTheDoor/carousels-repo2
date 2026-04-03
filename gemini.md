@@ -458,6 +458,7 @@ Status: `Approved and implemented`
   - `POST /api/review-rounds/{round_id}/winner`
   - `POST /api/review-rounds/{round_id}/submit`
   - `POST /api/review-rounds/{round_id}/next`
+  - `POST /api/review-rounds/reset`
 - Locked review-mode rules:
   - 3 variants only
   - real rendered Figma previews only
@@ -465,6 +466,7 @@ Status: `Approved and implemented`
   - CTA slide image omitted by default
 - Added winner-feedback support and persistent review-note exports under `notes/review_feedback/`.
 - Added a dedicated submit path so review notes can be saved and the active review lane cleared without generating the next round.
+- Added a dedicated reset path so a stuck or unwanted review round can be discarded from the default Studio lane and the UI can return to a clean `Generate 3` state.
 - Added review-round compatibility handling so older stored rounds do not break the new studio UI.
 - Locked the CTA default tighter for reviewed carousels:
   - CTA slides should render as headline-first by default

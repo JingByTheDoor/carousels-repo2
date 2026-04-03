@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from carousel_system.config import ConfigError, ROOT_DIR, load_settings
 from carousel_system.studio import (
     STUDIO_DIR,
+    ReviewResetRequest,
     ReviewRoundCreateRequest,
     ReviewWinnerRequest,
     StudioCreateRequest,
@@ -21,6 +22,7 @@ from carousel_system.studio import (
     load_latest_round,
     load_round,
     rate_variant,
+    reset_review_round,
     save_review_winner,
     submit_review_round,
     studio_bootstrap_payload,
@@ -105,6 +107,14 @@ def create_app() -> FastAPI:
         except FileNotFoundError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
         return round_record.model_dump(mode="json")
+
+    @app.post("/api/review-rounds/reset")
+    def reset_review_lane_round(request: ReviewResetRequest) -> dict:
+        round_record = reset_review_round(request.round_id)
+        return {
+            "status": "ok",
+            "cleared_round_id": round_record.round_id if round_record else None,
+        }
 
     @app.get("/api/rounds/latest")
     def latest_round() -> dict:

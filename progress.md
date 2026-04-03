@@ -340,3 +340,10 @@
   - plugin payloads now carry `include_download_exports`
   - review-mode plugin renders still export Studio previews, but they skip downloadable per-slide PNG exports and downstream PDF generation
   - plugin status text now reflects the shorter preview-only completion path for review rounds
+- Applied the latest saved review pass from `studio-20260402-150945-745c16`:
+  - CTA payload generation now suppresses body/supporting copy when the CTA text is already semantically contained in the CTA headline
+  - `placeholder_media` cover/body layouts now place body and image blocks from measured headline/body heights instead of fixed Y offsets, preventing overlap and bottom clipping on dense copy
+  - `device_mockup` body and CTA text scales were increased slightly, and text-only CTA/body slides no longer render decorative empty phone shells
+- Verified:
+  - `node --check figma_plugin\\code.js`
+  - `python -m compileall tools`

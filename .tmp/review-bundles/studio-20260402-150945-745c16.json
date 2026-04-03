@@ -1,0 +1,203 @@
+{
+  "repo_root": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2",
+  "round_id": "studio-20260402-150945-745c16",
+  "review_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\notes\\review_feedback\\studio-20260402-150945-745c16.json",
+  "round_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\rounds\\studio-20260402-150945-745c16.json",
+  "generated_brief": "Low-prep writing activities that help English students think faster",
+  "review_status": "submitted",
+  "winner_variant_id": "studio-20260402-150945-745c16-variant-2",
+  "winner": {
+    "variant_id": "studio-20260402-150945-745c16-variant-2",
+    "ordinal": 2,
+    "job_id": "studio-20260402-150945-745c16-v2",
+    "style": "Light Grain Glow",
+    "style_family": "reference_light_grain_glow",
+    "style_recipe": "light_grain_glow_v1",
+    "copy_length": "Expanded",
+    "feedback": "preaty good only problem is the bold title and the lower text bellow have the same text",
+    "slide_references": [
+      {
+        "token": "/slide_7",
+        "slide_number": 7,
+        "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v2\\slide-07.png",
+        "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v2/slide-07.png",
+        "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v2\\slide-07.png",
+        "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v2/slide-07.png"
+      }
+    ],
+    "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\studio-20260402-150945-745c16-v2.json",
+    "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\studio-20260402-150945-745c16-v2.render.json",
+    "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\studio-20260402-150945-745c16-v2.render-result.json",
+    "preview_image_paths": [
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v2\\slide-01.png",
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v2\\slide-02.png",
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v2\\slide-03.png",
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v2\\slide-04.png",
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v2\\slide-05.png",
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v2\\slide-06.png",
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v2\\slide-07.png"
+    ],
+    "export_paths": [
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v2\\slide-01.png",
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v2\\slide-02.png",
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v2\\slide-03.png",
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v2\\slide-04.png",
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v2\\slide-05.png",
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v2\\slide-06.png",
+      "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v2\\slide-07.png"
+    ],
+    "figma_page_name": "Round 01 \u00b7 Variant 2",
+    "figma_url": null,
+    "figma_page_url": null,
+    "render_status": "complete",
+    "likely_targets": [
+      "tools/carousel_system/render_payload.py"
+    ]
+  },
+  "losers": [
+    {
+      "variant_id": "studio-20260402-150945-745c16-variant-1",
+      "ordinal": 1,
+      "job_id": "studio-20260402-150945-745c16-v1",
+      "style": "Placeholder Media Glow",
+      "style_family": "reference_placeholder_media_glow",
+      "style_recipe": "placeholder_media_glow_v1",
+      "copy_length": "Balanced",
+      "feedback": "the text slides off the screen the text is overlapping the bold text and the small text are the same thing",
+      "slide_references": [
+        {
+          "token": "/slide_1",
+          "slide_number": 1,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-01.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v1/slide-01.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-01.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v1/slide-01.png"
+        },
+        {
+          "token": "/slide_2",
+          "slide_number": 2,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-02.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v1/slide-02.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-02.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v1/slide-02.png"
+        },
+        {
+          "token": "/slide_4",
+          "slide_number": 4,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-04.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v1/slide-04.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-04.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v1/slide-04.png"
+        },
+        {
+          "token": "/slide_5",
+          "slide_number": 5,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-05.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v1/slide-05.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-05.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v1/slide-05.png"
+        },
+        {
+          "token": "/slide_6",
+          "slide_number": 6,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-06.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v1/slide-06.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-06.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v1/slide-06.png"
+        },
+        {
+          "token": "/slide_7",
+          "slide_number": 7,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-07.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v1/slide-07.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-07.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v1/slide-07.png"
+        }
+      ],
+      "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\studio-20260402-150945-745c16-v1.json",
+      "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\studio-20260402-150945-745c16-v1.render.json",
+      "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\studio-20260402-150945-745c16-v1.render-result.json",
+      "preview_image_paths": [
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-01.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-02.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-03.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-04.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-05.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-06.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-07.png"
+      ],
+      "export_paths": [
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-01.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-02.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-03.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-04.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-05.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-06.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-07.png"
+      ],
+      "figma_page_name": "Round 01 \u00b7 Variant 1",
+      "figma_url": null,
+      "figma_page_url": null,
+      "render_status": "complete",
+      "likely_targets": [
+        "figma_plugin/code.js"
+      ]
+    },
+    {
+      "variant_id": "studio-20260402-150945-745c16-variant-3",
+      "ordinal": 3,
+      "job_id": "studio-20260402-150945-745c16-v3",
+      "style": "Device Mockup Gradient",
+      "style_family": "reference_device_mockup_gradient",
+      "style_recipe": "device_mockup_gradient_v1",
+      "copy_length": "Tight",
+      "feedback": "the text is too small and hard too read on every slide, plus the blank phone is on",
+      "slide_references": [
+        {
+          "token": "/slide_7",
+          "slide_number": 7,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v3\\slide-07.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v3/slide-07.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v3\\slide-07.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v3/slide-07.png"
+        }
+      ],
+      "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\studio-20260402-150945-745c16-v3.json",
+      "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\studio-20260402-150945-745c16-v3.render.json",
+      "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\studio-20260402-150945-745c16-v3.render-result.json",
+      "preview_image_paths": [
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v3\\slide-01.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v3\\slide-02.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v3\\slide-03.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v3\\slide-04.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v3\\slide-05.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v3\\slide-06.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v3\\slide-07.png"
+      ],
+      "export_paths": [
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v3\\slide-01.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v3\\slide-02.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v3\\slide-03.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v3\\slide-04.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v3\\slide-05.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v3\\slide-06.png",
+        "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v3\\slide-07.png"
+      ],
+      "figma_page_name": "Round 01 \u00b7 Variant 3 (2)",
+      "figma_url": null,
+      "figma_page_url": null,
+      "render_status": "complete",
+      "likely_targets": [
+        "figma_plugin/code.js"
+      ]
+    }
+  ],
+  "suggested_targets": [
+    "figma_plugin/code.js",
+    "tools/carousel_system/render_payload.py"
+  ],
+  "validate_commands": [
+    "python -m compileall tools",
+    "node --check figma_plugin\\code.js"
+  ]
+}

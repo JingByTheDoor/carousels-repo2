@@ -696,9 +696,13 @@ def _build_cta_copy_segments(cta_text: str, headline: str, language: str) -> tup
     normalized = _normalize_text(cta_text)
     if not normalized:
         return None, None
+    if _is_redundant_cta_fragment(normalized, headline):
+        return None, None
 
     shared_prefix_stripped = _strip_shared_prefix(normalized, headline)
     audience_text = shared_prefix_stripped or normalized
+    if _is_redundant_cta_fragment(audience_text, headline):
+        return None, None
     primary_seed, secondary_seed = _split_cta_audience(audience_text)
     body_display = _truncate_to_limit(primary_seed, 40)
     supporting_text = _truncate_to_limit(secondary_seed, 32) if secondary_seed else None

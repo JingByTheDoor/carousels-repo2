@@ -229,3 +229,4 @@
   - image slides can justify the phone shell
   - text-only slides should not show a decorative empty device shell
   This produces a cleaner family distinction and removes the “wonky thin phone on blank slides” failure mode.
+- The placeholder-media family cannot rely on fixed text Y positions. Long headlines need downstream body/image blocks to anchor off measured text height, otherwise dense review-safe copy produces headline/body overlap and cover overflow.

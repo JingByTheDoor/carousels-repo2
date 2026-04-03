@@ -1,0 +1,108 @@
+{
+  "round_id": "studio-20260402-150945-745c16",
+  "created_at": "2026-04-02T15:10:05.123602+00:00",
+  "round_number": 1,
+  "generated_brief": "Low-prep writing activities that help English students think faster",
+  "winner": {
+    "variant_id": "studio-20260402-150945-745c16-variant-2",
+    "ordinal": 2,
+    "style": "Light Grain Glow",
+    "style_family": "reference_light_grain_glow",
+    "copy_length": "Expanded",
+    "feedback": "preaty good only problem is the bold title and the lower text bellow have the same text",
+    "figma_url": null,
+    "figma_page_url": null,
+    "slide_references": [
+      {
+        "token": "/slide_7",
+        "slide_number": 7,
+        "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v2\\slide-07.png",
+        "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v2/slide-07.png",
+        "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v2\\slide-07.png",
+        "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v2/slide-07.png"
+      }
+    ]
+  },
+  "losers": [
+    {
+      "variant_id": "studio-20260402-150945-745c16-variant-1",
+      "ordinal": 1,
+      "style": "Placeholder Media Glow",
+      "style_family": "reference_placeholder_media_glow",
+      "copy_length": "Balanced",
+      "feedback": "the text slides off the screen the text is overlapping the bold text and the small text are the same thing",
+      "figma_url": null,
+      "figma_page_url": null,
+      "slide_references": [
+        {
+          "token": "/slide_1",
+          "slide_number": 1,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-01.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v1/slide-01.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-01.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v1/slide-01.png"
+        },
+        {
+          "token": "/slide_2",
+          "slide_number": 2,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-02.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v1/slide-02.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-02.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v1/slide-02.png"
+        },
+        {
+          "token": "/slide_4",
+          "slide_number": 4,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-04.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v1/slide-04.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-04.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v1/slide-04.png"
+        },
+        {
+          "token": "/slide_5",
+          "slide_number": 5,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-05.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v1/slide-05.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-05.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v1/slide-05.png"
+        },
+        {
+          "token": "/slide_6",
+          "slide_number": 6,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-06.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v1/slide-06.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-06.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v1/slide-06.png"
+        },
+        {
+          "token": "/slide_7",
+          "slide_number": 7,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v1\\slide-07.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v1/slide-07.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v1\\slide-07.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v1/slide-07.png"
+        }
+      ]
+    },
+    {
+      "variant_id": "studio-20260402-150945-745c16-variant-3",
+      "ordinal": 3,
+      "style": "Device Mockup Gradient",
+      "style_family": "reference_device_mockup_gradient",
+      "copy_length": "Tight",
+      "feedback": "the text is too small and hard too read on every slide, plus the blank phone is on",
+      "figma_url": null,
+      "figma_page_url": null,
+      "slide_references": [
+        {
+          "token": "/slide_7",
+          "slide_number": 7,
+          "export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\studio-20260402-150945-745c16-v3\\slide-07.png",
+          "export_url": "/tmp-output/exports/studio-20260402-150945-745c16-v3/slide-07.png",
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260402-150945-745c16-v3\\slide-07.png",
+          "preview_url": "/studio-output/previews/studio-20260402-150945-745c16-v3/slide-07.png"
+        }
+      ]
+    }
+  ]
+}

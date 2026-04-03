@@ -2147,32 +2147,34 @@ async function renderPlaceholderMediaCoverSlide(frame, slide, payload) {
     overlayOpacity: 0.04
   });
 
-  await createTextBlock(card, {
+  const headlineNode = await createTextBlock(card, {
     text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.cover_family,
     fontStyle: payload.typography.cover_style,
     fallbackStyle: "Bold",
     x: 58,
     y: 632,
-    width: 780,
-    maxHeight: 330,
+    width: 820,
+    maxHeight: 434,
     maxSize: 94,
-    minSize: 38,
+    minSize: 26,
     lineHeight: 1.0,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
 
   if (slide.body_display || slide.body) {
+    const bodyY = headlineNode.y + headlineNode.height + 26;
+    const remainingHeight = Math.max(64, 1096 - bodyY);
     await createTextBlock(card, {
       text: slide.body_display || slide.body,
       fontFamily: payload.typography.body_family,
       fontStyle: payload.typography.body_style,
       fallbackStyle: "Regular",
       x: 58,
-      y: 986,
+      y: bodyY,
       width: 700,
-      maxHeight: 80,
+      maxHeight: remainingHeight,
       maxSize: 28,
       minSize: 16,
       lineHeight: 1.14,
@@ -2363,7 +2365,7 @@ async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
 
   await appendLabelPill(card, 744, 44, `0${slide.slide_number}`, tokens.accent_navy, "#FFFFFF");
 
-  await createTextBlock(card, {
+  const headlineNode = await createTextBlock(card, {
     text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
@@ -2373,33 +2375,36 @@ async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
     width: 780,
     maxHeight: 200,
     maxSize: 76,
-    minSize: 32,
+    minSize: 26,
     lineHeight: 1.04,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
 
-  await createTextBlock(card, {
+  const bodyY = headlineNode.y + headlineNode.height + 20;
+  const bodyNode = await createTextBlock(card, {
     text: slide.body_display || slide.body || "",
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: 56,
-    y: 286,
+    y: bodyY,
     width: 760,
-    maxHeight: 228,
+    maxHeight: 244,
     maxSize: 42,
-    minSize: 22,
+    minSize: 18,
     lineHeight: 1.2,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
   });
 
+  const imageY = Math.max(598, bodyNode.y + bodyNode.height + 56);
+  const imageHeight = Math.max(240, 1060 - imageY);
   await appendRemoteImageRect(card, slide, {
     x: 56,
-    y: 598,
+    y: imageY,
     width: 824,
-    height: 362,
+    height: imageHeight,
     cornerRadius: 32,
     opacity: 0.98,
     overlayHex: "#FFFFFF",
@@ -2683,11 +2688,11 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
   }
 
   const textX = hasMedia ? (deviceOnRight ? 86 : 612) : 92;
-  const textWidth = hasMedia ? 394 : 734;
-  const bodyWidth = hasMedia ? 382 : 700;
+  const textWidth = hasMedia ? 394 : 812;
+  const bodyWidth = hasMedia ? 382 : 770;
   const deviceX = deviceOnRight ? 612 : 86;
   await appendLabelPill(frame, textX, 124, `0${slide.slide_number}`, tokens.accent_blue, tokens.text_dark);
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
@@ -2696,8 +2701,8 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
     y: 214,
     width: textWidth,
     maxHeight: 240,
-    maxSize: hasMedia ? 70 : 84,
-    minSize: 32,
+    maxSize: hasMedia ? 72 : 88,
+    minSize: hasMedia ? 34 : 36,
     lineHeight: 1.02,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
@@ -2709,11 +2714,11 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: textX,
-    y: 468,
+    y: headlineNode.y + headlineNode.height + 34,
     width: bodyWidth,
-    maxHeight: hasMedia ? 268 : 340,
-    maxSize: 34,
-    minSize: 18,
+    maxHeight: hasMedia ? 292 : 420,
+    maxSize: hasMedia ? 38 : 42,
+    minSize: hasMedia ? 20 : 22,
     lineHeight: 1.18,
     color: tokens.text_dark,
     alignHorizontal: "LEFT"
@@ -2723,31 +2728,6 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
     await appendDeviceMockupShell(frame, slide, deviceX, 126, 382, 1048, tokens, {
       screenOpacity: 0.98,
       overlayOpacity: 0.03
-    });
-  } else {
-    const accent = appendSurfaceCard(frame, deviceOnRight ? 744 : 746, 934, 248, 216, {
-      fillHex: "#FFFFFF",
-      fillOpacity: 0.5,
-      cornerRadius: 34,
-      strokeHex: "#DDE5F4",
-      strokeOpacity: 0.6,
-      shadow: false
-    });
-    await appendLabelPill(accent, 26, 26, "Text-first", tokens.accent_blue, tokens.text_dark);
-    await createTextBlock(accent, {
-      text: "No phone frame on text-only slides.",
-      fontFamily: payload.typography.body_family,
-      fontStyle: payload.typography.body_style,
-      fallbackStyle: "Regular",
-      x: 24,
-      y: 94,
-      width: 198,
-      maxHeight: 86,
-      maxSize: 20,
-      minSize: 14,
-      lineHeight: 1.16,
-      color: "#52607B",
-      alignHorizontal: "LEFT"
     });
   }
 }
@@ -2776,66 +2756,79 @@ async function renderTwitterCardCtaSlide(frame, slide, payload) {
 
 async function renderDeviceMockupCtaSlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
+  const hasMedia = !!slide.image_asset;
   appendSoftGradientBackdrop(frame, tokens, "sky");
+  const align = hasMedia ? "LEFT" : "CENTER";
+  const headlineX = hasMedia ? 92 : 110;
+  const headlineWidth = hasMedia ? 470 : 860;
+  const bodyX = hasMedia ? 92 : 160;
+  const bodyWidth = hasMedia ? 420 : 760;
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline_short || slide.headline,
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
-    x: 92,
+    x: headlineX,
     y: 226,
-    width: 470,
+    width: headlineWidth,
     maxHeight: 250,
-    maxSize: 74,
-    minSize: 34,
+    maxSize: hasMedia ? 74 : 92,
+    minSize: hasMedia ? 34 : 40,
     lineHeight: 1.02,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: align
   });
 
+  let bodyBottom = headlineNode.y + headlineNode.height;
   if (slide.body_display || slide.body) {
-    await createTextBlock(frame, {
+    const bodyNode = await createTextBlock(frame, {
       text: slide.body_display || slide.body,
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
-      x: 92,
-      y: 520,
-      width: 420,
-      maxHeight: 118,
-      maxSize: 28,
-      minSize: 18,
+      x: bodyX,
+      y: headlineNode.y + headlineNode.height + 34,
+      width: bodyWidth,
+      maxHeight: hasMedia ? 118 : 150,
+      maxSize: hasMedia ? 28 : 34,
+      minSize: hasMedia ? 18 : 20,
       lineHeight: 1.16,
       color: tokens.text_dark,
-      alignHorizontal: "LEFT"
+      alignHorizontal: align
     });
+    bodyBottom = bodyNode.y + bodyNode.height;
   }
 
   if (slide.supporting_text) {
-    await createTextBlock(frame, {
+    const supportingNode = await createTextBlock(frame, {
       text: slide.supporting_text,
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
-      x: 92,
-      y: 662,
-      width: 396,
+      x: hasMedia ? 92 : 190,
+      y: bodyBottom + 24,
+      width: hasMedia ? 396 : 700,
       maxHeight: 80,
       maxSize: 24,
       minSize: 14,
       lineHeight: 1.14,
       color: "#596177",
-      alignHorizontal: "LEFT"
+      alignHorizontal: align
     });
+    bodyBottom = supportingNode.y + supportingNode.height;
   }
 
-  await appendLabelPill(frame, 92, 824, slide.button_label || "Follow for more", tokens.accent_blue, tokens.text_dark);
-  await appendDeviceMockupShell(frame, slide, 602, 142, 382, 1060, tokens, {
-    screenOpacity: 1,
-    overlayOpacity: 0,
-    useDecorativeScreen: true
-  });
+  const buttonX = hasMedia ? 92 : 350;
+  const buttonY = hasMedia ? 824 : Math.min(1010, bodyBottom + 92);
+  await appendLabelPill(frame, buttonX, buttonY, slide.button_label || "Follow for more", tokens.accent_blue, tokens.text_dark);
+  if (hasMedia) {
+    await appendDeviceMockupShell(frame, slide, 602, 142, 382, 1060, tokens, {
+      screenOpacity: 1,
+      overlayOpacity: 0,
+      useDecorativeScreen: true
+    });
+  }
 }
 
 function appendNestedSquares(parent, baseNode, tokens) {

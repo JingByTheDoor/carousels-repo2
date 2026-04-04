@@ -741,6 +741,8 @@ def _clear_active_round(round_id: str | None) -> None:
 def acquire_next_studio_render_variant() -> StudioVariantRecord | None:
     for round_path in _iter_round_paths():
         round_record = StudioRoundRecord.model_validate_json(round_path.read_text(encoding="utf-8"))
+        if round_record.round_mode == "review" and round_record.review_status in {"submitted", "discarded"}:
+            continue
         updated = False
         for variant in round_record.variants:
             job_path = Path(variant.job_artifact_path)

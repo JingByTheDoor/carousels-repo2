@@ -258,6 +258,10 @@
         return serverUrlInput.value.trim().replace(/\/+$/, "");
       }
 
+      function isStudioPayload(payload) {
+        return Boolean(payload && typeof payload.job_id === "string" && payload.job_id.startsWith("studio-"));
+      }
+
       function setAutoMode(nextState) {
         autoMode = nextState;
         autoButton.textContent = autoMode ? "Stop Auto Mode" : "Start Auto Mode";
@@ -482,7 +486,10 @@
         if (message.type === "render-complete") {
           isRendering = false;
           updateResult(message.result);
-          if (currentBridgeJobId) {
+          const shouldPostBack =
+            Boolean(currentBridgeJobId) || (isStudioPayload(currentPayload) && Boolean(getServerUrl()));
+          if (shouldPostBack) {
+            currentBridgeJobId = currentBridgeJobId || message.result?.job_id || currentPayload?.job_id || null;
             setStatus("Render complete. Posting result back to the local bridge...", "");
             parent.postMessage(
               {
@@ -505,7 +512,10 @@
         if (message.type === "render-error") {
           isRendering = false;
           const errorText = message.message || "Render failed.";
-          if (currentBridgeJobId) {
+          const shouldReportBack =
+            Boolean(currentBridgeJobId) || (isStudioPayload(currentPayload) && Boolean(getServerUrl()));
+          if (shouldReportBack) {
+            currentBridgeJobId = currentBridgeJobId || currentPayload?.job_id || null;
             setStatus(`Render failed. Reporting the error back to the local bridge: ${errorText}`, "error");
             parent.postMessage(
               {

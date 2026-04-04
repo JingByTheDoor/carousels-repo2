@@ -1,0 +1,164 @@
+{
+  "round_id": "studio-20260404-000925-739956",
+  "created_at": "2026-04-04T00:09:43.774224+00:00",
+  "round_number": 1,
+  "generated_brief": "Low-prep writing activities that help English students think faster",
+  "winner": {
+    "variant_id": "studio-20260404-000925-739956-variant-2",
+    "ordinal": 2,
+    "style": "Light Grain Glow",
+    "style_family": "reference_light_grain_glow",
+    "copy_length": "Expanded",
+    "feedback": "this is only the winner because it has the least ammount of issues The body text is touching the bold text, which makes it difficult to read. The overflow seems to happen only on slides that contain an image, so the image may be causing the issue. The body text is touching the bold text, which makes it difficult to read. The overflow seems to happen only on slides that contain an image, so the image may be causing the issue. This issue does not appear here. Even though the slide includes an image, the text is not overflowing.",
+    "figma_url": null,
+    "figma_page_url": null,
+    "slide_references": [
+      {
+        "token": "/slide_2",
+        "slide_number": 2,
+        "export_path": null,
+        "export_url": null,
+        "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v2\\slide-02.png",
+        "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v2/slide-02.png"
+      },
+      {
+        "token": "/slide_3",
+        "slide_number": 3,
+        "export_path": null,
+        "export_url": null,
+        "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v2\\slide-03.png",
+        "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v2/slide-03.png"
+      },
+      {
+        "token": "/slide_5",
+        "slide_number": 5,
+        "export_path": null,
+        "export_url": null,
+        "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v2\\slide-05.png",
+        "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v2/slide-05.png"
+      }
+    ]
+  },
+  "losers": [
+    {
+      "variant_id": "studio-20260404-000925-739956-variant-1",
+      "ordinal": 1,
+      "style": "Placeholder Media Glow",
+      "style_family": "reference_placeholder_media_glow",
+      "copy_length": "Balanced",
+      "feedback": "The text is overflowing off the page, so part of it is not visible. The body text is touching the bold heading, which makes it hard to read. The body text is touching the bold heading, which makes it hard to read. The body text is touching the bold heading, which makes it hard to read. The body text is touching the bold heading, which makes it hard to read. The body text is touching the bold heading, which makes it hard to read.",
+      "figma_url": null,
+      "figma_page_url": null,
+      "slide_references": [
+        {
+          "token": "/slide_1",
+          "slide_number": 1,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v1\\slide-01.png",
+          "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v1/slide-01.png"
+        },
+        {
+          "token": "/slide_2",
+          "slide_number": 2,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v1\\slide-02.png",
+          "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v1/slide-02.png"
+        },
+        {
+          "token": "/slide_3",
+          "slide_number": 3,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v1\\slide-03.png",
+          "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v1/slide-03.png"
+        },
+        {
+          "token": "/slide_4",
+          "slide_number": 4,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v1\\slide-04.png",
+          "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v1/slide-04.png"
+        },
+        {
+          "token": "/slide_5",
+          "slide_number": 5,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v1\\slide-05.png",
+          "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v1/slide-05.png"
+        },
+        {
+          "token": "/slide_6",
+          "slide_number": 6,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v1\\slide-06.png",
+          "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v1/slide-06.png"
+        }
+      ]
+    },
+    {
+      "variant_id": "studio-20260404-000925-739956-variant-3",
+      "ordinal": 3,
+      "style": "Device Mockup Gradient",
+      "style_family": "reference_device_mockup_gradient",
+      "copy_length": "Tight",
+      "feedback": "The body text is touching the bold text, which makes it difficult to read. The overflow seems to happen only on slides that contain an image, so the image may be causing the issue. The body text is touching the bold text, which makes it difficult to read. The overflow seems to happen only on slides that contain an image, so the image may be causing the issue. The body text is touching the bold text, which makes it difficult to read. The overflow seems to happen only on slides that contain an image, so the image may be causing the issue. The body text is touching the bold text, which makes it difficult to read. The overflow seems to happen only on slides that contain an image, so the image may be causing the issue. The body text is touching the bold text, which makes it difficult to read. The overflow seems to happen only on slides that contain an image, so the image may be causing the issue. The \u201cFollow for more\u201d image or graphic is touching the bold text, which should not be happening.",
+      "figma_url": null,
+      "figma_page_url": null,
+      "slide_references": [
+        {
+          "token": "/slide_2",
+          "slide_number": 2,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v3\\slide-02.png",
+          "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v3/slide-02.png"
+        },
+        {
+          "token": "/slide_3",
+          "slide_number": 3,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v3\\slide-03.png",
+          "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v3/slide-03.png"
+        },
+        {
+          "token": "/slide_4",
+          "slide_number": 4,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v3\\slide-04.png",
+          "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v3/slide-04.png"
+        },
+        {
+          "token": "/slide_5",
+          "slide_number": 5,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v3\\slide-05.png",
+          "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v3/slide-05.png"
+        },
+        {
+          "token": "/slide_6",
+          "slide_number": 6,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v3\\slide-06.png",
+          "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v3/slide-06.png"
+        },
+        {
+          "token": "/slide_7",
+          "slide_number": 7,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260404-000925-739956-v3\\slide-07.png",
+          "preview_url": "/studio-output/previews/studio-20260404-000925-739956-v3/slide-07.png"
+        }
+      ]
+    }
+  ]
+}

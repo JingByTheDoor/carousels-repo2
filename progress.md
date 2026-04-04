@@ -334,6 +334,13 @@
 - Verified:
   - `node --check figma_plugin\\code.js`
   - `python -m compileall tools`
+- Applied the latest saved review pass from `studio-20260404-000925-739956`:
+  - `light_grain_glow` body slides now place body copy from the measured headline bottom instead of a brittle fixed Y value
+  - `placeholder_media` body slides now add extra headline/body clearance and push the image block down from the compensated body bottom
+  - `device_mockup` body and CTA slides now use compensated text-bottom spacing, and the CTA pill has a safer minimum Y so it no longer collides with the headline
+- Verified:
+  - `node --check figma_plugin\\code.js`
+  - `python -m compileall tools`
   - CTA copy smoke test: duplicate `Follow for more ...` body now collapses to `None`, while meaningful tails like `for busy teachers` survive
 - Reduced review-mode post-render overhead:
   - Studio review rounds now generate payloads with `output_modes=["figma"]`

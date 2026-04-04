@@ -2243,7 +2243,7 @@ async function renderLightGrainBodySlide(frame, slide, payload) {
     });
   }
 
-  await createTextBlock(panel, {
+  const headlineNode = await createTextBlock(panel, {
     text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
@@ -2259,13 +2259,14 @@ async function renderLightGrainBodySlide(frame, slide, payload) {
     alignHorizontal: "LEFT"
   });
 
+  const bodyY = Math.max(hasMedia ? 516 : 430, getTextBottom(headlineNode, 82, 22));
   await createTextBlock(panel, {
     text: slide.body_display || slide.body || slide.headline_display || slide.headline,
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: textX,
-    y: 462,
+    y: bodyY,
     width: textWidth,
     maxHeight: 330,
     maxSize: 40,
@@ -2383,7 +2384,7 @@ async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
     alignHorizontal: "LEFT"
   });
 
-  const bodyY = headlineNode.y + headlineNode.height + 20;
+  const bodyY = Math.max(256, getTextBottom(headlineNode, 76, 18));
   const bodyNode = await createTextBlock(card, {
     text: slide.body_display || slide.body || "",
     fontFamily: payload.typography.body_family,
@@ -2400,7 +2401,7 @@ async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
     alignHorizontal: "LEFT"
   });
 
-  const imageY = Math.max(598, bodyNode.y + bodyNode.height + 56);
+  const imageY = Math.max(630, getTextBottom(bodyNode, 42, 44));
   const imageHeight = Math.max(240, 1060 - imageY);
   await appendRemoteImageRect(card, slide, {
     x: 56,
@@ -2710,13 +2711,14 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
     alignHorizontal: "LEFT"
   });
 
+  const bodyY = Math.max(hasMedia ? 430 : 344, getTextBottom(headlineNode, hasMedia ? 72 : 88, 18));
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: textX,
-    y: headlineNode.y + headlineNode.height + 34,
+    y: bodyY,
     width: bodyWidth,
     maxHeight: hasMedia ? 292 : 420,
     maxSize: hasMedia ? 38 : 42,
@@ -2784,7 +2786,8 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
     alignHorizontal: align
   });
 
-  let bodyBottom = headlineNode.y + headlineNode.height;
+  const ctaBodyY = getTextBottom(headlineNode, hasMedia ? 74 : 92, 18);
+  let bodyBottom = getTextBottom(headlineNode, hasMedia ? 74 : 92, 0);
   if (slide.body_display || slide.body) {
     const bodyNode = await createTextBlock(frame, {
       text: slide.body_display || slide.body,
@@ -2792,7 +2795,7 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: bodyX,
-      y: headlineNode.y + headlineNode.height + 34,
+      y: ctaBodyY,
       width: bodyWidth,
       maxHeight: hasMedia ? 118 : 150,
       maxSize: hasMedia ? 28 : 34,
@@ -2801,7 +2804,7 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
       color: tokens.text_dark,
       alignHorizontal: align
     });
-    bodyBottom = bodyNode.y + bodyNode.height;
+    bodyBottom = getTextBottom(bodyNode, hasMedia ? 28 : 34, 0);
   }
 
   if (slide.supporting_text) {
@@ -2820,11 +2823,13 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
       color: "#596177",
       alignHorizontal: align
     });
-    bodyBottom = supportingNode.y + supportingNode.height;
+    bodyBottom = getTextBottom(supportingNode, 24, 0);
   }
 
   const buttonX = hasMedia ? 92 : 350;
-  const buttonY = hasMedia ? 824 : Math.min(1010, bodyBottom + 92);
+  const buttonY = hasMedia
+    ? Math.max(824, bodyBottom + 72)
+    : Math.min(1010, Math.max(824, bodyBottom + 96));
   await appendLabelPill(frame, buttonX, buttonY, slide.button_label || "Follow for more", tokens.accent_blue, tokens.text_dark);
   if (hasMedia) {
     await appendDeviceMockupShell(frame, slide, 602, 142, 382, 1060, tokens, {
@@ -4121,6 +4126,12 @@ async function createTextBlock(parent, options) {
   node.x = options.x;
   node.y = options.y;
   return node;
+}
+
+function getTextBottom(node, fallbackFontSize, extraPadding) {
+  const fontSize = typeof node.fontSize === "number" ? node.fontSize : fallbackFontSize;
+  const overshoot = Math.max(12, Math.round(fontSize * 0.4));
+  return Math.round(node.y + node.height + overshoot + (extraPadding || 0));
 }
 
 async function loadPreferredFont(family, style, fallbackStyle) {

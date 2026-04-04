@@ -1,0 +1,41 @@
+{
+  "feedback_entries": 21,
+  "issue_counts": {
+    "uncategorized": 9,
+    "overlap": 5,
+    "whitespace": 4,
+    "cta_duplication": 3,
+    "weak_images": 3,
+    "decorative_mismatch": 2
+  },
+  "family_issue_counts": {
+    "reference_alder_split_media": {
+      "whitespace": 2,
+      "uncategorized": 1,
+      "decorative_mismatch": 1
+    },
+    "reference_device_mockup_gradient": {
+      "uncategorized": 2,
+      "overlap": 1,
+      "whitespace": 1,
+      "weak_images": 1,
+      "decorative_mismatch": 1
+    },
+    "reference_light_grain_glow": {
+      "uncategorized": 3,
+      "cta_duplication": 2,
+      "whitespace": 1,
+      "overlap": 1
+    },
+    "reference_placeholder_media_glow": {
+      "overlap": 2,
+      "weak_images": 1
+    },
+    "reference_twitter_card_soft": {
+      "uncategorized": 3,
+      "overlap": 1,
+      "weak_images": 1,
+      "cta_duplication": 1
+    }
+  }
+}

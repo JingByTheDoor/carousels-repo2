@@ -51,6 +51,7 @@ GenerationMode = Literal["standard", "review"]
 TextDensity = Literal["low", "medium", "high"]
 LayoutPreference = Literal["hero", "editorial", "mask_left", "spotlight", "cta"]
 VisualPriority = Literal["headline", "body", "cta"]
+RenderWarningSeverity = Literal["info", "warning", "error"]
 ImageMode = Literal["auto", "none", "stock", "ai", "hybrid"]
 ResolvedImageMode = Literal["none", "stock", "ai", "hybrid"]
 ImageProvider = Literal["pexels", "unsplash", "openai_gpt_image"]
@@ -394,6 +395,27 @@ class PluginExportImage(BaseModel):
         return cleaned or None
 
 
+class PluginRenderWarning(BaseModel):
+    slide_number: int
+    code: str = Field(min_length=1)
+    severity: RenderWarningSeverity = "warning"
+    message: str = Field(min_length=1)
+
+
+class PluginFitMetric(BaseModel):
+    slide_number: int
+    role: Literal["cover", "body", "cta"]
+    headline_font_size: int | None = None
+    body_font_size: int | None = None
+    headline_lines: int | None = None
+    body_lines: int | None = None
+    content_top: int | None = None
+    content_bottom: int | None = None
+    occupied_height_ratio: float | None = None
+    truncated: bool = False
+    image_rendered: bool = False
+
+
 class PluginRenderResult(BaseModel):
     schema_version: Literal["figma_plugin_result_v1"] = "figma_plugin_result_v1"
     job_id: str
@@ -405,6 +427,8 @@ class PluginRenderResult(BaseModel):
     slide_node_ids: list[str] = Field(default_factory=list)
     preview_images: list[PluginPreviewImage] = Field(default_factory=list)
     export_images: list[PluginExportImage] = Field(default_factory=list)
+    render_warnings: list[PluginRenderWarning] = Field(default_factory=list)
+    fit_metrics: list[PluginFitMetric] = Field(default_factory=list)
     rendered_at: str
 
 

@@ -151,8 +151,6 @@ def resolve_image_assets(settings: Settings, record: CarouselOutput, payload: Pl
         if asset:
             assets.append(asset)
 
-    assets = _backfill_missing_review_assets(requests, assets)
-
     if assets:
         record.image_assets = assets
         _attach_assets_to_payload(payload, assets)
@@ -349,7 +347,7 @@ def _find_and_cache_pexels_asset(
                 best = candidate
                 break
     if best is None:
-        best = ranked[0]
+        return None
 
     used_photo_ids.add(best.photo_id)
     alt_signature = _compact_keywords(best.alt_text, max_words=8)
@@ -423,33 +421,6 @@ def _generate_ai_asset(
         credit="Generated with OpenAI",
         alt_text=revised_prompt,
     )
-
-
-def _backfill_missing_review_assets(requests: list[ImageRequest], assets: list[ImageAsset]) -> list[ImageAsset]:
-    if not requests or not assets:
-        return assets
-    asset_map = {asset.slide_number: asset for asset in assets}
-    fallback_assets = list({asset.local_path: asset for asset in assets}.values())
-    for request in requests:
-        if request.slide_number in asset_map:
-            continue
-        fallback_asset = fallback_assets[(request.slide_number - 1) % len(fallback_assets)]
-        asset_map[request.slide_number] = ImageAsset(
-            slide_number=request.slide_number,
-            role=request.role,
-            source_mode=fallback_asset.source_mode,
-            provider=fallback_asset.provider,
-            query_or_prompt=request.query,
-            original_url=fallback_asset.original_url,
-            local_path=fallback_asset.local_path,
-            credit=fallback_asset.credit,
-            width=fallback_asset.width,
-            height=fallback_asset.height,
-            alt_text=fallback_asset.alt_text,
-        )
-    return [asset_map[request.slide_number] for request in requests if request.slide_number in asset_map]
-
-
 def _search_pexels_candidates(settings: Settings, query: str, *, language: str) -> list[PexelsCandidate]:
     locale = LOCALE_BY_LANGUAGE.get(language.lower(), "en-US")
     params = urlencode(

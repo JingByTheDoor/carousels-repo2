@@ -15,7 +15,7 @@ from carousel_system.models import (
     TypographyTokens,
     VisualPriority,
 )
-from carousel_system.style_library import select_style_recipe
+from carousel_system.style_library import StyleRecipeSpec, select_style_recipe
 
 LIGHT_GLOW_STYLE_RECIPES = {
     "light_grain_glow_v1",
@@ -150,7 +150,7 @@ def build_plugin_render_payload(
     slides: list[RenderSlideSpec] = []
 
     for slide in record.content_plan:
-        slides.append(_build_render_slide(record, slide, language, recipe.style_recipe))
+        slides.append(_build_render_slide(record, slide, language, recipe))
 
     return PluginRenderPayload(
         job_id=record.job_id,
@@ -175,7 +175,8 @@ def write_plugin_render_payload(output_path: Path, payload: PluginRenderPayload)
     return output_path
 
 
-def _build_render_slide(record: CarouselOutput, slide, language: str, style_recipe: str) -> RenderSlideSpec:
+def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: StyleRecipeSpec) -> RenderSlideSpec:
+    style_recipe = recipe.style_recipe
     if slide.slide_role == "hook":
         if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}:
             hook_limit = 44
@@ -283,18 +284,25 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
         )
         headline_short = _shorten_headline(slide.headline, language, hard_limit=cta_headline_limit)
         body_display, supporting_text = _build_cta_copy_segments(cta_source, slide.headline, language)
-        button_label = (
-            None
-            if style_recipe in {
-                "sadekov_black_profile_minimal_v1",
-                "sadekov_white_profile_minimal_v1",
-                "typography_editorial_light_v1",
-                "creator_mono_minimal_v1",
-                *LIGHT_GLOW_STYLE_RECIPES,
-                *TWITTER_CARD_STYLE_RECIPES,
-            }
-            else _build_cta_button_label(language)
-        )
+        allow_supporting_copy = recipe.render_profile.cta_mode in {"headline_supporting", "headline_supporting_button"}
+        allow_button = recipe.render_profile.cta_mode in {"headline_button", "headline_supporting_button"}
+        if not allow_supporting_copy:
+            body_display = None
+            supporting_text = None
+        else:
+            body_display, supporting_text = _dedupe_cta_segments(body_display, supporting_text, slide.headline)
+        button_label = _build_cta_button_label(language) if allow_button else None
+        display_headline = slide.headline
+        if recipe.render_profile.cta_mode in {"headline_only", "headline_button"} and headline_short:
+            display_headline = headline_short
+        elif style_recipe in {
+            "sadekov_black_profile_minimal_v1",
+            "sadekov_white_profile_minimal_v1",
+            "typography_editorial_light_v1",
+            *LIGHT_GLOW_STYLE_RECIPES,
+            *TWITTER_CARD_STYLE_RECIPES,
+        } and headline_short:
+            display_headline = headline_short
         return RenderSlideSpec(
             slide_number=slide.slide_number,
             slide_role=slide.slide_role,
@@ -304,21 +312,11 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, style_reci
             text_align="center",
             headline=slide.headline,
             headline_short=headline_short,
-            headline_display=(
-                headline_short or slide.headline
-                if style_recipe in {
-                    "sadekov_black_profile_minimal_v1",
-                    "sadekov_white_profile_minimal_v1",
-                    "typography_editorial_light_v1",
-                    *LIGHT_GLOW_STYLE_RECIPES,
-                    *TWITTER_CARD_STYLE_RECIPES,
-                }
-                else slide.headline
-            ),
+            headline_display=display_headline,
             body=None,
             body_short=None,
-            body_display=None,
-            supporting_text=None,
+            body_display=body_display,
+            supporting_text=supporting_text,
             button_label=button_label,
             text_density=_cta_density(slide.headline, cta_source),
             visual_priority="cta",
@@ -709,6 +707,20 @@ def _build_cta_copy_segments(cta_text: str, headline: str, language: str) -> tup
 
     if body_display == audience_text and len(body_display) > 40:
         body_display = _shorten_body(audience_text, language, hard_limit=40)
+    if body_display and _is_redundant_cta_fragment(body_display, headline):
+        body_display = None
+    if supporting_text and _is_redundant_cta_fragment(supporting_text, headline):
+        supporting_text = None
+    return body_display, supporting_text
+
+
+def _dedupe_cta_segments(
+    body_display: str | None,
+    supporting_text: str | None,
+    headline: str,
+) -> tuple[str | None, str | None]:
+    if body_display and supporting_text and _is_redundant_cta_fragment(supporting_text, body_display):
+        supporting_text = None
     if body_display and _is_redundant_cta_fragment(body_display, headline):
         body_display = None
     if supporting_text and _is_redundant_cta_fragment(supporting_text, headline):

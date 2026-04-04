@@ -1,9 +1,44 @@
 from __future__ import annotations
 
 import hashlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Literal
 
 from carousel_system.models import CarouselOutput, StyleTokens, TypographyTokens
+
+
+SelectionTier = Literal["review_safe", "default_auto", "specialty_manual_only"]
+CtaMode = Literal["headline_only", "headline_button", "headline_supporting", "headline_supporting_button"]
+FooterMode = Literal["none", "minimal", "signals", "profile", "tweet_actions", "retro_creator"]
+MediaMode = Literal["text_only", "optional_cover", "optional_inline", "device_conditional", "tweet_card"]
+DecorationIntensity = Literal["low", "medium", "high"]
+SpacingProfile = Literal["tight", "balanced", "airy", "editorial"]
+
+
+@dataclass(frozen=True)
+class StyleRenderProfile:
+    cta_mode: CtaMode = "headline_only"
+    footer_mode: FooterMode = "minimal"
+    media_mode: MediaMode = "text_only"
+    decoration_intensity: DecorationIntensity = "medium"
+    spacing_profile: SpacingProfile = "balanced"
+
+
+def render_profile(
+    *,
+    cta_mode: CtaMode = "headline_only",
+    footer_mode: FooterMode = "minimal",
+    media_mode: MediaMode = "text_only",
+    decoration_intensity: DecorationIntensity = "medium",
+    spacing_profile: SpacingProfile = "balanced",
+) -> StyleRenderProfile:
+    return StyleRenderProfile(
+        cta_mode=cta_mode,
+        footer_mode=footer_mode,
+        media_mode=media_mode,
+        decoration_intensity=decoration_intensity,
+        spacing_profile=spacing_profile,
+    )
 
 
 @dataclass(frozen=True)
@@ -13,6 +48,8 @@ class StyleRecipeSpec:
     reference_node_ids: tuple[str, ...]
     style_tokens: StyleTokens
     typography: TypographyTokens
+    selection_tier: SelectionTier = "default_auto"
+    render_profile: StyleRenderProfile = field(default_factory=StyleRenderProfile)
 
 
 ALDER_RECIPE = StyleRecipeSpec(
@@ -43,6 +80,13 @@ ALDER_RECIPE = StyleRecipeSpec(
         cta_body_family="Inter",
         cta_body_style="Regular",
     ),
+    render_profile=render_profile(
+        cta_mode="headline_button",
+        footer_mode="minimal",
+        media_mode="text_only",
+        decoration_intensity="medium",
+        spacing_profile="editorial",
+    ),
 )
 
 ALDER_DENSE_RECIPE = StyleRecipeSpec(
@@ -62,6 +106,13 @@ ALDER_DENSE_RECIPE = StyleRecipeSpec(
         accent_navy="#07215B",
     ),
     typography=ALDER_RECIPE.typography,
+    render_profile=render_profile(
+        cta_mode="headline_button",
+        footer_mode="minimal",
+        media_mode="text_only",
+        decoration_intensity="medium",
+        spacing_profile="tight",
+    ),
 )
 
 TYPOGRAPHY_SIGNAL_RECIPE = StyleRecipeSpec(
@@ -91,6 +142,13 @@ TYPOGRAPHY_SIGNAL_RECIPE = StyleRecipeSpec(
         cta_heading_style="Bold",
         cta_body_family="Inter",
         cta_body_style="Regular",
+    ),
+    render_profile=render_profile(
+        cta_mode="headline_button",
+        footer_mode="signals",
+        media_mode="text_only",
+        decoration_intensity="medium",
+        spacing_profile="balanced",
     ),
 )
 
@@ -122,6 +180,13 @@ CP_SPLIT_RECIPE = StyleRecipeSpec(
         cta_body_family="Poppins",
         cta_body_style="Regular",
     ),
+    render_profile=render_profile(
+        cta_mode="headline_button",
+        footer_mode="minimal",
+        media_mode="text_only",
+        decoration_intensity="low",
+        spacing_profile="balanced",
+    ),
 )
 
 ALDER_SPLIT_RIGHT_RECIPE = StyleRecipeSpec(
@@ -130,6 +195,14 @@ ALDER_SPLIT_RIGHT_RECIPE = StyleRecipeSpec(
     reference_node_ids=("1:46227", "1:46248", "1:46485"),
     style_tokens=ALDER_RECIPE.style_tokens,
     typography=ALDER_RECIPE.typography,
+    selection_tier="review_safe",
+    render_profile=render_profile(
+        cta_mode="headline_only",
+        footer_mode="minimal",
+        media_mode="optional_inline",
+        decoration_intensity="low",
+        spacing_profile="editorial",
+    ),
 )
 
 ALDER_SPLIT_LEFT_RECIPE = StyleRecipeSpec(
@@ -138,6 +211,13 @@ ALDER_SPLIT_LEFT_RECIPE = StyleRecipeSpec(
     reference_node_ids=("1:46227", "1:46256", "1:46485"),
     style_tokens=ALDER_RECIPE.style_tokens,
     typography=ALDER_RECIPE.typography,
+    render_profile=render_profile(
+        cta_mode="headline_only",
+        footer_mode="minimal",
+        media_mode="optional_inline",
+        decoration_intensity="low",
+        spacing_profile="editorial",
+    ),
 )
 
 ALDER_TEXT_ONLY_RECIPE = StyleRecipeSpec(
@@ -146,6 +226,13 @@ ALDER_TEXT_ONLY_RECIPE = StyleRecipeSpec(
     reference_node_ids=("1:46227", "1:46264", "1:46485"),
     style_tokens=ALDER_RECIPE.style_tokens,
     typography=ALDER_RECIPE.typography,
+    render_profile=render_profile(
+        cta_mode="headline_only",
+        footer_mode="minimal",
+        media_mode="text_only",
+        decoration_intensity="low",
+        spacing_profile="airy",
+    ),
 )
 
 CP_LONGFORM_RECIPE = StyleRecipeSpec(
@@ -154,6 +241,13 @@ CP_LONGFORM_RECIPE = StyleRecipeSpec(
     reference_node_ids=("1:46190", "1:46277", "1:46485"),
     style_tokens=CP_SPLIT_RECIPE.style_tokens,
     typography=CP_SPLIT_RECIPE.typography,
+    render_profile=render_profile(
+        cta_mode="headline_button",
+        footer_mode="minimal",
+        media_mode="text_only",
+        decoration_intensity="low",
+        spacing_profile="editorial",
+    ),
 )
 
 CP_GALLERY_RECIPE = StyleRecipeSpec(
@@ -162,6 +256,14 @@ CP_GALLERY_RECIPE = StyleRecipeSpec(
     reference_node_ids=("1:46271", "1:46283", "1:46485"),
     style_tokens=CP_SPLIT_RECIPE.style_tokens,
     typography=CP_SPLIT_RECIPE.typography,
+    selection_tier="specialty_manual_only",
+    render_profile=render_profile(
+        cta_mode="headline_only",
+        footer_mode="minimal",
+        media_mode="optional_inline",
+        decoration_intensity="high",
+        spacing_profile="airy",
+    ),
 )
 
 SADEKOV_BLACK_PROFILE_RECIPE = StyleRecipeSpec(
@@ -191,6 +293,13 @@ SADEKOV_BLACK_PROFILE_RECIPE = StyleRecipeSpec(
         cta_heading_style="Regular",
         cta_body_family="Inter",
         cta_body_style="Regular",
+    ),
+    render_profile=render_profile(
+        cta_mode="headline_only",
+        footer_mode="profile",
+        media_mode="text_only",
+        decoration_intensity="low",
+        spacing_profile="balanced",
     ),
 )
 
@@ -222,6 +331,14 @@ SADEKOV_WHITE_PROFILE_RECIPE = StyleRecipeSpec(
         cta_body_family="Inter",
         cta_body_style="Regular",
     ),
+    selection_tier="specialty_manual_only",
+    render_profile=render_profile(
+        cta_mode="headline_only",
+        footer_mode="profile",
+        media_mode="text_only",
+        decoration_intensity="low",
+        spacing_profile="balanced",
+    ),
 )
 
 TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE = StyleRecipeSpec(
@@ -251,6 +368,13 @@ TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE = StyleRecipeSpec(
         cta_heading_style="Black",
         cta_body_family="Inter",
         cta_body_style="Regular",
+    ),
+    render_profile=render_profile(
+        cta_mode="headline_only",
+        footer_mode="signals",
+        media_mode="text_only",
+        decoration_intensity="medium",
+        spacing_profile="editorial",
     ),
 )
 
@@ -287,6 +411,13 @@ CREATOR_MONO_RECIPE = StyleRecipeSpec(
         cta_body_family="Inter",
         cta_body_style="Regular",
     ),
+    render_profile=render_profile(
+        cta_mode="headline_only",
+        footer_mode="minimal",
+        media_mode="text_only",
+        decoration_intensity="low",
+        spacing_profile="tight",
+    ),
 )
 
 LIGHT_GRAIN_GLOW_RECIPE = StyleRecipeSpec(
@@ -316,6 +447,14 @@ LIGHT_GRAIN_GLOW_RECIPE = StyleRecipeSpec(
         cta_heading_style="Bold",
         cta_body_family="Inter",
         cta_body_style="Regular",
+    ),
+    selection_tier="review_safe",
+    render_profile=render_profile(
+        cta_mode="headline_button",
+        footer_mode="minimal",
+        media_mode="optional_inline",
+        decoration_intensity="low",
+        spacing_profile="tight",
     ),
 )
 
@@ -347,6 +486,14 @@ RETRO_SWIPE_RECIPE = StyleRecipeSpec(
         cta_body_family="Inter",
         cta_body_style="Regular",
     ),
+    selection_tier="specialty_manual_only",
+    render_profile=render_profile(
+        cta_mode="headline_button",
+        footer_mode="retro_creator",
+        media_mode="text_only",
+        decoration_intensity="medium",
+        spacing_profile="balanced",
+    ),
 )
 
 TWITTER_CARD_SOFT_RECIPE = StyleRecipeSpec(
@@ -376,6 +523,14 @@ TWITTER_CARD_SOFT_RECIPE = StyleRecipeSpec(
         cta_heading_style="Bold",
         cta_body_family="Inter",
         cta_body_style="Regular",
+    ),
+    selection_tier="review_safe",
+    render_profile=render_profile(
+        cta_mode="headline_only",
+        footer_mode="tweet_actions",
+        media_mode="tweet_card",
+        decoration_intensity="low",
+        spacing_profile="balanced",
     ),
 )
 
@@ -407,6 +562,13 @@ PASTEL_ARROW_RECIPE = StyleRecipeSpec(
         cta_body_family="Inter",
         cta_body_style="Regular",
     ),
+    render_profile=render_profile(
+        cta_mode="headline_button",
+        footer_mode="minimal",
+        media_mode="optional_inline",
+        decoration_intensity="low",
+        spacing_profile="tight",
+    ),
 )
 
 PLACEHOLDER_MEDIA_RECIPE = StyleRecipeSpec(
@@ -436,6 +598,14 @@ PLACEHOLDER_MEDIA_RECIPE = StyleRecipeSpec(
         cta_heading_style="Bold",
         cta_body_family="Inter",
         cta_body_style="Regular",
+    ),
+    selection_tier="review_safe",
+    render_profile=render_profile(
+        cta_mode="headline_button",
+        footer_mode="minimal",
+        media_mode="optional_inline",
+        decoration_intensity="low",
+        spacing_profile="tight",
     ),
 )
 
@@ -467,6 +637,14 @@ DEVICE_MOCKUP_RECIPE = StyleRecipeSpec(
         cta_body_family="Inter",
         cta_body_style="Regular",
     ),
+    selection_tier="review_safe",
+    render_profile=render_profile(
+        cta_mode="headline_button",
+        footer_mode="minimal",
+        media_mode="device_conditional",
+        decoration_intensity="low",
+        spacing_profile="balanced",
+    ),
 )
 
 SOCIAL_PROOF_RECIPE = StyleRecipeSpec(
@@ -496,6 +674,14 @@ SOCIAL_PROOF_RECIPE = StyleRecipeSpec(
         cta_heading_style="Bold",
         cta_body_family="Inter",
         cta_body_style="Regular",
+    ),
+    selection_tier="specialty_manual_only",
+    render_profile=render_profile(
+        cta_mode="headline_button",
+        footer_mode="minimal",
+        media_mode="optional_inline",
+        decoration_intensity="medium",
+        spacing_profile="balanced",
     ),
 )
 
@@ -527,6 +713,14 @@ PROFILE_CIRCLE_RECIPE = StyleRecipeSpec(
         cta_body_family="Inter",
         cta_body_style="Regular",
     ),
+    selection_tier="specialty_manual_only",
+    render_profile=render_profile(
+        cta_mode="headline_button",
+        footer_mode="minimal",
+        media_mode="optional_inline",
+        decoration_intensity="medium",
+        spacing_profile="balanced",
+    ),
 )
 
 STYLE_RECIPES: dict[str, StyleRecipeSpec] = {
@@ -554,6 +748,19 @@ STYLE_RECIPES: dict[str, StyleRecipeSpec] = {
 }
 
 
+AUTO_SELECTION_TIERS = {"review_safe", "default_auto"}
+
+
+def get_style_recipe_spec(style_recipe: str) -> StyleRecipeSpec:
+    return STYLE_RECIPES[style_recipe]
+
+
+def _pick_candidate(candidates: list[StyleRecipeSpec], signature: int) -> StyleRecipeSpec:
+    eligible = [candidate for candidate in candidates if candidate.selection_tier in AUTO_SELECTION_TIERS]
+    pool = eligible or candidates
+    return pool[signature % len(pool)]
+
+
 def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpec:
     preference = (record.normalized_input.reference_style or "").strip().lower()
     if record.normalized_input.generation_mode == "review":
@@ -574,7 +781,7 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
             DEVICE_MOCKUP_RECIPE,
             TWITTER_CARD_SOFT_RECIPE,
         ]
-        return review_candidates[_content_signature(record) % len(review_candidates)]
+        return _pick_candidate(review_candidates, _content_signature(record))
     if preference in {"alder_forced", "alder_locked", "reference_mix_alder_portrait"}:
         return ALDER_DENSE_RECIPE if language == "ru" else ALDER_RECIPE
     if preference in {"alder_split_right", "alder_right"}:
@@ -625,7 +832,7 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
 
     if (language == "ru" and average_body > 100) or dense_slide_count >= 4 or average_body > 126:
         candidates = [ALDER_DENSE_RECIPE, ALDER_TEXT_ONLY_RECIPE, CP_LONGFORM_RECIPE, TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE]
-        return candidates[signature % len(candidates)]
+        return _pick_candidate(candidates, signature)
 
     if average_body > 102 or hook_length > 54:
         candidates = [
@@ -639,7 +846,7 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
             PASTEL_ARROW_RECIPE,
             SOCIAL_PROOF_RECIPE,
         ]
-        return candidates[signature % len(candidates)]
+        return _pick_candidate(candidates, signature)
 
     if average_body > 82 or cta_length > 88:
         candidates = [
@@ -655,7 +862,7 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
             PASTEL_ARROW_RECIPE,
             DEVICE_MOCKUP_RECIPE,
         ]
-        return candidates[signature % len(candidates)]
+        return _pick_candidate(candidates, signature)
 
     candidates = [
         CP_SPLIT_RECIPE,
@@ -676,7 +883,7 @@ def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpe
         SOCIAL_PROOF_RECIPE,
         PROFILE_CIRCLE_RECIPE,
     ]
-    return candidates[signature % len(candidates)]
+    return _pick_candidate(candidates, signature)
 
 
 def _content_signature(record: CarouselOutput) -> int:

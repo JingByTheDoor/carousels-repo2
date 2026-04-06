@@ -258,7 +258,7 @@ class QualityRulesTests(unittest.TestCase):
         self.assertTrue(cta_slide.headline_display.startswith("🎁 Get FREE access"))
         self.assertIsNone(cta_slide.headline_short)
         self.assertIsNone(cta_slide.body_display)
-        self.assertIsNone(cta_slide.supporting_text)
+        self.assertEqual(cta_slide.supporting_text, "Type WEBINAR in the comments 👇")
         self.assertGreaterEqual(cta_slide.max_headline_lines, 5)
         self.assertTrue(cta_slide.button_label)
 
@@ -272,7 +272,7 @@ class QualityRulesTests(unittest.TestCase):
         )
         self.assertIsNone(cta_slide.headline_short)
         self.assertIsNone(cta_slide.body_display)
-        self.assertIsNone(cta_slide.supporting_text)
+        self.assertEqual(cta_slide.supporting_text, "напишите ВЕБИНАР в комментариях 👇")
         self.assertGreaterEqual(cta_slide.max_headline_lines, 5)
 
     def test_render_payload_includes_save_post_icon_asset(self) -> None:

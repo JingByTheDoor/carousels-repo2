@@ -1,9 +1,9 @@
 {
-  "job_id": "production-20260406-174158-3fdd5c",
-  "created_at": "2026-04-06T17:41:58.963274+00:00",
+  "job_id": "production-20260406-180815-179fb4",
+  "created_at": "2026-04-06T18:08:15.330749+00:00",
   "status": "rendering",
   "request": {
-    "job_id": "production-20260406-174158-3fdd5c",
+    "job_id": "production-20260406-180815-179fb4",
     "source": "manual",
     "generation_mode": "production",
     "library_item_id": "warning-entry",
@@ -64,8 +64,8 @@
   "library_label": "Warning Entry",
   "style_family": "reference_placeholder_media_glow",
   "style_recipe": "placeholder_media_glow_v1",
-  "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\production-20260406-174158-3fdd5c.json",
-  "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\production-20260406-174158-3fdd5c.render.json",
+  "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\production-20260406-180815-179fb4.json",
+  "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\production-20260406-180815-179fb4.render.json",
   "render_result_path": null,
   "figma_file_url": null,
   "figma_page_url": null,

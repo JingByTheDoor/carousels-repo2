@@ -49,6 +49,22 @@ GLOBAL_CTA_HEADLINES = {
     "tr": "🎁 Webinere ÜCRETSİZ erişim alın: «🔥TEFL/TESOL ile uluslararası pazara nasıl girilir ve İngilizce öğreterek nasıl kazanmaya başlanır — online, yurt dışında ya da kendi ülkenizde.»",
     "uk": "🎁 Забирайте БЕЗКОШТОВНО доступ до вебінару: «🔥Як за допомогою TEFL/TESOL вийти на міжнародний ринок і почати заробляти, викладаючи англійську — онлайн, за кордоном або у своїй країні.»",
 }
+GLOBAL_CTA_SUPPORTING_LINES = {
+    "ar": "اكتبوا «الويبينار» في التعليقات 👇",
+    "de": "Schreibt WEBINAR in die Kommentare 👇",
+    "en": "Type WEBINAR in the comments 👇",
+    "es": "Escribe WEBINAR en los comentarios 👇",
+    "fr": "Écrivez WEBINAR en commentaires 👇",
+    "hi": "कमेंट्स में WEBINAR लिखें 👇",
+    "id": "Tulis WEBINAR di komentar 👇",
+    "it": "Scrivi WEBINAR nei commenti 👇",
+    "nl": "Typ WEBINAR in de reacties 👇",
+    "pl": "Napisz WEBINAR w komentarzach 👇",
+    "pt": "Escreva WEBINAR nos comentários 👇",
+    "ru": "напишите ВЕБИНАР в комментариях 👇",
+    "tr": "Yorumlara WEBINAR yazın 👇",
+    "uk": "напишіть ВЕБІНАР у коментарях 👇",
+}
 SAVE_POST_ICON_PATH = Path(__file__).resolve().parents[2] / "save post icon.png"
 
 
@@ -285,6 +301,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
 
     if slide.slide_role == "cta":
         cta_headline = _build_global_cta_headline(language)
+        cta_supporting = _build_global_cta_supporting_line(language)
         cta_density = _cta_density(cta_headline, "")
         allow_button = recipe.render_profile.cta_mode in {"headline_button", "headline_supporting_button"}
         button_label = _build_cta_button_label(language) if allow_button else None
@@ -301,7 +318,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
             body=None,
             body_short=None,
             body_display=None,
-            supporting_text=None,
+            supporting_text=cta_supporting,
             button_label=button_label,
             text_density=cta_density,
             visual_priority="cta",
@@ -772,6 +789,11 @@ def _build_cta_button_label(language: str) -> str:
 def _build_global_cta_headline(language: str) -> str:
     normalized = _normalize_language_code(language)
     return GLOBAL_CTA_HEADLINES.get(normalized, GLOBAL_CTA_HEADLINES["en"])
+
+
+def _build_global_cta_supporting_line(language: str) -> str:
+    normalized = _normalize_language_code(language)
+    return GLOBAL_CTA_SUPPORTING_LINES.get(normalized, GLOBAL_CTA_SUPPORTING_LINES["en"])
 
 
 def _normalize_text(text: str) -> str:

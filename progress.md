@@ -351,6 +351,14 @@
   - `node --check figma_plugin\\code.js`
   - `python -m compileall tools`
   - `python -m unittest discover -s tests -v`
+- Applied the latest saved review pass from `studio-20260406-010111-72ad90` with a more thorough renderer-level fix:
+  - traced recurring collisions across `placeholder_media`, `light_grain`, and `device_mockup` back to optimistic text measurement rather than only bad payload shortening
+  - changed the plugin fitter to use a conservative measured text height for fit decisions, metadata, diagnostics, and downstream stack anchoring
+  - added another payload regression so dense `placeholder_media` covers must use shortened display copy
+- Verified:
+  - `node --check figma_plugin\\code.js`
+  - `python -m compileall tools`
+  - `python -m unittest discover -s tests -v`
 - Reduced review-mode post-render overhead:
   - Studio review rounds now generate payloads with `output_modes=["figma"]`
   - plugin payloads now carry `include_download_exports`

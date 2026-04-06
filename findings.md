@@ -237,3 +237,7 @@
   - cover headlines on dense families must prefer shortened display copy earlier
   - renderer text stacks need fallback copy and measured body anchoring even when a family still uses fixed decorative scaffolding
 - Figma plugin compatibility is stricter than local Node syntax checks. Shared renderer maps should avoid newer syntax like object spread so one family-profile change does not break the whole plugin at parse time.
+- The next Studio round `studio-20260406-010111-72ad90` showed that copy shortening alone is not enough. The renderer also needs a conservative text-height model; trusting raw `TextNode.height` is too optimistic and leads to:
+  - cover headlines that still clip at the bottom of a card
+  - body copy starting too early under multi-line headlines
+  - the same collision pattern recurring across otherwise unrelated families

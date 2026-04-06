@@ -66,6 +66,15 @@ class QualityRulesTests(unittest.TestCase):
         self.assertEqual(cover_slide.headline_display, cover_slide.headline_short)
         self.assertEqual(cover_slide.max_headline_lines, 3)
 
+    def test_placeholder_media_hook_uses_shortened_copy_when_cover_is_dense(self) -> None:
+        plan = make_plan()
+        plan.slides[0].headline = "Boost Your English Students' Speedy Thinking with These Low-Prep Writing Activities!"
+        record = build_output_record(make_job("placeholder_media"), plan)
+        payload = build_plugin_render_payload(record, source_artifact_path=Path("test-job.json"))
+        cover_slide = payload.slides[0]
+        self.assertEqual(cover_slide.headline_display, cover_slide.headline_short)
+        self.assertEqual(cover_slide.max_headline_lines, 3)
+
     def test_device_mockup_dense_body_uses_shortened_stack_copy(self) -> None:
         plan = make_plan()
         plan.slides[1].headline = "Quick prompts that ignite thinking in seconds"

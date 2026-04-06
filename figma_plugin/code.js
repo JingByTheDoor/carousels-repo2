@@ -4699,10 +4699,11 @@ function applyTextFit(node, text, width, fontSize, lineHeight, maxHeight, maxLin
   node.lineHeight = { unit: "PIXELS", value: lineHeightPixels };
   node.resize(width, 100);
   const lineCount = text ? estimateLineCount(node.height, lineHeightPixels) : 0;
-  const overflowHeight = Math.max(0, node.height - maxHeight);
+  const measuredHeight = text ? getConservativeTextHeight(node, fontSize, lineHeightPixels, lineCount) : 0;
+  const overflowHeight = Math.max(0, measuredHeight - maxHeight);
   const overflowLines = maxLines ? Math.max(0, lineCount - maxLines) : 0;
   return {
-    fits: node.height <= maxHeight && (!maxLines || lineCount <= maxLines),
+    fits: measuredHeight <= maxHeight && (!maxLines || lineCount <= maxLines),
     fontSize,
     lineHeight,
     lineHeightPixels,
@@ -4710,7 +4711,7 @@ function applyTextFit(node, text, width, fontSize, lineHeight, maxHeight, maxLin
     text,
     truncated: false,
     usedMinSize: fontSize <= minSize,
-    height: node.height,
+    height: measuredHeight,
     overflowScore: overflowHeight + overflowLines * lineHeightPixels
   };
 }
@@ -4774,7 +4775,18 @@ function stripTrailingConnector(text) {
 }
 
 function estimateLineCount(height, lineHeightPixels) {
-  return Math.max(1, Math.ceil((height + 2) / Math.max(1, lineHeightPixels)));
+  const adjustedHeight = Math.max(0, height - Math.round(lineHeightPixels * 0.12));
+  return Math.max(1, Math.ceil((adjustedHeight + 2) / Math.max(1, lineHeightPixels)));
+}
+
+function getConservativeTextHeight(node, fontSize, lineHeightPixels, lineCount) {
+  const baseHeight = typeof node.height === "number" ? node.height : 0;
+  const renderBoundsHeight = node.absoluteRenderBounds && typeof node.absoluteRenderBounds.height === "number"
+    ? node.absoluteRenderBounds.height
+    : 0;
+  const lineBoxHeight = Math.max(baseHeight, lineCount * lineHeightPixels);
+  const overshoot = Math.max(18, Math.round(fontSize * 0.46));
+  return Math.round(Math.max(baseHeight, renderBoundsHeight, lineBoxHeight + overshoot));
 }
 
 function registerTextBlockMeta(node, options, metrics) {
@@ -4801,14 +4813,16 @@ function collectSlideDiagnostics(frame, slide, payload) {
   const textNodes = frame.findAll((node) => node.type === "TEXT");
   const entries = textNodes.map((node) => {
     const meta = TEXT_BLOCK_META.get(node.id) || {};
+    const top = getNodeTopWithinFrame(node, frame);
+    const measuredHeight = typeof meta.height === "number" ? meta.height : node.height;
     return {
       node,
       role: meta.role || null,
       fontSize: typeof meta.fontSize === "number" ? meta.fontSize : typeof node.fontSize === "number" ? node.fontSize : null,
       lineCount: typeof meta.lineCount === "number" ? meta.lineCount : null,
       truncated: Boolean(meta.truncated),
-      top: getNodeTopWithinFrame(node, frame),
-      bottom: getNodeTopWithinFrame(node, frame) + node.height
+      top,
+      bottom: top + measuredHeight
     };
   }).filter((entry) => entry.fontSize);
 
@@ -4918,11 +4932,16 @@ function getTextBottom(node, fallbackFontSize, extraPadding) {
     : typeof node.fontSize === "number"
       ? node.fontSize
       : fallbackFontSize;
+  const measuredHeight = typeof meta.height === "number"
+    ? meta.height
+    : typeof node.height === "number"
+      ? node.height
+      : 0;
   const lineHeightPixels = typeof meta.lineHeightPixels === "number"
     ? meta.lineHeightPixels
     : Math.max(1, Math.round(fontSize * 1.08));
-  const overshoot = Math.max(16, Math.round(lineHeightPixels * 0.52));
-  return Math.round(node.y + node.height + overshoot + (extraPadding || 0));
+  const gap = Math.max(24, Math.round(lineHeightPixels * 0.34));
+  return Math.round(node.y + measuredHeight + gap + (extraPadding || 0));
 }
 
 async function loadPreferredFont(family, style, fallbackStyle) {

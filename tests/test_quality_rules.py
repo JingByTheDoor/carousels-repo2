@@ -6,7 +6,14 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from carousel_system.config import Settings
-from carousel_system.image_assets import ImageRequest, PexelsCandidate, _find_and_cache_pexels_asset
+from carousel_system.image_assets import (
+    ImageRequest,
+    PexelsCandidate,
+    PexelsQueryPlan,
+    PexelsSemanticRanking,
+    _find_and_cache_pexels_asset,
+    _plan_pexels_queries,
+)
 from carousel_system.models import (
     CarouselInput,
     CarouselPlanResponse,
@@ -359,6 +366,198 @@ class QualityRulesTests(unittest.TestCase):
                 used_photo_ids={123},
                 used_alt_signatures={"lesson planning desk materials"},
             )
+        self.assertIsNone(asset)
+
+    def test_query_planner_merges_model_variants_with_fallback_query(self) -> None:
+        settings = make_settings()
+        record = build_output_record(make_job("placeholder_media"), make_plan())
+        requests = [
+            ImageRequest(
+                slide_number=2,
+                role="info",
+                slot="body_media",
+                treatment="blur_glow",
+                query="lesson planning desk materials professional clean",
+                reason="test",
+                headline="Quick warm-up",
+                body="Start with one focused prompt and a visible timer.",
+                topic="Low-prep writing activities that help English students think faster",
+                visual_hint="lesson planning desk materials",
+                focus="brand_safe",
+            )
+        ]
+        parsed = SimpleNamespace(
+            plans=[
+                PexelsQueryPlan(
+                    slide_number=2,
+                    visual_intent="Teacher-led remote writing lesson",
+                    primary_subject="English tutor with laptop",
+                    setting="Home tutoring desk",
+                    action="Reviewing prompts with a student",
+                    queries=[
+                        "english tutor laptop lesson",
+                        "online english teacher desk",
+                        "english tutor laptop lesson",
+                    ],
+                )
+            ]
+        )
+        fake_client = SimpleNamespace(
+            chat=SimpleNamespace(
+                completions=SimpleNamespace(
+                    parse=lambda **kwargs: SimpleNamespace(
+                        choices=[SimpleNamespace(message=SimpleNamespace(parsed=parsed))]
+                    )
+                )
+            )
+        )
+
+        with patch("carousel_system.image_assets._openai_client", return_value=fake_client):
+            plans = _plan_pexels_queries(settings, record, requests)
+
+        self.assertIn(2, plans)
+        self.assertEqual(
+            plans[2].queries,
+            [
+                "english tutor laptop lesson",
+                "online english teacher desk",
+                "lesson planning desk materials professional clean",
+            ],
+        )
+
+    def test_image_picker_uses_semantic_winner_query_variant(self) -> None:
+        settings = make_settings()
+        record = build_output_record(make_job("placeholder_media"), make_plan())
+        record.job_id = "test-query-variant-win"
+        image_request = ImageRequest(
+            slide_number=2,
+            role="info",
+            slot="body_media",
+            treatment="blur_glow",
+            query="lesson planning desk materials",
+            reason="test",
+            headline="Quick warm-up",
+            body="Start with one focused prompt and a visible timer.",
+            topic="Low-prep writing activities that help English students think faster",
+            visual_hint="lesson planning desk materials",
+            focus="brand_safe",
+        )
+        castle_candidate = PexelsCandidate(
+            photo_id=111,
+            width=1000,
+            height=1500,
+            alt_text="Windsor Castle in England",
+            photographer="Tester",
+            page_url=None,
+            download_url="https://images.pexels.com/photos/111/test.jpg",
+            search_query="english qualification england school",
+        )
+        remote_teacher_candidate = PexelsCandidate(
+            photo_id=222,
+            width=1200,
+            height=1800,
+            alt_text="Teacher tutoring student on laptop",
+            photographer="Tester",
+            page_url=None,
+            download_url="https://images.pexels.com/photos/222/test.jpg",
+            search_query="online english teacher laptop lesson",
+        )
+        query_plan = PexelsQueryPlan(
+            slide_number=2,
+            visual_intent="Online English tutoring session",
+            primary_subject="Teacher on laptop with lesson materials",
+            setting="Home or office tutoring desk",
+            action="Teaching remotely",
+            queries=[
+                "english qualification england school",
+                "online english teacher laptop lesson",
+            ],
+        )
+
+        def search_side_effect(_settings, query: str, *, language: str) -> list[PexelsCandidate]:
+            if query == "english qualification england school":
+                return [castle_candidate]
+            if query == "online english teacher laptop lesson":
+                return [remote_teacher_candidate]
+            return []
+
+        semantic_choice = PexelsSemanticRanking(
+            selected_photo_id=222,
+            ordered_photo_ids=[222],
+            rejected_photo_ids=[111],
+            reason="Matches the slide directly.",
+        )
+
+        with patch("carousel_system.image_assets._search_pexels_candidates", side_effect=search_side_effect), patch(
+            "carousel_system.image_assets._semantic_rank_pexels_candidates",
+            return_value=semantic_choice,
+        ), patch("carousel_system.image_assets._download_binary", return_value=None):
+            asset = _find_and_cache_pexels_asset(
+                settings,
+                record,
+                image_request,
+                used_photo_ids=set(),
+                used_alt_signatures=set(),
+                query_plan=query_plan,
+            )
+
+        self.assertIsNotNone(asset)
+        self.assertEqual(asset.query_or_prompt, "online english teacher laptop lesson")
+        self.assertEqual(asset.original_url, "https://images.pexels.com/photos/222/test.jpg")
+
+    def test_image_picker_returns_none_when_semantic_ranking_rejects_all_candidates(self) -> None:
+        settings = make_settings()
+        record = build_output_record(make_job("placeholder_media"), make_plan())
+        image_request = ImageRequest(
+            slide_number=2,
+            role="info",
+            slot="body_media",
+            treatment="blur_glow",
+            query="lesson planning desk materials",
+            reason="test",
+            headline="Quick warm-up",
+            body="Start with one focused prompt and a visible timer.",
+            topic="Low-prep writing activities that help English students think faster",
+            visual_hint="lesson planning desk materials",
+            focus="brand_safe",
+        )
+        candidate = PexelsCandidate(
+            photo_id=111,
+            width=1000,
+            height=1500,
+            alt_text="Windsor Castle in England",
+            photographer="Tester",
+            page_url=None,
+            download_url="https://images.pexels.com/photos/111/test.jpg",
+            search_query="english qualification england school",
+        )
+        query_plan = PexelsQueryPlan(
+            slide_number=2,
+            visual_intent="Online English tutoring session",
+            primary_subject="Teacher on laptop with lesson materials",
+            setting="Home or office tutoring desk",
+            action="Teaching remotely",
+            queries=["english qualification england school"],
+        )
+
+        with patch("carousel_system.image_assets._search_pexels_candidates", return_value=[candidate]), patch(
+            "carousel_system.image_assets._semantic_rank_pexels_candidates",
+            return_value=PexelsSemanticRanking(
+                selected_photo_id=None,
+                ordered_photo_ids=[],
+                rejected_photo_ids=[111],
+                reason="Landmark does not fit the slide.",
+            ),
+        ):
+            asset = _find_and_cache_pexels_asset(
+                settings,
+                record,
+                image_request,
+                used_photo_ids=set(),
+                used_alt_signatures=set(),
+                query_plan=query_plan,
+            )
+
         self.assertIsNone(asset)
 
     def test_review_mode_preserves_explicit_non_safe_preferred_style(self) -> None:

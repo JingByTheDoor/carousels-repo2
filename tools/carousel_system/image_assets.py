@@ -10,6 +10,7 @@ from urllib.parse import parse_qs, urlencode, urlparse
 from urllib.request import Request, urlopen
 
 from openai import OpenAI
+from pydantic import BaseModel, Field, field_validator
 
 from carousel_system.config import ROOT_DIR, Settings
 from carousel_system.models import (
@@ -87,6 +88,14 @@ DEFAULT_VISUAL_SUFFIX_BY_SLIDE = {
     4: "collaboration",
     6: "materials closeup",
 }
+PEXELS_QUERY_VARIANT_LIMIT = 4
+SEMANTIC_CANDIDATE_LIMIT = 10
+
+
+def _normalize_text(value: str | None) -> str:
+    if value is None:
+        return ""
+    return " ".join(str(value).strip().split())
 
 
 @dataclass(frozen=True)
@@ -97,6 +106,11 @@ class ImageRequest:
     treatment: str
     query: str
     reason: str
+    headline: str = ""
+    body: str = ""
+    topic: str = ""
+    visual_hint: str = ""
+    focus: str = ""
 
 
 @dataclass(frozen=True)
@@ -108,6 +122,68 @@ class PexelsCandidate:
     photographer: str
     page_url: str | None
     download_url: str
+    search_query: str = ""
+
+
+class PexelsQueryPlan(BaseModel):
+    slide_number: int = Field(ge=1, le=7)
+    visual_intent: str = ""
+    primary_subject: str = ""
+    setting: str = ""
+    action: str = ""
+    avoid: list[str] = Field(default_factory=list)
+    queries: list[str] = Field(default_factory=list)
+
+    @field_validator("visual_intent", "primary_subject", "setting", "action", mode="before")
+    @classmethod
+    def _normalize_text_fields(cls, value: str | None) -> str:
+        return _normalize_text(value)
+
+    @field_validator("avoid", "queries", mode="before")
+    @classmethod
+    def _normalize_text_lists(cls, value: list[str] | str | None) -> list[str]:
+        if value is None:
+            return []
+        items = [value] if isinstance(value, str) else value
+        normalized: list[str] = []
+        for item in items:
+            cleaned = _normalize_text(str(item))
+            if cleaned and cleaned not in normalized:
+                normalized.append(cleaned)
+        return normalized
+
+
+class PexelsQueryPlanBatch(BaseModel):
+    plans: list[PexelsQueryPlan] = Field(default_factory=list)
+
+
+class PexelsSemanticRanking(BaseModel):
+    selected_photo_id: int | None = None
+    ordered_photo_ids: list[int] = Field(default_factory=list)
+    rejected_photo_ids: list[int] = Field(default_factory=list)
+    reason: str | None = None
+
+    @field_validator("ordered_photo_ids", "rejected_photo_ids", mode="before")
+    @classmethod
+    def _normalize_photo_lists(cls, value: list[int] | int | None) -> list[int]:
+        if value is None:
+            return []
+        items = [value] if isinstance(value, int) else value
+        normalized: list[int] = []
+        for item in items:
+            try:
+                photo_id = int(item)
+            except (TypeError, ValueError):
+                continue
+            if photo_id > 0 and photo_id not in normalized:
+                normalized.append(photo_id)
+        return normalized
+
+    @field_validator("reason", mode="before")
+    @classmethod
+    def _normalize_reason(cls, value: str | None) -> str | None:
+        cleaned = _normalize_text(value)
+        return cleaned or None
 
 
 def resolve_image_assets(settings: Settings, record: CarouselOutput, payload: PluginRenderPayload) -> None:
@@ -139,6 +215,7 @@ def resolve_image_assets(settings: Settings, record: CarouselOutput, payload: Pl
         _write_image_manifest(record)
         return
 
+    query_plans = _plan_pexels_queries(settings, record, requests) if strategy.provider == "pexels" else {}
     assets: list[ImageAsset] = []
     used_photo_ids: set[int] = set()
     used_alt_signatures: set[str] = set()
@@ -151,6 +228,7 @@ def resolve_image_assets(settings: Settings, record: CarouselOutput, payload: Pl
                 image_request,
                 used_photo_ids=used_photo_ids,
                 used_alt_signatures=used_alt_signatures,
+                query_plan=query_plans.get(image_request.slide_number),
             )
         if asset is None and strategy.mode in {"ai", "hybrid"} and record.normalized_input.allow_ai_fallback:
             asset = _generate_ai_asset(settings, record, image_request)
@@ -339,6 +417,9 @@ def _build_image_requests(
         if slide.image_slot == "none":
             continue
         visual_target = visual_targets.get(slide.slide_number)
+        content_slide = next((item for item in record.content_plan if item.slide_number == slide.slide_number), None)
+        visual_hint = _visual_suffix(record, slide.slide_number, library_entry=library_entry, visual_target=visual_target)
+        focus = _resolve_image_focus(record, library_entry=library_entry)
         query = _build_query(record, slide.slide_number, library_entry=library_entry, visual_target=visual_target)
         reason = (
             f"{library_entry.label} requires a resolved production visual."
@@ -353,9 +434,24 @@ def _build_image_requests(
                 treatment=slide.image_treatment,
                 query=query,
                 reason=reason,
+                headline=content_slide.headline if content_slide else "",
+                body=(content_slide.body or "") if content_slide else "",
+                topic=record.normalized_input.topic or "",
+                visual_hint=visual_hint,
+                focus=focus,
             )
         )
     return requests
+
+
+def _resolve_image_focus(
+    record: CarouselOutput,
+    *,
+    library_entry: PerfectLibraryEntry | None = None,
+) -> str:
+    if library_entry and library_entry.visual_recipe:
+        return library_entry.visual_recipe.default_focus
+    return record.normalized_input.image_focus
 
 
 def _build_query(
@@ -372,11 +468,7 @@ def _build_query(
     role = slide.slide_role if slide else "info"
     source = " ".join(part for part in [topic, headline, body] if part) or record.content_plan[0].headline
     keywords = _compact_keywords(source)
-    focus = (
-        library_entry.visual_recipe.default_focus
-        if library_entry and library_entry.visual_recipe
-        else record.normalized_input.image_focus
-    )
+    focus = _resolve_image_focus(record, library_entry=library_entry)
     niche = "english teacher materials" if record.normalized_input.generation_mode == "review" else "education"
     visual_suffix = _visual_suffix(record, slide_number, library_entry=library_entry, visual_target=visual_target)
     base = f"{keywords} {role} {niche} {visual_suffix}".strip()
@@ -416,6 +508,224 @@ def _compact_keywords(text: str, *, max_words: int = 6) -> str:
     return " ".join(tokens[:max_words])
 
 
+def _normalize_query_text(text: str | None) -> str:
+    cleaned = _normalize_text(text)
+    if not cleaned:
+        return ""
+    cleaned = re.sub(r"[\.,;:|/]+", " ", cleaned)
+    return _normalize_text(cleaned)
+
+
+def _openai_client(settings: Settings) -> OpenAI | None:
+    if not settings.openai_api_key:
+        return None
+    return OpenAI(api_key=settings.openai_api_key)
+
+
+def _build_pexels_query_planning_prompt(record: CarouselOutput, requests: list[ImageRequest]) -> str:
+    header = [
+        f"carousel topic: {_normalize_text(record.normalized_input.topic) or 'n/a'}",
+        f"carousel language: {record.language or record.normalized_input.language or 'unknown'}",
+        f"generation mode: {record.normalized_input.generation_mode}",
+        f"style family: {record.style_family or 'unknown'}",
+    ]
+    slides: list[str] = []
+    for request in requests:
+        slides.extend(
+            [
+                "",
+                f"slide_number: {request.slide_number}",
+                f"role: {request.role}",
+                f"slot: {request.slot}",
+                f"treatment: {request.treatment}",
+                f"headline: {request.headline or 'n/a'}",
+                f"body: {request.body or 'n/a'}",
+                f"visual_hint: {request.visual_hint or 'n/a'}",
+                f"focus: {request.focus or 'n/a'}",
+                f"reason: {request.reason}",
+                f"fallback_query: {request.query}",
+            ]
+        )
+    return "\n".join(header + slides)
+
+
+def _plan_pexels_queries(
+    settings: Settings,
+    record: CarouselOutput,
+    requests: list[ImageRequest],
+) -> dict[int, PexelsQueryPlan]:
+    client = _openai_client(settings)
+    if client is None or not requests:
+        return {}
+
+    system_prompt = """You write concise, precise Pexels stock-photo search queries for Instagram carousel slides.
+
+Return a JSON object that matches the supplied schema.
+
+Rules:
+- Queries must be natural English search phrases for Pexels, even if the slide copy is in another language.
+- Each query should be concrete and visual, usually 4 to 10 words.
+- Prioritize scenes that literally support the slide meaning.
+- Avoid generic business buzzwords, landmarks, castles, tourism, flags, random city scenes, and weak symbolic matches unless the slide explicitly asks for them.
+- Prefer one clear subject, business-safe educational settings, and compositions that can crop vertically with text overlays.
+- Give each slide 3 to 4 meaningfully different query variants, not trivial rewordings.
+- Keep different slides visually varied so the carousel does not repeat the same stock setup."""
+    try:
+        completion = client.chat.completions.parse(
+            model=settings.openai_model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": _build_pexels_query_planning_prompt(record, requests)},
+            ],
+            response_format=PexelsQueryPlanBatch,
+        )
+        message = completion.choices[0].message
+        parsed = getattr(message, "parsed", None)
+        if not parsed:
+            return {}
+    except Exception:
+        return {}
+
+    plan_map: dict[int, PexelsQueryPlan] = {}
+    parsed_by_slide = {plan.slide_number: plan for plan in parsed.plans}
+    for request in requests:
+        parsed_plan = parsed_by_slide.get(request.slide_number)
+        queries: list[str] = []
+        if parsed_plan:
+            for query in parsed_plan.queries:
+                normalized = _normalize_query_text(query)
+                if normalized and normalized not in queries:
+                    queries.append(normalized)
+        fallback_query = _normalize_query_text(request.query)
+        if fallback_query and fallback_query not in queries:
+            queries.append(fallback_query)
+        if not queries:
+            continue
+        if parsed_plan is None:
+            plan_map[request.slide_number] = PexelsQueryPlan(
+                slide_number=request.slide_number,
+                visual_intent=request.reason,
+                primary_subject=request.visual_hint,
+                setting=request.focus,
+                action=request.role,
+                avoid=[],
+                queries=queries[:PEXELS_QUERY_VARIANT_LIMIT],
+            )
+            continue
+        plan_map[request.slide_number] = PexelsQueryPlan(
+            slide_number=request.slide_number,
+            visual_intent=parsed_plan.visual_intent,
+            primary_subject=parsed_plan.primary_subject,
+            setting=parsed_plan.setting,
+            action=parsed_plan.action,
+            avoid=parsed_plan.avoid,
+            queries=queries[:PEXELS_QUERY_VARIANT_LIMIT],
+        )
+    return plan_map
+
+
+def _build_pexels_candidate_ranking_prompt(
+    record: CarouselOutput,
+    image_request: ImageRequest,
+    candidates: list[PexelsCandidate],
+    *,
+    query_plan: PexelsQueryPlan | None = None,
+) -> str:
+    lines = [
+        f"topic: {_normalize_text(image_request.topic) or _normalize_text(record.normalized_input.topic) or 'n/a'}",
+        f"language: {record.language or record.normalized_input.language or 'unknown'}",
+        f"slide_number: {image_request.slide_number}",
+        f"role: {image_request.role}",
+        f"headline: {image_request.headline or 'n/a'}",
+        f"body: {image_request.body or 'n/a'}",
+        f"visual_hint: {image_request.visual_hint or 'n/a'}",
+        f"fallback_query: {image_request.query}",
+        f"planned_intent: {query_plan.visual_intent if query_plan else 'n/a'}",
+        f"planned_subject: {query_plan.primary_subject if query_plan else 'n/a'}",
+        f"planned_setting: {query_plan.setting if query_plan else 'n/a'}",
+        f"planned_action: {query_plan.action if query_plan else 'n/a'}",
+        "avoid: " + (", ".join(query_plan.avoid) if query_plan and query_plan.avoid else "n/a"),
+        "",
+        "candidates:",
+    ]
+    for candidate in candidates:
+        ratio = round(candidate.height / max(candidate.width, 1), 2) if candidate.width and candidate.height else 0
+        lines.extend(
+            [
+                f"- photo_id: {candidate.photo_id}",
+                f"  query: {candidate.search_query or image_request.query}",
+                f"  alt_text: {candidate.alt_text or 'n/a'}",
+                f"  photographer: {candidate.photographer or 'n/a'}",
+                f"  size: {candidate.width}x{candidate.height}",
+                f"  portrait_ratio: {ratio}",
+            ]
+        )
+    return "\n".join(lines)
+
+
+def _semantic_rank_pexels_candidates(
+    settings: Settings,
+    record: CarouselOutput,
+    image_request: ImageRequest,
+    candidates: list[PexelsCandidate],
+    *,
+    query_plan: PexelsQueryPlan | None = None,
+) -> PexelsSemanticRanking | None:
+    client = _openai_client(settings)
+    if client is None or not candidates:
+        return None
+
+    system_prompt = """You are choosing the best Pexels photo for one educational Instagram carousel slide.
+
+Return a JSON object that matches the supplied schema.
+
+Rules:
+- Favor candidates that literally depict the slide meaning, not candidates that only share one keyword.
+- Reject tourist landmarks, castles, flags, generic office meetings, handshake-business photos, vague success imagery, and random books or objects unless the slide explicitly asks for them.
+- Prefer clean, realistic, business-safe images with one clear subject and a usable portrait crop.
+- If no candidate truly fits, return no selected photo and an empty ordered list."""
+    candidate_subset = candidates[:SEMANTIC_CANDIDATE_LIMIT]
+    valid_ids = {candidate.photo_id for candidate in candidate_subset}
+    try:
+        completion = client.chat.completions.parse(
+            model=settings.openai_model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {
+                    "role": "user",
+                    "content": _build_pexels_candidate_ranking_prompt(
+                        record,
+                        image_request,
+                        candidate_subset,
+                        query_plan=query_plan,
+                    ),
+                },
+            ],
+            response_format=PexelsSemanticRanking,
+        )
+        message = completion.choices[0].message
+        parsed = getattr(message, "parsed", None)
+        if not parsed:
+            return None
+    except Exception:
+        return None
+
+    ordered_photo_ids = [photo_id for photo_id in parsed.ordered_photo_ids if photo_id in valid_ids]
+    if parsed.selected_photo_id in valid_ids and parsed.selected_photo_id not in ordered_photo_ids:
+        ordered_photo_ids.insert(0, parsed.selected_photo_id)
+    rejected_photo_ids = [
+        photo_id
+        for photo_id in parsed.rejected_photo_ids
+        if photo_id in valid_ids and photo_id not in ordered_photo_ids
+    ]
+    return PexelsSemanticRanking(
+        selected_photo_id=ordered_photo_ids[0] if ordered_photo_ids else None,
+        ordered_photo_ids=ordered_photo_ids,
+        rejected_photo_ids=rejected_photo_ids,
+        reason=parsed.reason,
+    )
+
+
 def _find_and_cache_pexels_asset(
     settings: Settings,
     record: CarouselOutput,
@@ -423,16 +733,54 @@ def _find_and_cache_pexels_asset(
     *,
     used_photo_ids: set[int],
     used_alt_signatures: set[str],
+    query_plan: PexelsQueryPlan | None = None,
 ) -> ImageAsset | None:
-    candidates = _search_pexels_candidates(
-        settings,
-        image_request.query,
-        language=record.language or record.normalized_input.language or "en",
-    )
-    if not candidates:
+    queries = [
+        _normalize_query_text(query)
+        for query in (query_plan.queries if query_plan and query_plan.queries else [image_request.query])
+    ]
+    queries = [query for query in queries if query]
+    if not queries:
         return None
 
-    ranked = sorted(candidates, key=lambda candidate: _score_candidate(candidate, image_request.query), reverse=True)
+    candidate_map: dict[int, PexelsCandidate] = {}
+    for query in queries:
+        candidates = _search_pexels_candidates(
+            settings,
+            query,
+            language=record.language or record.normalized_input.language or "en",
+        )
+        for candidate in candidates:
+            incumbent = candidate_map.get(candidate.photo_id)
+            if incumbent is None:
+                candidate_map[candidate.photo_id] = candidate
+                continue
+            if _score_candidate(candidate, candidate.search_query or query) > _score_candidate(
+                incumbent,
+                incumbent.search_query or image_request.query,
+            ):
+                candidate_map[candidate.photo_id] = candidate
+    if not candidate_map:
+        return None
+
+    ranked = sorted(
+        candidate_map.values(),
+        key=lambda candidate: _score_candidate(candidate, candidate.search_query or image_request.query),
+        reverse=True,
+    )
+    semantic_ranking = _semantic_rank_pexels_candidates(
+        settings,
+        record,
+        image_request,
+        ranked,
+        query_plan=query_plan,
+    )
+    if semantic_ranking is not None:
+        candidate_lookup = {candidate.photo_id: candidate for candidate in ranked}
+        ranked = [candidate_lookup[photo_id] for photo_id in semantic_ranking.ordered_photo_ids if photo_id in candidate_lookup]
+        if not ranked:
+            return None
+
     best = None
     for candidate in ranked:
         if candidate.photo_id in used_photo_ids:
@@ -467,7 +815,7 @@ def _find_and_cache_pexels_asset(
         role=image_request.role,
         source_mode="stock",
         provider="pexels",
-        query_or_prompt=image_request.query,
+        query_or_prompt=best.search_query or image_request.query,
         original_url=best.download_url,
         local_path=str(asset_path),
         credit=f"Photo by {best.photographer} on Pexels",
@@ -523,7 +871,7 @@ def _generate_ai_asset(
         alt_text=revised_prompt,
     )
 def _search_pexels_candidates(settings: Settings, query: str, *, language: str) -> list[PexelsCandidate]:
-    locale = LOCALE_BY_LANGUAGE.get(language.lower(), "en-US")
+    locale = "en-US" if re.search(r"[A-Za-z]", query) and not re.search(r"[\u0400-\u04FF]", query) else LOCALE_BY_LANGUAGE.get(language.lower(), "en-US")
     params = urlencode(
         {
             "query": query,
@@ -551,6 +899,7 @@ def _search_pexels_candidates(settings: Settings, query: str, *, language: str) 
                 photographer=(photo.get("photographer") or "Unknown").strip(),
                 page_url=(photo.get("url") or "").strip() or None,
                 download_url=download_url,
+                search_query=query,
             )
         )
     return candidates

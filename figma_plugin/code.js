@@ -25,6 +25,8 @@ const DEFAULT_TYPOGRAPHY = {
   cta_body_family: "Inter",
   cta_body_style: "Regular"
 };
+let cachedSavePostIconBase64 = null;
+let cachedSavePostIconHash = null;
 const FONT_FALLBACKS = {
   Inter: ["Black", "Bold", "Semi Bold", "Regular"],
   Poppins: ["Bold", "SemiBold", "Regular", "Medium"],
@@ -373,9 +375,26 @@ function normalizePayload(payload) {
     image_strategy: Object.assign({ mode: "none", provider: null }, payload.image_strategy || {}),
     language: normalizeLanguageCode(payload.language),
     style_tokens: Object.assign({}, DEFAULT_TOKENS, payload.style_tokens || {}),
-    typography: Object.assign({}, DEFAULT_TYPOGRAPHY, payload.typography || {}),
+    typography: normalizeTypography(payload.typography),
     slides: payload.slides.map(normalizeSlide)
   });
+}
+
+function normalizeTypography(typography) {
+  const merged = Object.assign({}, DEFAULT_TYPOGRAPHY, typography || {});
+  merged.cta_heading_style = coerceBoldFontStyle(merged.cta_heading_family, merged.cta_heading_style);
+  return merged;
+}
+
+function coerceBoldFontStyle(family, style) {
+  const normalized = cleanText(style);
+  if (normalized && /(black|bold|heavy)/i.test(normalized)) {
+    return normalized;
+  }
+  if (family === "Inter") {
+    return "Black";
+  }
+  return "Bold";
 }
 
 function normalizeSlide(slide) {
@@ -4000,13 +4019,13 @@ function getPlaceholderMediaMetaY(frameHeight) {
 function appendCarouselMetaTone(frame) {
   const fill = getPrimarySolidFill(frame);
   if (!fill) {
-    return { colorHex: "#757B94", textOpacity: 0.78, iconOpacity: 0.74 };
+    return { colorHex: "#757B94", textOpacity: 0.9, iconOpacity: 0.94 };
   }
   const brightness = getPaintBrightness(fill);
   if (brightness < 0.42) {
-    return { colorHex: "#FFFFFF", textOpacity: 0.72, iconOpacity: 0.68 };
+    return { colorHex: "#FFFFFF", textOpacity: 0.84, iconOpacity: 0.96 };
   }
-  return { colorHex: "#757B94", textOpacity: 0.78, iconOpacity: 0.74 };
+  return { colorHex: "#757B94", textOpacity: 0.9, iconOpacity: 0.94 };
 }
 
 function getPrimarySolidFill(node) {
@@ -4030,7 +4049,7 @@ function getPaintBrightness(paint) {
 }
 
 function getCarouselMetaY(frameHeight) {
-  return Math.max(0, frameHeight - 88);
+  return Math.max(0, frameHeight - 102);
 }
 
 function getSavePostLabel(language) {
@@ -4056,52 +4075,76 @@ async function appendCarouselMeta(frame, payload) {
     fallbackStyle: "Regular",
     x: 46,
     y: y,
-    width: Math.min(720, Math.max(420, Math.round(frame.width * 0.64))),
-    maxHeight: 46,
-    maxSize: 33,
-    minSize: 18,
+    width: Math.min(760, Math.max(480, Math.round(frame.width * 0.66))),
+    maxHeight: 56,
+    maxSize: 46,
+    minSize: 24,
     lineHeight: 1.0,
     color: tone.colorHex,
     alignHorizontal: "LEFT"
   });
   leftNode.opacity = tone.textOpacity;
 
-  const iconWidth = 44;
-  const iconX = frame.width - 74;
-  const textWidth = 420;
+  const iconWidth = 34;
+  const iconHeight = 60;
+  const iconX = frame.width - 70;
+  const textWidth = 470;
   const actionNode = await createTextBlock(frame, {
     text: getSavePostLabel(payload && payload.language),
     fontFamily: "Inter",
     fontStyle: "Regular",
     fallbackStyle: "Regular",
-    x: iconX - textWidth - 16,
+    x: iconX - textWidth - 18,
     y: y,
     width: textWidth,
-    maxHeight: 46,
-    maxSize: 33,
-    minSize: 18,
+    maxHeight: 56,
+    maxSize: 46,
+    minSize: 24,
     lineHeight: 1.0,
     color: tone.colorHex,
     alignHorizontal: "RIGHT"
   });
   actionNode.opacity = tone.textOpacity;
 
-  const iconNode = await createTextBlock(frame, {
-    text: "🔖",
-    fontFamily: "Segoe UI Emoji",
-    fontStyle: "Regular",
-    fallbackStyle: "Regular",
-    x: iconX,
-    y: y - 2,
-    width: iconWidth,
-    maxHeight: 46,
-    maxSize: 34,
-    minSize: 20,
-    lineHeight: 1.0,
-    color: tone.colorHex,
-    alignHorizontal: "CENTER"
-  });
-  iconNode.opacity = tone.iconOpacity;
+  await appendSavePostIcon(frame, payload, iconX, y - 6, iconWidth, iconHeight, tone.iconOpacity);
+}
+
+async function appendSavePostIcon(frame, payload, x, y, width, height, opacity) {
+  const imageHash = getSavePostIconHash(payload);
+  if (!imageHash) {
+    return null;
+  }
+  const rect = figma.createRectangle();
+  rect.name = "Save Post Icon";
+  rect.resize(width, height);
+  rect.x = x;
+  rect.y = y;
+  rect.fills = [
+    {
+      type: "IMAGE",
+      scaleMode: "FILL",
+      imageHash: imageHash
+    }
+  ];
+  if (typeof opacity === "number") {
+    rect.opacity = opacity;
+  }
+  frame.appendChild(rect);
+  return rect;
+}
+
+function getSavePostIconHash(payload) {
+  const base64 = payload && payload.save_post_icon_data_base64 ? payload.save_post_icon_data_base64 : null;
+  if (!base64) {
+    return null;
+  }
+  if (cachedSavePostIconBase64 === base64 && cachedSavePostIconHash) {
+    return cachedSavePostIconHash;
+  }
+  const image = figma.createImage(decodeBase64(base64));
+  cachedSavePostIconBase64 = base64;
+  cachedSavePostIconHash = image.hash;
+  return cachedSavePostIconHash;
 }
 
 async function appendLabelPill(frame, x, y, text, fillHex, textHex) {

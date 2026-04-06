@@ -253,6 +253,12 @@
     - keep full copy in `headline_display` / `body_display`
     - reserve `headline_short` / `body_short` for renderer fallback only
     - whenever the planner must truncate, append an ellipsis so the cut reads intentional instead of glitched
+- Global CTA policy is now a content contract, not a style preference.
+  - If every carousel must end with one specific webinar offer, the payload builder should override slide-7 headline text centrally instead of relying on planner output or per-style CTA copy rules.
+  - Supporting/body CTA text should stay empty in that mode, otherwise families with supporting-copy layouts will reintroduce duplicate or competing copy under the main offer.
+  - The plugin should force CTA headline styling toward bold/black at normalization time, because some style families previously declared regular CTA heading styles that conflicted with a universal headline-only CTA requirement.
+- Shared footer icons are safer when shipped through the payload rather than hardcoded in the plugin.
+  - Loading the repo asset in Python and embedding it as `save_post_icon_data_base64` keeps the plugin deterministic and avoids runtime file-access problems inside Figma.
 - Studio review-mode style forcing had a separate backend bug: the Advanced `preferred_style` dropdown could accept any valid family, but review-round normalization silently downgraded non-review-safe choices back to `auto`.
   - That made the generator appear to ignore explicit user style requests and rotate back through the safe review pool.
   - The correct behavior is split by intent:

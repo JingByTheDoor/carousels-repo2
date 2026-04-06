@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import base64
 import re
+from functools import lru_cache
 from pathlib import Path
 
 from carousel_system.models import (
@@ -31,6 +33,23 @@ RETRO_SWIPE_STYLE_RECIPES = {
     "social_proof_linkedin_v1",
     "profile_circle_pop_v1",
 }
+GLOBAL_CTA_HEADLINES = {
+    "ar": "🎁 احصلوا مجانًا على الوصول إلى الويبينار: «🔥كيف تستخدمون TEFL/TESOL لدخول السوق الدولي والبدء في الربح من تدريس الإنجليزية — أونلاين، في الخارج، أو في بلدكم.»",
+    "de": "🎁 Sichert euch KOSTENLOSEN Zugang zum Webinar: „🔥Wie du mit TEFL/TESOL in den internationalen Markt einsteigst und anfängst, mit Englischunterricht Geld zu verdienen — online, im Ausland oder im eigenen Land.“",
+    "en": "🎁 Get FREE access to the webinar: “🔥How to use TEFL/TESOL to enter the international market and start earning by teaching English — online, abroad, or in your own country.”",
+    "es": "🎁 Consigue GRATIS acceso al webinar: «🔥Cómo usar TEFL/TESOL para entrar al mercado internacional y empezar a ganar enseñando inglés — online, en el extranjero o en tu propio país.»",
+    "fr": "🎁 Obtenez GRATUITEMENT l’accès au webinaire : «🔥Comment utiliser le TEFL/TESOL pour entrer sur le marché international et commencer à gagner de l’argent en enseignant l’anglais — en ligne, à l’étranger ou dans votre propre pays.»",
+    "hi": "🎁 वेबिनार का मुफ़्त एक्सेस लें: «🔥TEFL/TESOL की मदद से अंतरराष्ट्रीय बाज़ार में कैसे जाएँ और अंग्रेज़ी पढ़ाकर कमाई शुरू करें — ऑनलाइन, विदेश में या अपने ही देश में.»",
+    "id": "🎁 Dapatkan AKSES GRATIS ke webinar: «🔥Cara menggunakan TEFL/TESOL untuk masuk ke pasar internasional dan mulai menghasilkan uang dengan mengajar bahasa Inggris — online, di luar negeri, atau di negara sendiri.»",
+    "it": "🎁 Ottieni GRATIS l’accesso al webinar: «🔥Come usare il TEFL/TESOL per entrare nel mercato internazionale e iniziare a guadagnare insegnando inglese — online, all’estero o nel tuo Paese.»",
+    "nl": "🎁 Krijg GRATIS toegang tot het webinar: “🔥Hoe je met TEFL/TESOL de internationale markt betreedt en geld gaat verdienen met Engels geven — online, in het buitenland of in je eigen land.”",
+    "pl": "🎁 Odbierz DARMOWY dostęp do webinaru: «🔥Jak dzięki TEFL/TESOL wejść na rynek międzynarodowy i zacząć zarabiać, ucząc angielskiego — online, za granicą lub w swoim kraju.»",
+    "pt": "🎁 Garanta GRÁTIS o acesso ao webinar: «🔥Como usar TEFL/TESOL para entrar no mercado internacional e começar a ganhar ensinando inglês — online, no exterior ou no seu próprio país.»",
+    "ru": "🎁 Забирайте БЕСПЛАТНО доступ к вебинару: «🔥Как с TEFL/TESOL выйти на международный рынок и начать зарабатывать, преподавая английский — онлайн, за рубежом или в своей стране.»",
+    "tr": "🎁 Webinere ÜCRETSİZ erişim alın: «🔥TEFL/TESOL ile uluslararası pazara nasıl girilir ve İngilizce öğreterek nasıl kazanmaya başlanır — online, yurt dışında ya da kendi ülkenizde.»",
+    "uk": "🎁 Забирайте БЕЗКОШТОВНО доступ до вебінару: «🔥Як за допомогою TEFL/TESOL вийти на міжнародний ринок і почати заробляти, викладаючи англійську — онлайн, за кордоном або у своїй країні.»",
+}
+SAVE_POST_ICON_PATH = Path(__file__).resolve().parents[2] / "save post icon.png"
 
 
 EN_STOPWORDS = {
@@ -160,6 +179,7 @@ def build_plugin_render_payload(
         language=language,
         style_family=recipe.style_family,
         style_recipe=recipe.style_recipe,
+        save_post_icon_data_base64=_load_save_post_icon_data_base64(),
         source_artifact_path=str(source_artifact_path),
         reference_file_key=record.normalized_input.reference_file_key,
         reference_node_ids=list(recipe.reference_node_ids),
@@ -264,8 +284,8 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
         )
 
     if slide.slide_role == "cta":
-        cta_source = slide.body or record.normalized_input.cta_text or ""
-        cta_density = _cta_density(slide.headline, cta_source)
+        cta_headline = _build_global_cta_headline(language)
+        cta_density = _cta_density(cta_headline, "")
         cta_headline_limit = (
             50
             if style_recipe in {"creator_mono_minimal_v1"} | RETRO_SWIPE_STYLE_RECIPES
@@ -275,21 +295,9 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
             if style_recipe in TWITTER_CARD_STYLE_RECIPES
             else 38
         )
-        headline_short = _shorten_headline(slide.headline, language, hard_limit=cta_headline_limit)
-        body_display, supporting_text = _build_cta_copy_segments(cta_source, slide.headline, language)
-        allow_supporting_copy = recipe.render_profile.cta_mode in {"headline_supporting", "headline_supporting_button"}
+        headline_short = _shorten_headline(cta_headline, language, hard_limit=cta_headline_limit)
         allow_button = recipe.render_profile.cta_mode in {"headline_button", "headline_supporting_button"}
-        if not allow_supporting_copy:
-            body_display = None
-            supporting_text = None
-        else:
-            body_display, supporting_text = _dedupe_cta_segments(body_display, supporting_text, slide.headline)
         button_label = _build_cta_button_label(language) if allow_button else None
-        display_headline = slide.headline
-        if _cta_should_use_short_headline(recipe, cta_density) and headline_short:
-            display_headline = headline_short
-        elif style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1", "typography_editorial_light_v1"} and headline_short:
-            display_headline = headline_short
         return RenderSlideSpec(
             slide_number=slide.slide_number,
             slide_role=slide.slide_role,
@@ -297,22 +305,18 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
             layout_variant="cta_dark_glow",
             layout_preference="cta",
             text_align="center",
-            headline=slide.headline,
+            headline=cta_headline,
             headline_short=headline_short,
-            headline_display=display_headline,
+            headline_display=cta_headline,
             body=None,
             body_short=None,
-            body_display=body_display,
-            supporting_text=supporting_text,
+            body_display=None,
+            supporting_text=None,
             button_label=button_label,
             text_density=cta_density,
             visual_priority="cta",
             safe_area_profile="cta_center_stack",
-            max_headline_lines=_cta_max_headline_lines(
-                3 if style_recipe in LIGHT_GLOW_STYLE_RECIPES | TWITTER_CARD_STYLE_RECIPES else 4,
-                recipe,
-                cta_density,
-            ),
+            max_headline_lines=_cta_max_headline_lines(6, recipe, cta_density),
             max_body_lines=(
                 3
                 if style_recipe in {
@@ -785,8 +789,26 @@ def _build_cta_button_label(language: str) -> str:
     return "Get access"
 
 
+def _build_global_cta_headline(language: str) -> str:
+    normalized = _normalize_language_code(language)
+    return GLOBAL_CTA_HEADLINES.get(normalized, GLOBAL_CTA_HEADLINES["en"])
+
+
 def _normalize_text(text: str) -> str:
     return " ".join(text.strip().split())
+
+
+def _normalize_language_code(language: str | None) -> str:
+    if not language:
+        return "en"
+    return language.strip().lower().split("-", 1)[0].split("_", 1)[0] or "en"
+
+
+@lru_cache(maxsize=1)
+def _load_save_post_icon_data_base64() -> str | None:
+    if not SAVE_POST_ICON_PATH.exists():
+        return None
+    return base64.b64encode(SAVE_POST_ICON_PATH.read_bytes()).decode("ascii")
 
 
 def _strip_shared_prefix(source_text: str, headline: str) -> str:

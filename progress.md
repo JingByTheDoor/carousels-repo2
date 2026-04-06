@@ -387,6 +387,15 @@
   - `python -m compileall tools`
   - `.venv\\Scripts\\python.exe -m unittest discover -s tests -v`
   - `node --check figma_plugin\\code.js`
+- Global footer + CTA update:
+  - the shared corner footer now uses the repo asset `save post icon.png`, shipped to the plugin via payload base64 instead of an emoji or hardcoded shape
+  - slide 7 now uses one translated global webinar-offer headline across all carousel families
+  - CTA supporting/body text is suppressed globally in that mode
+  - plugin payload normalization now coerces CTA headline typography toward bold styling so the webinar offer renders as title text even on families that previously used regular CTA headings
+- Verified:
+  - `python -m compileall tools`
+  - `.venv\\Scripts\\python.exe -m unittest discover -s tests -v`
+  - `node --check figma_plugin\\code.js`
 - Changed review-mode style exploration policy:
   - review-mode `auto` no longer rotates only through the old safe trio/five
   - Studio now builds auto review rounds from tier buckets in this order:

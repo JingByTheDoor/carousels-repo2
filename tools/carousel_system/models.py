@@ -433,6 +433,7 @@ class PluginRenderPayload(BaseModel):
     language: str = "unknown"
     style_family: str = DEFAULT_STYLE_FAMILY
     style_recipe: str = DEFAULT_STYLE_RECIPE
+    save_post_icon_data_base64: str | None = None
     source_artifact_path: str
     reference_file_key: str
     reference_node_ids: list[str]
@@ -441,6 +442,14 @@ class PluginRenderPayload(BaseModel):
     style_tokens: StyleTokens
     typography: TypographyTokens
     slides: list[RenderSlideSpec]
+
+    @field_validator("save_post_icon_data_base64", mode="before")
+    @classmethod
+    def _normalize_optional_icon_data(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = "".join(value.strip().split())
+        return cleaned or None
 
     @model_validator(mode="after")
     def _validate_slide_count(self) -> "PluginRenderPayload":

@@ -47,12 +47,13 @@ def make_plan(cta_body: str = "Follow for more English teaching materials") -> C
     )
 
 
-def make_job(reference_style: str = "auto", generation_mode: str = "standard") -> CarouselInput:
+def make_job(reference_style: str = "auto", generation_mode: str = "standard", language: str | None = None) -> CarouselInput:
     return CarouselInput(
         job_id="test-job",
         source="manual",
         generation_mode=generation_mode,
         topic="Low-prep writing activities that help English students think faster",
+        language=language,
         reference_style=reference_style,
         reference_file_key="test-file",
     )
@@ -251,9 +252,26 @@ class QualityRulesTests(unittest.TestCase):
         payload = build_plugin_render_payload(record, source_artifact_path=Path("test-job.json"))
         cta_slide = payload.slides[-1]
         self.assertEqual(cta_slide.layout_variant, "cta_dark_glow")
+        self.assertTrue(cta_slide.headline_display.startswith("🎁 Get FREE access"))
         self.assertIsNone(cta_slide.body_display)
         self.assertIsNone(cta_slide.supporting_text)
         self.assertTrue(cta_slide.button_label)
+
+    def test_cta_uses_translated_global_webinar_headline(self) -> None:
+        record = build_output_record(make_job("placeholder_media", language="ru"), make_plan())
+        payload = build_plugin_render_payload(record, source_artifact_path=Path("test-job.json"))
+        cta_slide = payload.slides[-1]
+        self.assertEqual(
+            cta_slide.headline_display,
+            "🎁 Забирайте БЕСПЛАТНО доступ к вебинару: «🔥Как с TEFL/TESOL выйти на международный рынок и начать зарабатывать, преподавая английский — онлайн, за рубежом или в своей стране.»",
+        )
+        self.assertIsNone(cta_slide.body_display)
+        self.assertIsNone(cta_slide.supporting_text)
+
+    def test_render_payload_includes_save_post_icon_asset(self) -> None:
+        record = build_output_record(make_job("placeholder_media"), make_plan())
+        payload = build_plugin_render_payload(record, source_artifact_path=Path("test-job.json"))
+        self.assertIsNotNone(payload.save_post_icon_data_base64)
 
     def test_light_glow_hook_keeps_full_display_copy_and_shortens_only_as_fallback(self) -> None:
         plan = make_plan()

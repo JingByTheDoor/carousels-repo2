@@ -359,6 +359,15 @@
   - `node --check figma_plugin\\code.js`
   - `python -m compileall tools`
   - `python -m unittest discover -s tests -v`
+- Applied the latest saved review pass from `studio-20260406-011550-e53d3a`:
+  - enlarged and raised the side-media slot in the shared `light_grain_glow` / `pastel_arrow` body renderer so image slides no longer look underfilled
+  - rebalanced `device_mockup_gradient` body slides by widening the text column, increasing body-copy scale and available text height, and slightly reducing the phone shell dominance
+  - wired fallback copy into `device_mockup_gradient` body slides so future dense rounds can step down cleanly instead of only shrinking live text
+  - added a shared render warning for body slides whose fitted body font falls below the readability target for that family/profile
+- Verified:
+  - `node --check figma_plugin\\code.js`
+  - `python -m compileall tools`
+  - `.venv\\Scripts\\python.exe -m unittest discover -s tests -v`
 - Reduced review-mode post-render overhead:
   - Studio review rounds now generate payloads with `output_modes=["figma"]`
   - plugin payloads now carry `include_download_exports`

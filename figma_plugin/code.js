@@ -560,6 +560,19 @@ function getRenderProfile(payload) {
   return STYLE_RENDER_PROFILES[payload.style_recipe] || DEFAULT_RENDER_PROFILE;
 }
 
+function getMinimumBodyFontSize(profile, imageRendered) {
+  if (profile && profile.mediaMode === "device_conditional") {
+    return imageRendered ? 30 : 32;
+  }
+  if (profile && profile.mediaMode === "optional_inline") {
+    return imageRendered ? 28 : 30;
+  }
+  if (profile && profile.spacingProfile === "tight") {
+    return imageRendered ? 26 : 28;
+  }
+  return imageRendered ? 24 : 26;
+}
+
 async function renderCoverSlide(frame, slide, payload) {
   if (isAlderSplitRight(payload) || isAlderSplitLeft(payload)) {
     await renderAlderMediaCoverSlide(frame, slide, payload);
@@ -2552,21 +2565,10 @@ async function renderLightGrainBodySlide(frame, slide, payload) {
 
   const hasMedia = !!slide.image_asset;
   const mediaOnRight = slide.slide_number % 4 !== 2;
-  const mediaX = mediaOnRight ? 612 : 40;
-  const textX = hasMedia ? (mediaOnRight ? 62 : 390) : 62;
-  const textWidth = hasMedia ? 470 : 812;
-  if (hasMedia) {
-    await appendRemoteImageRect(panel, slide, {
-      x: mediaX,
-      y: 608,
-      width: 284,
-      height: 404,
-      cornerRadius: 28,
-      opacity: 0.96,
-      overlayHex: "#FFFFFF",
-      overlayOpacity: 0.03
-    });
-  }
+  const mediaWidth = hasMedia ? 318 : 0;
+  const mediaX = mediaOnRight ? 896 - mediaWidth : 40;
+  const textX = hasMedia ? (mediaOnRight ? 62 : mediaX + mediaWidth + 34) : 62;
+  const textWidth = hasMedia ? (mediaOnRight ? 484 : 470) : 812;
 
   const headlineNode = await createTextBlock(panel, {
     text: slide.headline_display || slide.headline,
@@ -2577,8 +2579,8 @@ async function renderLightGrainBodySlide(frame, slide, payload) {
     x: textX,
     y: 126,
     width: textWidth,
-    maxHeight: 236,
-    maxSize: 82,
+    maxHeight: hasMedia ? 248 : 236,
+    maxSize: hasMedia ? 84 : 82,
     minSize: 30,
     lineHeight: 1.02,
     color: tokens.text_dark,
@@ -2587,7 +2589,7 @@ async function renderLightGrainBodySlide(frame, slide, payload) {
     maxLines: slide.max_headline_lines
   });
 
-  const bodyY = Math.max(hasMedia ? 468 : 388, getTextBottom(headlineNode, 82, 18));
+  const bodyY = Math.max(hasMedia ? 430 : 388, getTextBottom(headlineNode, hasMedia ? 84 : 82, 18));
   await createTextBlock(panel, {
     text: slide.body_display || slide.body || slide.headline_display || slide.headline,
     fallbackTexts: getBodyFallbackTexts(slide),
@@ -2597,15 +2599,30 @@ async function renderLightGrainBodySlide(frame, slide, payload) {
     x: textX,
     y: bodyY,
     width: textWidth,
-    maxHeight: hasMedia ? 360 : 440,
-    maxSize: 42,
-    minSize: 20,
-    lineHeight: 1.22,
+    maxHeight: hasMedia ? 420 : 440,
+    maxSize: hasMedia ? 44 : 42,
+    minSize: hasMedia ? 22 : 20,
+    lineHeight: hasMedia ? 1.18 : 1.22,
     color: tokens.text_dark,
     alignHorizontal: "LEFT",
     role: "body",
     maxLines: slide.max_body_lines
   });
+
+  if (hasMedia) {
+    const mediaY = Math.max(510, getTextBottom(headlineNode, 84, 24));
+    await appendRemoteImageRect(panel, slide, {
+      x: mediaX,
+      y: mediaY,
+      width: mediaWidth,
+      height: Math.max(432, 1022 - mediaY),
+      cornerRadius: 30,
+      opacity: 0.98,
+      overlayHex: "#FFFFFF",
+      overlayOpacity: 0.02,
+      effects: [dropShadow("#0F1420", 0.08, 0, 16, 34)]
+    });
+  }
 }
 
 async function renderLightGrainCtaSlide(frame, slide, payload) {
@@ -3080,22 +3097,25 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
     });
   }
 
-  const textX = hasMedia ? (deviceOnRight ? 86 : 612) : 92;
-  const textWidth = hasMedia ? 412 : 812;
-  const bodyWidth = hasMedia ? 396 : 770;
-  const deviceX = deviceOnRight ? 612 : 86;
+  const deviceWidth = hasMedia ? 384 : 0;
+  const deviceHeight = hasMedia ? 1038 : 0;
+  const deviceX = deviceOnRight ? 624 : 72;
+  const textX = hasMedia ? (deviceOnRight ? 86 : 522) : 92;
+  const textWidth = hasMedia ? 438 : 812;
+  const bodyWidth = hasMedia ? 424 : 796;
   await appendLabelPill(frame, textX, 124, `0${slide.slide_number}`, tokens.accent_blue, tokens.text_dark);
   const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
     x: textX,
     y: 214,
     width: textWidth,
-    maxHeight: 240,
-    maxSize: hasMedia ? 72 : 88,
-    minSize: hasMedia ? 34 : 36,
+    maxHeight: hasMedia ? 252 : 240,
+    maxSize: hasMedia ? 76 : 88,
+    minSize: hasMedia ? 36 : 36,
     lineHeight: 1.02,
     color: tokens.text_dark,
     alignHorizontal: "LEFT",
@@ -3103,19 +3123,20 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
     maxLines: slide.max_headline_lines
   });
 
-  const bodyY = Math.max(hasMedia ? 410 : 344, getTextBottom(headlineNode, hasMedia ? 72 : 88, 18));
+  const bodyY = Math.max(hasMedia ? 396 : 336, getTextBottom(headlineNode, hasMedia ? 76 : 88, 16));
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: textX,
     y: bodyY,
     width: bodyWidth,
-    maxHeight: hasMedia ? 292 : 420,
-    maxSize: hasMedia ? 38 : 42,
-    minSize: hasMedia ? 20 : 22,
-    lineHeight: 1.18,
+    maxHeight: clampTextHeight(frame, bodyY, hasMedia ? 420 : 520, hasMedia ? 140 : 188),
+    maxSize: hasMedia ? 44 : 46,
+    minSize: hasMedia ? 24 : 24,
+    lineHeight: hasMedia ? 1.14 : 1.16,
     color: tokens.text_dark,
     alignHorizontal: "LEFT",
     role: "body",
@@ -3123,7 +3144,7 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
   });
 
   if (hasMedia) {
-    await appendDeviceMockupShell(frame, slide, deviceX, 126, 406, 1076, tokens, {
+    await appendDeviceMockupShell(frame, slide, deviceX, 132, deviceWidth, deviceHeight, tokens, {
       screenOpacity: 0.98,
       overlayOpacity: 0.02
     });
@@ -4888,6 +4909,18 @@ function collectSlideDiagnostics(frame, slide, payload) {
         "overpacked_layout",
         "warning",
         `Primary content uses ${Math.round(occupiedHeightRatio * 100)}% of the slide height and may feel cramped.`
+      );
+    }
+  }
+
+  if (slide.design_role === "body" && bodyEntry && bodyEntry.fontSize) {
+    const minimumBodyFontSize = getMinimumBodyFontSize(getRenderProfile(payload), imageRendered);
+    if (bodyEntry.fontSize < minimumBodyFontSize) {
+      recordRenderWarning(
+        slide.slide_number,
+        "body_text_small",
+        "warning",
+        `Body text resolved to ${Math.round(bodyEntry.fontSize)}px, below the ${minimumBodyFontSize}px readability target for this layout.`
       );
     }
   }

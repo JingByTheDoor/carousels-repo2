@@ -1,0 +1,115 @@
+{
+  "round_id": "studio-20260406-011550-e53d3a",
+  "created_at": "2026-04-06T01:16:06.249197+00:00",
+  "round_number": 1,
+  "generated_brief": "Low-prep writing activities that help English students think faster",
+  "winner": {
+    "variant_id": "studio-20260406-011550-e53d3a-variant-1",
+    "ordinal": 1,
+    "style": "Placeholder Media Glow",
+    "style_family": "reference_placeholder_media_glow",
+    "copy_length": "Balanced",
+    "feedback": null,
+    "figma_url": null,
+    "figma_page_url": null,
+    "slide_references": []
+  },
+  "losers": [
+    {
+      "variant_id": "studio-20260406-011550-e53d3a-variant-2",
+      "ordinal": 2,
+      "style": "Light Grain Glow",
+      "style_family": "reference_light_grain_glow",
+      "copy_length": "Expanded",
+      "feedback": "The image is slightly too small and may need resizing or repositioning. The image is slightly too small and may need resizing or repositioning. The image is slightly too small and may need resizing or repositioning. The image is slightly too small and may need resizing or repositioning.",
+      "figma_url": null,
+      "figma_page_url": null,
+      "slide_references": [
+        {
+          "token": "/slide_2",
+          "slide_number": 2,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260406-011550-e53d3a-v2\\slide-02.png",
+          "preview_url": "/studio-output/previews/studio-20260406-011550-e53d3a-v2/slide-02.png"
+        },
+        {
+          "token": "/slide_4",
+          "slide_number": 4,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260406-011550-e53d3a-v2\\slide-04.png",
+          "preview_url": "/studio-output/previews/studio-20260406-011550-e53d3a-v2/slide-04.png"
+        },
+        {
+          "token": "/slide_5",
+          "slide_number": 5,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260406-011550-e53d3a-v2\\slide-05.png",
+          "preview_url": "/studio-output/previews/studio-20260406-011550-e53d3a-v2/slide-05.png"
+        },
+        {
+          "token": "/slide_6",
+          "slide_number": 6,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260406-011550-e53d3a-v2\\slide-06.png",
+          "preview_url": "/studio-output/previews/studio-20260406-011550-e53d3a-v2/slide-06.png"
+        }
+      ]
+    },
+    {
+      "variant_id": "studio-20260406-011550-e53d3a-variant-3",
+      "ordinal": 3,
+      "style": "Device Mockup Gradient",
+      "style_family": "reference_device_mockup_gradient",
+      "copy_length": "Tight",
+      "feedback": "The body text is too small and hard to read. The body text is too small and hard to read. The body text is too small and hard to read. The body text is too small and hard to read. The body text is too small and hard to read.",
+      "figma_url": null,
+      "figma_page_url": null,
+      "slide_references": [
+        {
+          "token": "/slide_2",
+          "slide_number": 2,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260406-011550-e53d3a-v3\\slide-02.png",
+          "preview_url": "/studio-output/previews/studio-20260406-011550-e53d3a-v3/slide-02.png"
+        },
+        {
+          "token": "/slide_3",
+          "slide_number": 3,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260406-011550-e53d3a-v3\\slide-03.png",
+          "preview_url": "/studio-output/previews/studio-20260406-011550-e53d3a-v3/slide-03.png"
+        },
+        {
+          "token": "/slide_4",
+          "slide_number": 4,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260406-011550-e53d3a-v3\\slide-04.png",
+          "preview_url": "/studio-output/previews/studio-20260406-011550-e53d3a-v3/slide-04.png"
+        },
+        {
+          "token": "/slide_5",
+          "slide_number": 5,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260406-011550-e53d3a-v3\\slide-05.png",
+          "preview_url": "/studio-output/previews/studio-20260406-011550-e53d3a-v3/slide-05.png"
+        },
+        {
+          "token": "/slide_6",
+          "slide_number": 6,
+          "export_path": null,
+          "export_url": null,
+          "preview_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\studio\\previews\\studio-20260406-011550-e53d3a-v3\\slide-06.png",
+          "preview_url": "/studio-output/previews/studio-20260406-011550-e53d3a-v3/slide-06.png"
+        }
+      ]
+    }
+  ]
+}

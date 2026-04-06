@@ -241,3 +241,8 @@
   - cover headlines that still clip at the bottom of a card
   - body copy starting too early under multi-line headlines
   - the same collision pattern recurring across otherwise unrelated families
+- The latest saved Studio round `studio-20260406-011550-e53d3a` exposed another shared class of review failures: some families were no longer colliding, but their proportions were still weak.
+  - `light_grain_glow` body slides kept the inline image too small and too low in the card, which made the slide feel underfilled even when the copy fit.
+  - `device_mockup_gradient` body slides let the phone shell dominate the composition while the body copy stayed in a narrow, shallow text column, so the text read as too small even without literal overflow.
+  - This round was a geometry problem more than a planner problem: media-slot size, text-column width, and allowed body-text height all needed to move together.
+  - Readability regressions should also emit diagnostics, not wait for visual review notes, so body-slide telemetry now needs a minimum-font warning.

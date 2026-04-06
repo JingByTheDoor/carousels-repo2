@@ -32,6 +32,22 @@ const FONT_FALLBACKS = {
 };
 const PREVIEW_EXPORT_WIDTH = 720;
 const EXPORT_SCALE = 2;
+const SAVE_POST_LABELS = {
+  ar: "احفظ المنشور",
+  de: "Beitrag speichern",
+  en: "Save post",
+  es: "Guarda la publicación",
+  fr: "Enregistrer le post",
+  hi: "पोस्ट सेव करें",
+  id: "Simpan postingan",
+  it: "Salva il post",
+  nl: "Bewaar dit bericht",
+  pl: "Zapisz post",
+  pt: "Salve o post",
+  ru: "Сохраните пост",
+  tr: "Gönderiyi kaydet",
+  uk: "Збережіть допис"
+};
 const TRAILING_CONNECTORS = new Set([
   "a", "an", "and", "as", "at", "but", "for", "from", "in", "into", "of", "on", "or", "that", "the", "to", "with",
   "и", "или", "в", "во", "на", "но", "по", "с", "со", "для", "к", "ко", "от", "из", "у", "а", "что", "чтобы"
@@ -355,6 +371,7 @@ function normalizePayload(payload) {
     canvas: Object.assign({}, DEFAULT_CANVAS, payload.canvas || {}),
     include_download_exports: payload.include_download_exports !== false,
     image_strategy: Object.assign({ mode: "none", provider: null }, payload.image_strategy || {}),
+    language: normalizeLanguageCode(payload.language),
     style_tokens: Object.assign({}, DEFAULT_TOKENS, payload.style_tokens || {}),
     typography: Object.assign({}, DEFAULT_TYPOGRAPHY, payload.typography || {}),
     slides: payload.slides.map(normalizeSlide)
@@ -424,6 +441,7 @@ async function renderCarousel(payload) {
     page.appendChild(frame);
 
     await renderSlide(frame, slide, payload);
+    await appendCarouselMeta(frame, payload);
     collectSlideDiagnostics(frame, slide, payload);
     frames.push(frame);
     nodeIds.push(frame.id);
@@ -2465,8 +2483,9 @@ async function renderPlaceholderMediaCoverSlide(frame, slide, payload) {
     strokeHex: "#E7EBF5",
     strokeOpacity: 1
   });
+  const footerY = getPlaceholderMediaMetaY(card.height);
+  const contentBottom = footerY - 24;
 
-  await appendLabelPill(card, 40, 42, "Cover", tokens.accent_navy, "#FFFFFF");
   const heroImage = await appendRemoteImageRect(card, slide, {
     x: 36,
     y: 108,
@@ -2490,7 +2509,7 @@ async function renderPlaceholderMediaCoverSlide(frame, slide, payload) {
     x: 58,
     y: 632,
     width: 820,
-    maxHeight: 434,
+    maxHeight: Math.max(220, contentBottom - 632),
     maxSize: 94,
     minSize: 26,
     lineHeight: 1.0,
@@ -2502,7 +2521,7 @@ async function renderPlaceholderMediaCoverSlide(frame, slide, payload) {
 
   if (slide.body_display || slide.body) {
     const bodyY = getTextBottom(headlineNode, 94, 8);
-    const remainingHeight = Math.max(64, 1096 - bodyY);
+    const remainingHeight = Math.max(64, contentBottom - bodyY);
     await createTextBlock(card, {
       text: slide.body_display || slide.body,
       fallbackTexts: getBodyFallbackTexts(slide),
@@ -2522,6 +2541,7 @@ async function renderPlaceholderMediaCoverSlide(frame, slide, payload) {
       maxLines: slide.max_body_lines
     });
   }
+
 }
 
 async function renderLightGrainBodySlide(frame, slide, payload) {
@@ -2725,6 +2745,8 @@ async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
     strokeHex: "#EAEFF8",
     strokeOpacity: 1
   });
+  const footerY = getPlaceholderMediaMetaY(card.height);
+  const contentBottom = footerY - 26;
 
   await appendLabelPill(card, 744, 44, `0${slide.slide_number}`, tokens.accent_navy, "#FFFFFF");
   const hasMedia = !!slide.image_asset;
@@ -2769,8 +2791,8 @@ async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
   });
 
   if (hasMedia) {
-    const imageY = Math.max(618, getTextBottom(bodyNode, 42, 36));
-    const imageHeight = Math.max(260, 1060 - imageY);
+    const imageY = Math.min(Math.max(618, getTextBottom(bodyNode, 42, 36)), contentBottom - 220);
+    const imageHeight = Math.max(220, contentBottom - imageY);
     await appendRemoteImageRect(card, slide, {
       x: 56,
       y: imageY,
@@ -2782,13 +2804,25 @@ async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
       overlayOpacity: 0.02
     });
   } else {
-    appendPlaceholderMediaDecor(card, 56, Math.max(640, getTextBottom(bodyNode, 44, 40)), 824, 292, tokens);
+    const decorY = Math.min(Math.max(640, getTextBottom(bodyNode, 44, 40)), contentBottom - 220);
+    appendPlaceholderMediaDecor(card, 56, decorY, 824, Math.max(220, contentBottom - decorY), tokens);
   }
+
 }
 
 async function renderPlaceholderMediaCtaSlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   appendSoftGradientBackdrop(frame, tokens, "violet");
+  await appendRemoteImageRect(frame, slide, {
+    x: 0,
+    y: 0,
+    width: 1080,
+    height: 1350,
+    opacity: 0.14,
+    overlayHex: "#FFFFFF",
+    overlayOpacity: 0.18,
+    effects: [{ type: "LAYER_BLUR", radius: 6, visible: true }]
+  });
   const card = appendSurfaceCard(frame, 104, 184, 872, 978, {
     fillHex: "#FFFFFF",
     fillOpacity: 0.96,
@@ -2796,9 +2830,6 @@ async function renderPlaceholderMediaCtaSlide(frame, slide, payload) {
     strokeHex: "#E9EEF8",
     strokeOpacity: 1
   });
-
-  await appendLabelPill(card, 308, 66, "Keep following", tokens.accent_blue, tokens.text_dark);
-
   const headlineNode = await createTextBlock(card, {
     text: slide.headline_display || slide.headline_short || slide.headline,
     fallbackTexts: getHeadlineFallbackTexts(slide),
@@ -2862,7 +2893,32 @@ async function renderPlaceholderMediaCtaSlide(frame, slide, payload) {
     bodyBottom = getTextBottom(supportingNode, 24, 0);
   }
 
-  await appendLabelPill(card, 280, Math.max(792, bodyBottom + 64), slide.button_label || "Follow for more", tokens.accent_navy, "#FFFFFF");
+  const hasMedia = !!slide.image_asset;
+  let mediaBottom = bodyBottom;
+  if (hasMedia) {
+    const imageY = Math.max(626, bodyBottom + 28);
+    const imageHeight = 170;
+    await appendRemoteImageRect(card, slide, {
+      x: 88,
+      y: imageY,
+      width: 696,
+      height: imageHeight,
+      cornerRadius: 28,
+      opacity: 0.98,
+      overlayHex: "#FFFFFF",
+      overlayOpacity: 0.04
+    });
+    mediaBottom = imageY + imageHeight;
+  }
+
+  await appendLabelPill(
+    card,
+    280,
+    Math.max(hasMedia ? 848 : 792, mediaBottom + 34),
+    slide.button_label || "Follow for more",
+    tokens.accent_navy,
+    "#FFFFFF"
+  );
 }
 
 async function renderRetroSwipeCoverSlide(frame, slide, payload) {
@@ -3959,6 +4015,120 @@ function appendPlaceholderMediaDecor(frame, x, y, width, height, tokens) {
   cardRight.cornerRadius = 28;
   cardRight.fills = [solidPaint("#FFFFFF", 0.84)];
   block.appendChild(cardRight);
+}
+
+function getPlaceholderMediaMetaY(frameHeight) {
+  return Math.max(0, frameHeight - 50);
+}
+
+function appendBookmarkGlyph(frame, x, y, colorHex, opacity) {
+  const body = figma.createRectangle();
+  body.resize(14, 15);
+  body.x = x;
+  body.y = y;
+  body.cornerRadius = 3;
+  body.fills = [solidPaint(colorHex, opacity)];
+  frame.appendChild(body);
+
+  const tail = figma.createPolygon();
+  tail.pointCount = 3;
+  tail.resize(14, 9);
+  tail.rotation = 180;
+  tail.x = x;
+  tail.y = y + 10;
+  tail.fills = [solidPaint(colorHex, opacity)];
+  frame.appendChild(tail);
+}
+
+function appendCarouselMetaTone(frame) {
+  const fill = getPrimarySolidFill(frame);
+  if (!fill) {
+    return { colorHex: "#757B94", textOpacity: 0.52, iconOpacity: 0.38 };
+  }
+  const brightness = getPaintBrightness(fill);
+  if (brightness < 0.42) {
+    return { colorHex: "#FFFFFF", textOpacity: 0.42, iconOpacity: 0.28 };
+  }
+  return { colorHex: "#757B94", textOpacity: 0.52, iconOpacity: 0.38 };
+}
+
+function getPrimarySolidFill(node) {
+  if (!node || !Array.isArray(node.fills)) {
+    return null;
+  }
+  for (const fill of node.fills) {
+    if (fill && fill.visible !== false && fill.type === "SOLID" && fill.color) {
+      return fill;
+    }
+  }
+  return null;
+}
+
+function getPaintBrightness(paint) {
+  const color = paint && paint.color ? paint.color : null;
+  if (!color) {
+    return 1;
+  }
+  return color.r * 0.2126 + color.g * 0.7152 + color.b * 0.0722;
+}
+
+function getCarouselMetaY(frameHeight) {
+  return Math.max(0, frameHeight - 58);
+}
+
+function getSavePostLabel(language) {
+  const normalized = normalizeLanguageCode(language);
+  return SAVE_POST_LABELS[normalized] || SAVE_POST_LABELS.en;
+}
+
+function normalizeLanguageCode(language) {
+  const cleaned = cleanText(language);
+  if (!cleaned) {
+    return "en";
+  }
+  return cleaned.toLowerCase().split(/[-_]/)[0] || "en";
+}
+
+async function appendCarouselMeta(frame, payload) {
+  const y = getCarouselMetaY(frame.height);
+  const tone = appendCarouselMetaTone(frame);
+  const leftNode = await createTextBlock(frame, {
+    text: "© TEFL-TESOL-Certificate.com",
+    fontFamily: "Inter",
+    fontStyle: "Regular",
+    fallbackStyle: "Regular",
+    x: 46,
+    y: y,
+    width: Math.min(420, Math.max(280, Math.round(frame.width * 0.52))),
+    maxHeight: 26,
+    maxSize: 18,
+    minSize: 12,
+    lineHeight: 1.0,
+    color: tone.colorHex,
+    alignHorizontal: "LEFT"
+  });
+  leftNode.opacity = tone.textOpacity;
+
+  const iconX = frame.width - 48;
+  const textWidth = 260;
+  const actionNode = await createTextBlock(frame, {
+    text: getSavePostLabel(payload && payload.language),
+    fontFamily: "Inter",
+    fontStyle: "Regular",
+    fallbackStyle: "Regular",
+    x: iconX - textWidth - 14,
+    y: y,
+    width: textWidth,
+    maxHeight: 26,
+    maxSize: 18,
+    minSize: 12,
+    lineHeight: 1.0,
+    color: tone.colorHex,
+    alignHorizontal: "RIGHT"
+  });
+  actionNode.opacity = tone.textOpacity;
+
+  appendBookmarkGlyph(frame, iconX, y + 1, tone.colorHex, tone.iconOpacity);
 }
 
 async function appendLabelPill(frame, x, y, text, fillHex, textHex) {

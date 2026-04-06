@@ -747,6 +747,30 @@ STYLE_RECIPES: dict[str, StyleRecipeSpec] = {
     PROFILE_CIRCLE_RECIPE.style_recipe: PROFILE_CIRCLE_RECIPE,
 }
 
+STYLE_PREFERENCES_BY_RECIPE: dict[str, str] = {
+    ALDER_RECIPE.style_recipe: "alder_forced",
+    ALDER_DENSE_RECIPE.style_recipe: "alder_forced",
+    ALDER_SPLIT_RIGHT_RECIPE.style_recipe: "alder_split_right",
+    ALDER_SPLIT_LEFT_RECIPE.style_recipe: "alder_split_left",
+    ALDER_TEXT_ONLY_RECIPE.style_recipe: "alder_text_only",
+    TYPOGRAPHY_SIGNAL_RECIPE.style_recipe: "typography_signal",
+    CP_SPLIT_RECIPE.style_recipe: "cp_3",
+    CP_LONGFORM_RECIPE.style_recipe: "cp_longform",
+    CP_GALLERY_RECIPE.style_recipe: "cp_gallery",
+    SADEKOV_BLACK_PROFILE_RECIPE.style_recipe: "sadekov",
+    SADEKOV_WHITE_PROFILE_RECIPE.style_recipe: "sadekov_light",
+    TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE.style_recipe: "typography_light",
+    CREATOR_MONO_RECIPE.style_recipe: "creator_mono",
+    PASTEL_ARROW_RECIPE.style_recipe: "pastel_arrow",
+    PLACEHOLDER_MEDIA_RECIPE.style_recipe: "placeholder_media",
+    LIGHT_GRAIN_GLOW_RECIPE.style_recipe: "light_glow",
+    DEVICE_MOCKUP_RECIPE.style_recipe: "device_mockup",
+    RETRO_SWIPE_RECIPE.style_recipe: "retro_swipe",
+    SOCIAL_PROOF_RECIPE.style_recipe: "social_proof",
+    PROFILE_CIRCLE_RECIPE.style_recipe: "profile_circle",
+    TWITTER_CARD_SOFT_RECIPE.style_recipe: "twitter_card",
+}
+
 
 AUTO_SELECTION_TIERS = {"review_safe", "default_auto"}
 REVIEW_SELECTION_PRIORITY: tuple[SelectionTier, ...] = (
@@ -760,6 +784,10 @@ def get_style_recipe_spec(style_recipe: str) -> StyleRecipeSpec:
     return STYLE_RECIPES[style_recipe]
 
 
+def style_preference_for_recipe(style_recipe: str) -> str | None:
+    return STYLE_PREFERENCES_BY_RECIPE.get(style_recipe)
+
+
 def _pick_candidate(candidates: list[StyleRecipeSpec], signature: int) -> StyleRecipeSpec:
     eligible = [candidate for candidate in candidates if candidate.selection_tier in AUTO_SELECTION_TIERS]
     pool = eligible or candidates
@@ -768,6 +796,11 @@ def _pick_candidate(candidates: list[StyleRecipeSpec], signature: int) -> StyleR
 
 def resolve_style_preference(preference: str, language: str) -> StyleRecipeSpec | None:
     normalized = (preference or "").strip().lower()
+    if normalized in STYLE_RECIPES:
+        return STYLE_RECIPES[normalized]
+    for recipe in STYLE_RECIPES.values():
+        if normalized == recipe.style_family:
+            return recipe
     if normalized in {"alder_forced", "alder_locked", "reference_mix_alder_portrait"}:
         return ALDER_DENSE_RECIPE if language == "ru" else ALDER_RECIPE
     if normalized in {"alder_split_right", "alder_right"}:

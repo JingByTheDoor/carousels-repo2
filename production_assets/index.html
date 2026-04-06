@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfect Library Production</title>
+    <link rel="stylesheet" href="/production-assets/styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero-card">
+        <p class="eyebrow">Perfect Library</p>
+        <h1>Generate one final production carousel</h1>
+        <p class="hero-copy">
+          Choose an approved template, generate one real production job, then download the real PNG and PDF exports as
+          soon as the Figma/plugin render finishes.
+        </p>
+        <div class="hero-actions">
+          <button id="generate-button" class="primary-button" type="button">Generate Final Carousel</button>
+        </div>
+        <div class="status-strip">
+          <span id="status-text">Loading perfect library…</span>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <div class="form-grid">
+          <label>
+            <span>Perfect Template</span>
+            <select id="library_item_id" name="library_item_id"></select>
+          </label>
+
+          <label>
+            <span>Language</span>
+            <input id="language" name="language" type="text" placeholder="Optional, e.g. en or ru" />
+          </label>
+
+          <label>
+            <span>Topic</span>
+            <input id="topic" name="topic" type="text" placeholder="Seed topic for the carousel" />
+          </label>
+
+          <label>
+            <span>CTA Text</span>
+            <input id="cta_text" name="cta_text" type="text" placeholder="Optional CTA override" />
+          </label>
+
+          <label class="span-2">
+            <span>Script</span>
+            <textarea id="script" name="script" rows="6" placeholder="Optional full script"></textarea>
+          </label>
+
+          <label class="span-2">
+            <span>Notes</span>
+            <textarea id="notes" name="notes" rows="4" placeholder="Optional direction or constraint"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section class="job-card">
+        <div class="job-header">
+          <div>
+            <p class="eyebrow">Current Job</p>
+            <h2 id="job-title">No production job yet</h2>
+          </div>
+          <div class="chip-row" id="job-meta"></div>
+        </div>
+        <p class="job-copy" id="job-copy">Choose a perfect-library template and generate one final carousel.</p>
+        <div class="link-row" id="link-row"></div>
+      </section>
+
+      <section class="results-grid">
+        <article class="panel-card">
+          <div class="panel-header">
+            <h3>Warnings</h3>
+            <span class="panel-note" id="visual-status">pending</span>
+          </div>
+          <div id="warnings-panel" class="stack-panel"></div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-header">
+            <h3>Downloads</h3>
+            <span class="panel-note">Real files only</span>
+          </div>
+          <div id="downloads-panel" class="stack-panel"></div>
+        </article>
+      </section>
+
+      <section class="panel-card">
+        <div class="panel-header script-header">
+          <div>
+            <h3>Script Used</h3>
+            <p class="panel-copy">Final slide-by-slide copy used for the production render.</p>
+          </div>
+          <div class="script-actions">
+            <button id="copy-script-button" class="secondary-button" type="button" disabled>Copy Script</button>
+            <button id="download-script-button" class="secondary-button" type="button" disabled>Download .txt</button>
+          </div>
+        </div>
+        <textarea
+          id="used-script-output"
+          class="script-output"
+          rows="12"
+          readonly
+          spellcheck="false"
+          placeholder="The final script will appear here after the carousel plan is generated."
+        ></textarea>
+      </section>
+    </main>
+
+    <script src="/production-assets/app.js"></script>
+  </body>
+  </html>

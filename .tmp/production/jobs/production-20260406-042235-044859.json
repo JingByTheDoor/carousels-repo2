@@ -1,0 +1,51 @@
+{
+  "job_id": "production-20260406-042235-044859",
+  "created_at": "2026-04-06T04:22:35.773262+00:00",
+  "status": "rendering",
+  "request": {
+    "job_id": "production-20260406-042235-044859",
+    "source": "manual",
+    "generation_mode": "production",
+    "library_item_id": "placeholder-media-glow-perfect-v1",
+    "niche_preset": null,
+    "topic": "Low-prep writing activities that help English students think faster",
+    "script": null,
+    "cta_text": "Follow for more English teaching materials",
+    "language": null,
+    "aspect_ratio": "portrait_1080x1350",
+    "output_modes": [
+      "figma",
+      "png"
+    ],
+    "reference_style": "placeholder_media",
+    "image_mode": "auto",
+    "image_source_preference": "pexels",
+    "allow_ai_fallback": true,
+    "image_focus": "brand_safe",
+    "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
+    "reference_node_ids": [
+      "local:light-1",
+      "local:light-2",
+      "local:light-6"
+    ],
+    "notes": null
+  },
+  "library_item_id": "placeholder-media-glow-perfect-v1",
+  "library_label": "Placeholder Media Glow",
+  "style_family": "reference_placeholder_media_glow",
+  "style_recipe": "placeholder_media_glow_v1",
+  "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\production-20260406-042235-044859.json",
+  "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\production-20260406-042235-044859.render.json",
+  "render_result_path": null,
+  "figma_file_url": null,
+  "figma_page_url": null,
+  "figma_page_name": null,
+  "export_paths": [],
+  "export_urls": [],
+  "pdf_export_path": null,
+  "pdf_export_url": null,
+  "visual_status": "visual_resolved",
+  "warnings": [],
+  "fit_metrics": [],
+  "error": null
+}

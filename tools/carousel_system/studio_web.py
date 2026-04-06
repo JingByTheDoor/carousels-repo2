@@ -7,6 +7,12 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from carousel_system.config import ConfigError, ROOT_DIR, load_settings
+from carousel_system.production import (
+    ProductionJobCreateRequest,
+    create_production_job,
+    load_production_job,
+    production_library_payload,
+)
 from carousel_system.studio import (
     STUDIO_DIR,
     ReviewResetRequest,
@@ -30,12 +36,14 @@ from carousel_system.studio import (
 
 
 ASSETS_DIR = ROOT_DIR / "studio_assets"
+PRODUCTION_ASSETS_DIR = ROOT_DIR / "production_assets"
 
 
 def create_app() -> FastAPI:
     STUDIO_DIR.mkdir(parents=True, exist_ok=True)
     app = FastAPI(title="Carousel Review Studio", version="0.1.0")
     app.mount("/studio-assets", StaticFiles(directory=ASSETS_DIR), name="studio-assets")
+    app.mount("/production-assets", StaticFiles(directory=PRODUCTION_ASSETS_DIR), name="production-assets")
     app.mount("/studio-output", StaticFiles(directory=STUDIO_DIR), name="studio-output")
     app.mount("/tmp-output", StaticFiles(directory=ROOT_DIR / ".tmp"), name="tmp-output")
 
@@ -47,6 +55,10 @@ def create_app() -> FastAPI:
     def index() -> FileResponse:
         return FileResponse(ASSETS_DIR / "index.html")
 
+    @app.get("/production")
+    def production_index() -> FileResponse:
+        return FileResponse(PRODUCTION_ASSETS_DIR / "index.html")
+
     @app.get("/api/bootstrap")
     def bootstrap() -> dict:
         payload = studio_bootstrap_payload()
@@ -55,6 +67,28 @@ def create_app() -> FastAPI:
         payload["latest_round"] = latest_round.model_dump(mode="json") if latest_round else None
         payload["latest_review_round"] = latest_review.model_dump(mode="json") if latest_review else None
         return payload
+
+    @app.get("/api/perfect-library")
+    def perfect_library() -> dict:
+        return production_library_payload()
+
+    @app.post("/api/production-jobs")
+    def create_production_lane_job(request: ProductionJobCreateRequest) -> dict:
+        try:
+            settings = load_settings(require_openai=True)
+            job_record = create_production_job(settings, request)
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except ConfigError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        return job_record.model_dump(mode="json")
+
+    @app.get("/api/production-jobs/{job_id}")
+    def get_production_job(job_id: str) -> dict:
+        job_record = load_production_job(job_id)
+        if job_record is None:
+            raise HTTPException(status_code=404, detail="Production job not found.")
+        return job_record.model_dump(mode="json")
 
     @app.get("/api/review-rounds/latest")
     def latest_review_round() -> dict:

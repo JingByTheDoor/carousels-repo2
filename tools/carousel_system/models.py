@@ -47,7 +47,7 @@ DEFAULT_RENDER_SCHEMA_VERSION = "figma_plugin_payload_v2"
 DEFAULT_RENDER_BACKEND = "figma_plugin_file_import"
 
 JobStatus = Literal["queued", "planning", "planned", "rendering", "complete", "error"]
-GenerationMode = Literal["standard", "review"]
+GenerationMode = Literal["standard", "review", "production"]
 TextDensity = Literal["low", "medium", "high"]
 LayoutPreference = Literal["hero", "editorial", "mask_left", "spotlight", "cta"]
 VisualPriority = Literal["headline", "body", "cta"]
@@ -59,6 +59,9 @@ ImageFocus = Literal["literal", "abstract", "brand_safe", "mixed"]
 ImageSourceMode = Literal["stock", "ai"]
 ImageSlot = Literal["none", "cover_media", "body_media", "cta_media"]
 ImageTreatment = Literal["none", "crop", "mask", "duotone", "blur_glow", "card_embed", "gallery_wall"]
+VisualAssetKind = Literal["photo", "infographic", "illustration", "mixed"]
+PerfectLibraryEntryStatus = Literal["active", "inactive"]
+ProductionVisualStatus = Literal["pending", "visual_resolved", "visual_warning"]
 SafeAreaProfile = Literal[
     "cover_tall_text",
     "cover_balanced",
@@ -73,6 +76,7 @@ class CarouselInput(BaseModel):
     job_id: str = Field(min_length=1)
     source: Literal["manual", "google_sheets"]
     generation_mode: GenerationMode = "standard"
+    library_item_id: str | None = None
     niche_preset: str | None = None
     topic: str | None = None
     script: str | None = None
@@ -89,7 +93,7 @@ class CarouselInput(BaseModel):
     reference_node_ids: list[str] = Field(default_factory=lambda: DEFAULT_REFERENCE_NODE_IDS.copy())
     notes: str | None = None
 
-    @field_validator("topic", "script", "cta_text", "notes", "language", mode="before")
+    @field_validator("library_item_id", "topic", "script", "cta_text", "notes", "language", mode="before")
     @classmethod
     def _strip_optional_strings(cls, value: str | None) -> str | None:
         if value is None:
@@ -211,6 +215,89 @@ class SourceSync(BaseModel):
     google_sheet_id: str | None = None
     worksheet_name: str | None = None
     row_number: int | None = None
+
+
+class PerfectVisualTarget(BaseModel):
+    slide_number: int = Field(ge=1, le=7)
+    slot: ImageSlot
+    treatment: ImageTreatment = "none"
+    asset_kind: VisualAssetKind = "photo"
+    query_suffix: str | None = None
+    required: bool = True
+
+    @field_validator("query_suffix", mode="before")
+    @classmethod
+    def _normalize_query_suffix(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(value.strip().split())
+        return cleaned or None
+
+
+class PerfectVisualRecipe(BaseModel):
+    description: str | None = None
+    source_mode: ImageMode = "hybrid"
+    default_focus: ImageFocus = "brand_safe"
+    default_query_suffix: str | None = None
+    targets: list[PerfectVisualTarget] = Field(default_factory=list)
+
+    @field_validator("description", "default_query_suffix", mode="before")
+    @classmethod
+    def _normalize_visual_recipe_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(value.strip().split())
+        return cleaned or None
+
+
+class PerfectLibraryEntry(BaseModel):
+    library_item_id: str = Field(min_length=1)
+    label: str = Field(min_length=1)
+    status: PerfectLibraryEntryStatus = "active"
+    style_family: str = Field(min_length=1)
+    style_recipe: str = Field(min_length=1)
+    style_preference: str | None = None
+    reference_file_key: str | None = None
+    reference_node_ids: list[str] = Field(default_factory=list)
+    visual_recipe: PerfectVisualRecipe | None = None
+    approval_notes: str | None = None
+    approved_at: str | None = None
+    approved_by: str | None = None
+    notes: str | None = None
+    exemplar_preview_path: str | None = None
+    exemplar_export_path: str | None = None
+
+    @field_validator(
+        "style_preference",
+        "reference_file_key",
+        "approval_notes",
+        "approved_at",
+        "approved_by",
+        "notes",
+        "exemplar_preview_path",
+        "exemplar_export_path",
+        mode="before",
+    )
+    @classmethod
+    def _normalize_library_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(value.strip().split())
+        return cleaned or None
+
+
+class PerfectLibraryStatus(BaseModel):
+    manifest_version: str = "perfect_library_v1"
+    updated_at: str | None = None
+    entries: list[PerfectLibraryEntry] = Field(default_factory=list)
+
+    @field_validator("updated_at", mode="before")
+    @classmethod
+    def _normalize_status_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(value.strip().split())
+        return cleaned or None
 
 
 class RenderArtifact(BaseModel):
@@ -430,6 +517,72 @@ class PluginRenderResult(BaseModel):
     render_warnings: list[PluginRenderWarning] = Field(default_factory=list)
     fit_metrics: list[PluginFitMetric] = Field(default_factory=list)
     rendered_at: str
+
+
+class ProductionJobWarning(BaseModel):
+    code: str = Field(min_length=1)
+    severity: RenderWarningSeverity = "warning"
+    message: str = Field(min_length=1)
+    slide_number: int | None = None
+
+    @field_validator("code", "message", mode="before")
+    @classmethod
+    def _normalize_warning_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(value.strip().split())
+        return cleaned or None
+
+
+class ProductionJobRecord(BaseModel):
+    job_id: str
+    created_at: str
+    status: JobStatus
+    request: CarouselInput
+    library_item_id: str
+    library_label: str
+    style_family: str | None = None
+    style_recipe: str | None = None
+    job_artifact_path: str
+    render_payload_path: str
+    render_result_path: str | None = None
+    figma_file_url: str | None = None
+    figma_page_url: str | None = None
+    figma_page_name: str | None = None
+    export_paths: list[str] = Field(default_factory=list)
+    export_urls: list[str] = Field(default_factory=list)
+    pdf_export_path: str | None = None
+    pdf_export_url: str | None = None
+    used_script: str | None = None
+    visual_status: ProductionVisualStatus = "pending"
+    warnings: list[ProductionJobWarning] = Field(default_factory=list)
+    fit_metrics: list[PluginFitMetric] = Field(default_factory=list)
+    error: str | None = None
+
+    @field_validator(
+        "render_result_path",
+        "figma_file_url",
+        "figma_page_url",
+        "figma_page_name",
+        "pdf_export_path",
+        "pdf_export_url",
+        "error",
+        mode="before",
+    )
+    @classmethod
+    def _normalize_production_job_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = " ".join(value.strip().split())
+        return cleaned or None
+
+    @field_validator("used_script", mode="before")
+    @classmethod
+    def _normalize_used_script(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = str(value).replace("\r\n", "\n").replace("\r", "\n").strip()
+        return cleaned or None
 
 
 class CarouselOutput(BaseModel):

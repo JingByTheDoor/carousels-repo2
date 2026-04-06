@@ -23,19 +23,23 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Serve render jobs to the local Figma plugin.")
     parser.add_argument("--host")
     parser.add_argument("--port", type=int)
-    parser.add_argument("--queue-mode", choices=["sheets_first", "studio_first", "studio_only", "sheets_only"])
+    parser.add_argument("--queue-mode", choices=["sheets_first", "studio_first", "studio_only", "sheets_only", "production_only"])
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    settings = load_settings(require_openai=True, require_google=True)
+    settings = load_settings(require_openai=True)
+    queue_mode = args.queue_mode or settings.render_queue_priority
+    if queue_mode in {"sheets_first", "studio_first", "sheets_only"}:
+        settings = load_settings(require_openai=True, require_google=True)
     if args.queue_mode:
-        settings = replace(settings, render_queue_priority=args.queue_mode)
+        settings = replace(settings, render_queue_priority=queue_mode)
     host = args.host or settings.render_server_host
     port = args.port or settings.render_server_port
-    queue = GoogleSheetsQueue(settings)
-    queue.ensure_queue_sheet()
+    queue = GoogleSheetsQueue(settings) if queue_mode in {"sheets_first", "studio_first", "sheets_only"} else None
+    if queue is not None:
+        queue.ensure_queue_sheet()
 
     class RenderBridgeHandler(BaseHTTPRequestHandler):
         server_version = "CarouselRenderBridge/0.1"
@@ -49,7 +53,15 @@ def main() -> int:
             try:
                 path = urlparse(self.path).path
                 if path == "/health":
-                    self._write_json(HTTPStatus.OK, {"status": "ok", "host": host, "port": port})
+                    self._write_json(
+                        HTTPStatus.OK,
+                        {
+                            "status": "ok",
+                            "host": host,
+                            "port": port,
+                            "queue_mode": queue_mode,
+                        },
+                    )
                     return
 
                 if path == "/next-job":

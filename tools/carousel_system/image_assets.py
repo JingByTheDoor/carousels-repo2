@@ -16,9 +16,12 @@ from carousel_system.models import (
     CarouselOutput,
     ImageAsset,
     ImageStrategy,
+    PerfectLibraryEntry,
+    PerfectVisualTarget,
     PluginRenderPayload,
     RenderImageAssetSpec,
 )
+from carousel_system.perfect_library import get_perfect_library_entry
 
 
 IMAGE_ASSETS_DIR = ROOT_DIR / ".tmp" / "image-assets"
@@ -108,8 +111,9 @@ class PexelsCandidate:
 
 
 def resolve_image_assets(settings: Settings, record: CarouselOutput, payload: PluginRenderPayload) -> None:
-    _apply_slot_defaults(record, payload)
-    strategy = _resolve_image_strategy(settings, record, payload)
+    library_entry = _resolve_library_entry(record)
+    _apply_slot_defaults(record, payload, library_entry=library_entry)
+    strategy = _resolve_image_strategy(settings, record, payload, library_entry=library_entry)
     record.image_strategy = strategy
     record.image_assets = []
     payload.image_strategy.mode = strategy.mode
@@ -119,17 +123,17 @@ def resolve_image_assets(settings: Settings, record: CarouselOutput, payload: Pl
         _write_image_manifest(record)
         return
 
-    if strategy.provider != "pexels":
-        record.image_strategy.reason = "Only Pexels stock acquisition is implemented right now."
-        _write_image_manifest(record)
-        return
-
-    if not settings.pexels_api_key:
+    if strategy.provider == "pexels" and not settings.pexels_api_key:
         record.image_strategy.reason = "PEXELS_API_KEY is not configured, so stock images were skipped."
         _write_image_manifest(record)
         return
 
-    requests = _build_image_requests(record, payload)
+    if strategy.provider == "openai_gpt_image" and not settings.openai_api_key:
+        record.image_strategy.reason = "OPENAI_API_KEY is not configured, so AI image generation was skipped."
+        _write_image_manifest(record)
+        return
+
+    requests = _build_image_requests(record, payload, library_entry=library_entry)
     if not requests:
         record.image_strategy.reason = "No image slots are active for the selected style family."
         _write_image_manifest(record)
@@ -139,13 +143,15 @@ def resolve_image_assets(settings: Settings, record: CarouselOutput, payload: Pl
     used_photo_ids: set[int] = set()
     used_alt_signatures: set[str] = set()
     for image_request in requests:
-        asset = _find_and_cache_pexels_asset(
-            settings,
-            record,
-            image_request,
-            used_photo_ids=used_photo_ids,
-            used_alt_signatures=used_alt_signatures,
-        )
+        asset = None
+        if strategy.provider == "pexels":
+            asset = _find_and_cache_pexels_asset(
+                settings,
+                record,
+                image_request,
+                used_photo_ids=used_photo_ids,
+                used_alt_signatures=used_alt_signatures,
+            )
         if asset is None and strategy.mode in {"ai", "hybrid"} and record.normalized_input.allow_ai_fallback:
             asset = _generate_ai_asset(settings, record, image_request)
         if asset:
@@ -154,22 +160,60 @@ def resolve_image_assets(settings: Settings, record: CarouselOutput, payload: Pl
     if assets:
         record.image_assets = assets
         _attach_assets_to_payload(payload, assets)
+        provider_labels = sorted({asset.provider for asset in assets})
+        provider_text = ", ".join(provider_labels)
         record.image_strategy.reason = (
-            f"Attached {len(assets)} stock image asset"
+            f"Attached {len(assets)} image asset"
             f"{'' if len(assets) == 1 else 's'} via Pexels for {payload.style_family}."
         )
+        if provider_text:
+            record.image_strategy.reason = (
+                f"Attached {len(assets)} image asset"
+                f"{'' if len(assets) == 1 else 's'} via {provider_text} for {payload.style_family}."
+            )
     else:
-        record.image_strategy.reason = "No acceptable Pexels candidate was found for the active image slots."
+        record.image_strategy.reason = "No acceptable image candidate was found for the active image slots."
 
     _write_image_manifest(record)
 
 
-def _apply_slot_defaults(record: CarouselOutput, payload: PluginRenderPayload) -> None:
+def _resolve_library_entry(record: CarouselOutput) -> PerfectLibraryEntry | None:
+    if record.normalized_input.generation_mode != "production":
+        return None
+    return get_perfect_library_entry(record.normalized_input.library_item_id or "")
+
+
+def _apply_slot_defaults(
+    record: CarouselOutput,
+    payload: PluginRenderPayload,
+    *,
+    library_entry: PerfectLibraryEntry | None = None,
+) -> None:
     for slide in payload.slides:
         slide.image_slot = "none"
         slide.image_required = False
         slide.image_treatment = "none"
         slide.image_asset = None
+
+    visual_recipe = library_entry.visual_recipe if library_entry else None
+    if record.normalized_input.generation_mode == "production" and visual_recipe and visual_recipe.targets:
+        slide_plan = {
+            target.slide_number: (target.slot, target.treatment)
+            for target in visual_recipe.targets
+            if target.slot != "none"
+        }
+        effective_mode = record.normalized_input.image_mode
+        if effective_mode == "auto":
+            effective_mode = visual_recipe.source_mode
+        require_image = effective_mode in {"auto", "stock", "ai", "hybrid"}
+        for slide in payload.slides:
+            slot, treatment = slide_plan.get(slide.slide_number, ("none", "none"))
+            if slot == "none":
+                continue
+            slide.image_slot = slot
+            slide.image_required = require_image
+            slide.image_treatment = treatment
+        return
 
     if payload.style_family not in IMAGE_FRIENDLY_FAMILIES:
         return
@@ -197,14 +241,20 @@ def _resolve_image_strategy(
     settings: Settings,
     record: CarouselOutput,
     payload: PluginRenderPayload,
+    *,
+    library_entry: PerfectLibraryEntry | None = None,
 ) -> ImageStrategy:
+    visual_recipe = library_entry.visual_recipe if library_entry else None
     requested_mode = record.normalized_input.image_mode
+    if record.normalized_input.generation_mode == "production" and requested_mode == "auto" and visual_recipe:
+        requested_mode = visual_recipe.source_mode
     preferred_provider = record.normalized_input.image_source_preference
+    family_supports_images = payload.style_family in IMAGE_FRIENDLY_FAMILIES or bool(visual_recipe and visual_recipe.targets)
 
     if requested_mode == "none":
         return ImageStrategy(mode="none", provider=None, reason="User explicitly disabled images.")
 
-    if payload.style_family not in IMAGE_FRIENDLY_FAMILIES:
+    if not family_supports_images:
         return ImageStrategy(
             mode="none",
             provider=None,
@@ -222,6 +272,12 @@ def _resolve_image_strategy(
         return ImageStrategy(mode="stock", provider="pexels", reason="Stock-only mode.")
 
     if requested_mode == "hybrid":
+        if not settings.pexels_api_key and settings.openai_api_key:
+            return ImageStrategy(
+                mode="ai",
+                provider="openai_gpt_image",
+                reason="Hybrid requested. Pexels is unavailable, so AI image generation is active.",
+            )
         provider = "pexels"
         reason = "Hybrid requested. Stock-first is implemented now; AI fallback will come later."
         if preferred_provider == "openai_gpt_image":
@@ -248,6 +304,12 @@ def _resolve_image_strategy(
                 reason="Review mode needs images, but neither Pexels nor OpenAI is configured.",
             )
         if not settings.pexels_api_key:
+            if settings.openai_api_key and record.normalized_input.generation_mode == "production":
+                return ImageStrategy(
+                    mode="ai",
+                    provider="openai_gpt_image",
+                    reason="Auto image mode fell back to AI because Pexels is unavailable for this production template.",
+                )
             return ImageStrategy(
                 mode="none",
                 provider=None,
@@ -262,12 +324,27 @@ def _resolve_image_strategy(
     return ImageStrategy(mode="none", provider=None, reason="No image strategy matched.")
 
 
-def _build_image_requests(record: CarouselOutput, payload: PluginRenderPayload) -> list[ImageRequest]:
+def _build_image_requests(
+    record: CarouselOutput,
+    payload: PluginRenderPayload,
+    *,
+    library_entry: PerfectLibraryEntry | None = None,
+) -> list[ImageRequest]:
     requests: list[ImageRequest] = []
+    visual_targets = {
+        target.slide_number: target
+        for target in (library_entry.visual_recipe.targets if library_entry and library_entry.visual_recipe else [])
+    }
     for slide in payload.slides:
         if slide.image_slot == "none":
             continue
-        query = _build_query(record, slide.slide_number)
+        visual_target = visual_targets.get(slide.slide_number)
+        query = _build_query(record, slide.slide_number, library_entry=library_entry, visual_target=visual_target)
+        reason = (
+            f"{library_entry.label} requires a resolved production visual."
+            if library_entry and visual_target
+            else f"{payload.style_family} exposes a hook-media slot."
+        )
         requests.append(
             ImageRequest(
                 slide_number=slide.slide_number,
@@ -275,13 +352,19 @@ def _build_image_requests(record: CarouselOutput, payload: PluginRenderPayload) 
                 slot=slide.image_slot,
                 treatment=slide.image_treatment,
                 query=query,
-                reason=f"{payload.style_family} exposes a hook-media slot.",
+                reason=reason,
             )
         )
     return requests
 
 
-def _build_query(record: CarouselOutput, slide_number: int) -> str:
+def _build_query(
+    record: CarouselOutput,
+    slide_number: int,
+    *,
+    library_entry: PerfectLibraryEntry | None = None,
+    visual_target: PerfectVisualTarget | None = None,
+) -> str:
     slide = next((item for item in record.content_plan if item.slide_number == slide_number), None)
     topic = record.normalized_input.topic or ""
     headline = slide.headline if slide else ""
@@ -289,9 +372,13 @@ def _build_query(record: CarouselOutput, slide_number: int) -> str:
     role = slide.slide_role if slide else "info"
     source = " ".join(part for part in [topic, headline, body] if part) or record.content_plan[0].headline
     keywords = _compact_keywords(source)
-    focus = record.normalized_input.image_focus
+    focus = (
+        library_entry.visual_recipe.default_focus
+        if library_entry and library_entry.visual_recipe
+        else record.normalized_input.image_focus
+    )
     niche = "english teacher materials" if record.normalized_input.generation_mode == "review" else "education"
-    visual_suffix = _visual_suffix(record, slide_number)
+    visual_suffix = _visual_suffix(record, slide_number, library_entry=library_entry, visual_target=visual_target)
     base = f"{keywords} {role} {niche} {visual_suffix}".strip()
     if focus == "brand_safe":
         return f"{base} professional clean"
@@ -302,7 +389,21 @@ def _build_query(record: CarouselOutput, slide_number: int) -> str:
     return f"{base} editorial"
 
 
-def _visual_suffix(record: CarouselOutput, slide_number: int) -> str:
+def _visual_suffix(
+    record: CarouselOutput,
+    slide_number: int,
+    *,
+    library_entry: PerfectLibraryEntry | None = None,
+    visual_target: PerfectVisualTarget | None = None,
+) -> str:
+    if visual_target is not None:
+        suffix = visual_target.query_suffix or ""
+        if visual_target.asset_kind != "photo":
+            suffix = f"{visual_target.asset_kind} {suffix}".strip()
+        if suffix:
+            return suffix
+    if library_entry and library_entry.visual_recipe and library_entry.visual_recipe.default_query_suffix:
+        return library_entry.visual_recipe.default_query_suffix
     if record.normalized_input.generation_mode == "review":
         return REVIEW_VISUAL_SUFFIX_BY_SLIDE.get(slide_number, "teaching materials")
     return DEFAULT_VISUAL_SUFFIX_BY_SLIDE.get(slide_number, "editorial scene")

@@ -19,9 +19,9 @@ from carousel_system.studio_web import create_app
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Start the review studio and optional render bridge.")
+    parser = argparse.ArgumentParser(description="Start the production carousel app and render bridge.")
     parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", type=int, default=3000)
+    parser.add_argument("--port", type=int, default=3001)
     parser.add_argument("--no-browser", action="store_true")
     parser.add_argument("--no-render-bridge", action="store_true")
     parser.add_argument("--bridge-host")
@@ -47,7 +47,7 @@ def main() -> int:
                 "--port",
                 str(bridge_port),
                 "--queue-mode",
-                "studio_only",
+                "production_only",
             ],
             cwd=ROOT_DIR,
         )
@@ -59,8 +59,8 @@ def main() -> int:
         atexit.register(_cleanup_render_process)
 
     if not args.no_browser:
-        studio_url = f"http://{args.host}:{args.port}"
-        health_url = f"{studio_url}/health"
+        app_url = f"http://{args.host}:{args.port}/production"
+        health_url = f"http://{args.host}:{args.port}/health"
 
         def _open_browser() -> None:
             deadline = time.time() + 20
@@ -72,7 +72,7 @@ def main() -> int:
                     time.sleep(0.4)
             else:
                 time.sleep(1.0)
-            webbrowser.open(studio_url)
+            webbrowser.open(app_url)
 
         threading.Thread(target=_open_browser, daemon=True).start()
 

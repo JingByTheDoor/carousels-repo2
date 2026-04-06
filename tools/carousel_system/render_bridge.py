@@ -19,6 +19,11 @@ from carousel_system.models import (
 )
 from carousel_system.payload import build_output_record, write_output_record
 from carousel_system.planner import PROMPT_VERSION, generate_carousel_plan
+from carousel_system.production import (
+    acquire_next_production_render_job,
+    sync_production_render_error,
+    sync_production_render_result,
+)
 from carousel_system.render_payload import (
     build_plugin_render_payload,
     build_render_artifact,
@@ -105,19 +110,28 @@ def plan_row_to_render_item(settings: Settings, queue: GoogleSheetsQueue, row: Q
     )
 
 
-def acquire_next_render_item(settings: Settings, queue: GoogleSheetsQueue) -> RenderQueueItem | None:
+def acquire_next_render_item(settings: Settings, queue: GoogleSheetsQueue | None) -> RenderQueueItem | None:
     priority = (settings.render_queue_priority or "sheets_first").strip().lower()
+    if priority == "production_only":
+        return _acquire_production_render_item()
     if priority == "studio_only":
-        return _acquire_studio_render_item()
+        item = _acquire_studio_render_item()
+        if item:
+            return item
+        return _acquire_production_render_item()
     if priority == "sheets_only":
+        if queue is None:
+            return None
         return _acquire_sheet_render_item(settings, queue)
     if priority == "studio_first":
         item = _acquire_studio_render_item()
         if item:
             return item
+        if queue is None:
+            return None
         return _acquire_sheet_render_item(settings, queue)
 
-    item = _acquire_sheet_render_item(settings, queue)
+    item = _acquire_sheet_render_item(settings, queue) if queue is not None else None
     if item:
         return item
     return _acquire_studio_render_item()
@@ -155,6 +169,27 @@ def _acquire_studio_render_item() -> RenderQueueItem | None:
     return RenderQueueItem(
         row_number=None,
         job_id=studio_variant.job_id,
+        job_path=job_path,
+        render_payload_path=render_payload_path,
+        record=record,
+        payload=payload,
+    )
+
+
+def _acquire_production_render_item() -> RenderQueueItem | None:
+    production_job = acquire_next_production_render_job()
+    if production_job is None:
+        return None
+
+    job_path = Path(production_job.job_artifact_path)
+    render_payload_path = Path(production_job.render_payload_path)
+    record = CarouselOutput.model_validate_json(job_path.read_text(encoding="utf-8"))
+    payload = PluginRenderPayload.model_validate_json(render_payload_path.read_text(encoding="utf-8"))
+    record.status = "rendering"
+    write_output_record(job_path, record)
+    return RenderQueueItem(
+        row_number=None,
+        job_id=production_job.job_id,
         job_path=job_path,
         render_payload_path=render_payload_path,
         record=record,
@@ -266,6 +301,7 @@ def apply_render_result(
         render_result_path=result_path,
         preview_image_paths=preview_paths,
     )
+    sync_production_render_result(job_id, result, render_result_path=result_path)
 
     return job_path
 
@@ -293,6 +329,7 @@ def record_render_error(settings: Settings, queue: GoogleSheetsQueue | None, *, 
         if row:
             queue.update_row(row.row_number, {"status": "error", "error": error_text})
     sync_variant_render_error(job_id, error_text)
+    sync_production_render_error(job_id, error_text)
 
 
 def _resolve_job_path(job_id: str, raw_path: str | None) -> Path:

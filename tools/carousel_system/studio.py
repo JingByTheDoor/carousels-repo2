@@ -13,6 +13,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from carousel_system.config import ROOT_DIR, Settings
 from carousel_system.image_assets import resolve_image_assets
 from carousel_system.models import CarouselInput, CarouselOutput, PluginRenderPayload, PluginRenderResult
+from carousel_system.perfect_library import active_perfect_library_requested_styles
 from carousel_system.payload import build_output_record, write_output_record
 from carousel_system.planner import PROMPT_VERSION, generate_carousel_plan
 from carousel_system.render_payload import (
@@ -381,6 +382,7 @@ class StudioRoundRecord(BaseModel):
 
 class StudioState(BaseModel):
     latest_round_id: str | None = None
+    review_style_backlog_by_tier: dict[str, list[str]] = Field(default_factory=dict)
 
 
 class StudioSlideReference(BaseModel):
@@ -481,6 +483,7 @@ def create_review_round(
     based_on_round_id: str | None = None,
 ) -> StudioRoundRecord:
     STUDIO_ROUNDS_DIR.mkdir(parents=True, exist_ok=True)
+    studio_state = load_state()
     previous_round = load_round(based_on_round_id) if based_on_round_id else None
     round_number = 1 if previous_round is None else previous_round.round_number + 1
     round_id = f"studio-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}-{uuid4().hex[:6]}"
@@ -494,7 +497,12 @@ def create_review_round(
 
     variants: list[StudioVariantRecord] = []
     for ordinal, spec in enumerate(
-        _build_variant_specs(resolved_request, round_number=round_number, previous_round=previous_round),
+        _build_variant_specs(
+            resolved_request,
+            round_number=round_number,
+            previous_round=previous_round,
+            studio_state=studio_state,
+        ),
         start=1,
     ):
         job_id = f"{round_id}-v{ordinal}"
@@ -571,7 +579,7 @@ def create_review_round(
         figma_file_url=None,
         variants=variants,
     )
-    save_round(round_record)
+    save_round(round_record, state=studio_state)
     return round_record
 
 
@@ -704,14 +712,20 @@ def load_state() -> StudioState:
     return StudioState.model_validate_json(STUDIO_STATE_PATH.read_text(encoding="utf-8"))
 
 
-def save_round(round_record: StudioRoundRecord) -> Path:
+def save_state(state: StudioState) -> Path:
+    STUDIO_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    STUDIO_STATE_PATH.write_text(state.model_dump_json(indent=2), encoding="utf-8")
+    return STUDIO_STATE_PATH
+
+
+def save_round(round_record: StudioRoundRecord, *, state: StudioState | None = None) -> Path:
     _refresh_round_summary(round_record)
     STUDIO_ROUNDS_DIR.mkdir(parents=True, exist_ok=True)
     path = STUDIO_ROUNDS_DIR / f"{round_record.round_id}.json"
     path.write_text(round_record.model_dump_json(indent=2), encoding="utf-8")
-    state = StudioState(latest_round_id=round_record.round_id)
-    STUDIO_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    STUDIO_STATE_PATH.write_text(state.model_dump_json(indent=2), encoding="utf-8")
+    next_state = (state or load_state()).model_copy(deep=True)
+    next_state.latest_round_id = round_record.round_id
+    save_state(next_state)
     return path
 
 
@@ -743,8 +757,8 @@ def _clear_active_round(round_id: str | None) -> None:
     state = load_state()
     if round_id is not None and state.latest_round_id != round_id:
         return
-    STUDIO_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    STUDIO_STATE_PATH.write_text(StudioState(latest_round_id=None).model_dump_json(indent=2), encoding="utf-8")
+    state.latest_round_id = None
+    save_state(state)
 
 
 def acquire_next_studio_render_variant() -> StudioVariantRecord | None:
@@ -851,9 +865,15 @@ def _build_variant_specs(
     *,
     round_number: int,
     previous_round: StudioRoundRecord | None,
+    studio_state: StudioState | None = None,
 ) -> list[_VariantSpec]:
     if request.review_mode:
-        return _build_review_variant_specs(request, round_number=round_number, previous_round=previous_round)
+        return _build_review_variant_specs(
+            request,
+            round_number=round_number,
+            previous_round=previous_round,
+            studio_state=studio_state,
+        )
 
     pool = _resolve_style_pool(request)
     signature = _signature(request, round_number)
@@ -894,26 +914,14 @@ def _build_review_variant_specs(
     *,
     round_number: int,
     previous_round: StudioRoundRecord | None,
+    studio_state: StudioState | None = None,
 ) -> list[_VariantSpec]:
-    signature = _signature(request, round_number)
     anchor_variant = _winner_variant(previous_round) or _best_rated_variant(previous_round)
     if request.preferred_style != "auto":
         styles = [request.preferred_style] * 3
     else:
-        anchor_style = None
-        if anchor_variant and anchor_variant.rating in {"love", "good"} and anchor_variant.requested_style != "auto":
-            anchor_style = anchor_variant.requested_style
-        ordered_pool: list[str] = []
-        for tier in REVIEW_SELECTION_PRIORITY:
-            tier_values = list(REVIEW_STYLE_BUCKETS.get(tier, ()))
-            if not tier_values:
-                continue
-            ordered_pool.extend(_rotated_values(tier_values, signature))
-        if anchor_style in ordered_pool:
-            styles = [anchor_style] + [value for value in ordered_pool if value != anchor_style]
-        else:
-            styles = ordered_pool
-        styles = styles[:3]
+        active_state = studio_state or StudioState()
+        styles = _consume_review_backlog(active_state, count=3)
 
     anchor_copy = request.base_copy_length
     if anchor_variant and anchor_variant.rating in {"love", "good"}:
@@ -939,6 +947,56 @@ def _build_review_variant_specs(
             )
         )
     return specs
+
+
+def _consume_review_backlog(state: StudioState, *, count: int) -> list[str]:
+    available_by_tier = _available_review_styles_by_tier()
+    backlog = _normalize_review_backlog(state.review_style_backlog_by_tier, available_by_tier)
+    if not any(backlog.get(tier) for tier in REVIEW_SELECTION_PRIORITY):
+        backlog = {tier: list(available_by_tier.get(tier, [])) for tier in REVIEW_SELECTION_PRIORITY}
+
+    selected: list[str] = []
+    while len(selected) < count:
+        advanced = False
+        for tier in REVIEW_SELECTION_PRIORITY:
+            tier_backlog = backlog.setdefault(tier, [])
+            while tier_backlog and len(selected) < count:
+                selected.append(tier_backlog.pop(0))
+                advanced = True
+            if len(selected) >= count:
+                break
+        if len(selected) >= count:
+            break
+        if advanced:
+            continue
+        backlog = {tier: list(available_by_tier.get(tier, [])) for tier in REVIEW_SELECTION_PRIORITY}
+        if not any(backlog.get(tier) for tier in REVIEW_SELECTION_PRIORITY):
+            break
+
+    state.review_style_backlog_by_tier = {tier: list(backlog.get(tier, [])) for tier in REVIEW_SELECTION_PRIORITY}
+    return selected
+
+
+def _available_review_styles_by_tier() -> dict[str, list[str]]:
+    excluded_styles = active_perfect_library_requested_styles()
+    return {
+        tier: [style for style in REVIEW_STYLE_BUCKETS.get(tier, ()) if style not in excluded_styles]
+        for tier in REVIEW_SELECTION_PRIORITY
+    }
+
+
+def _normalize_review_backlog(
+    backlog: dict[str, list[str]],
+    available_by_tier: dict[str, list[str]],
+) -> dict[str, list[str]]:
+    normalized: dict[str, list[str]] = {}
+    for tier in REVIEW_SELECTION_PRIORITY:
+        available = list(available_by_tier.get(tier, []))
+        if tier not in backlog:
+            normalized[tier] = available
+            continue
+        normalized[tier] = [style for style in backlog.get(tier, []) if style in available]
+    return normalized
 
 
 def _pick_styles(

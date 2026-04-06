@@ -1,0 +1,82 @@
+{
+  "manifest_version": "perfect_library_v1",
+  "updated_at": "2026-04-05T00:00:00Z",
+  "entries": [
+    {
+      "library_item_id": "placeholder-media-glow-perfect-v1",
+      "label": "Placeholder Media Glow",
+      "status": "active",
+      "style_family": "reference_placeholder_media_glow",
+      "style_recipe": "placeholder_media_glow_v1",
+      "style_preference": "placeholder_media",
+      "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
+      "reference_node_ids": [
+        "local:light-1",
+        "local:light-2",
+        "local:light-6"
+      ],
+      "visual_recipe": {
+        "description": "Bright editorial teaching-materials photography with one strong cover image and supporting inline classroom/materials visuals.",
+        "source_mode": "hybrid",
+        "default_focus": "brand_safe",
+        "default_query_suffix": "editorial education photography professional clean",
+        "targets": [
+          {
+            "slide_number": 1,
+            "slot": "cover_media",
+            "treatment": "blur_glow",
+            "asset_kind": "photo",
+            "query_suffix": "teacher portrait classroom whiteboard",
+            "required": true
+          },
+          {
+            "slide_number": 2,
+            "slot": "body_media",
+            "treatment": "blur_glow",
+            "asset_kind": "photo",
+            "query_suffix": "lesson planning desk materials",
+            "required": true
+          },
+          {
+            "slide_number": 3,
+            "slot": "body_media",
+            "treatment": "blur_glow",
+            "asset_kind": "photo",
+            "query_suffix": "english grammar workbook student notes",
+            "required": true
+          },
+          {
+            "slide_number": 4,
+            "slot": "body_media",
+            "treatment": "blur_glow",
+            "asset_kind": "photo",
+            "query_suffix": "students classroom activity",
+            "required": true
+          },
+          {
+            "slide_number": 5,
+            "slot": "body_media",
+            "treatment": "blur_glow",
+            "asset_kind": "photo",
+            "query_suffix": "online tutoring laptop lesson planning",
+            "required": true
+          },
+          {
+            "slide_number": 6,
+            "slot": "body_media",
+            "treatment": "blur_glow",
+            "asset_kind": "photo",
+            "query_suffix": "worksheets flashcards teaching materials",
+            "required": true
+          }
+        ]
+      },
+      "approval_notes": "First manually promoted production-safe template.",
+      "approved_at": "2026-04-05",
+      "approved_by": "manual_curation",
+      "notes": "Seed entry for the new perfect library production workflow.",
+      "exemplar_preview_path": null,
+      "exemplar_export_path": null
+    }
+  ]
+}

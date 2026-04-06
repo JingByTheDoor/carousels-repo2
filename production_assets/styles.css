@@ -272,6 +272,13 @@ textarea {
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.query-card {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--panel-soft);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
 .warning-card.error {
   border-color: rgba(255, 181, 163, 0.36);
 }
@@ -282,6 +289,29 @@ textarea {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--accent);
+}
+
+.query-meta {
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-cool);
+}
+
+.query-copy,
+.query-credit {
+  color: var(--muted);
+}
+
+.query-copy {
+  font: 14px/1.5 "Cascadia Code", "Consolas", monospace;
+  white-space: pre-wrap;
+}
+
+.query-credit {
+  margin-top: 8px;
+  font-size: 12px;
 }
 
 .download-grid {

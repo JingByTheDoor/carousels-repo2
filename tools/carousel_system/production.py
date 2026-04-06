@@ -163,6 +163,7 @@ def create_production_job(settings: Settings, request: ProductionJobCreateReques
         job_artifact_path=str(job_path),
         render_payload_path=str(render_payload_path),
         used_script=_format_used_script(record),
+        image_assets=list(record.image_assets),
         visual_status="visual_warning" if warnings else "visual_resolved",
         warnings=warnings,
     )
@@ -309,6 +310,7 @@ def _apply_output_snapshot(job_record: ProductionJobRecord, output_record: Carou
     job_record.style_family = output_record.style_family
     job_record.style_recipe = output_record.style_recipe
     job_record.used_script = _format_used_script(output_record)
+    job_record.image_assets = list(output_record.image_assets)
     job_record.export_paths = [export.path_or_url for export in output_record.exports if export.format == "png"]
     job_record.export_urls = [_tmp_url_from_path(path) for path in job_record.export_paths if _tmp_url_from_path(path)]
     job_record.pdf_export_path = next((export.path_or_url for export in output_record.exports if export.format == "pdf"), None)
@@ -333,13 +335,16 @@ def _tmp_url_from_path(path: str | None) -> str | None:
 
 
 def _ensure_used_script(job_record: ProductionJobRecord) -> None:
-    if job_record.used_script:
+    if job_record.used_script and job_record.image_assets:
         return
     artifact_path = Path(job_record.job_artifact_path)
     if not artifact_path.exists():
         return
     output_record = CarouselOutput.model_validate_json(artifact_path.read_text(encoding="utf-8"))
-    job_record.used_script = _format_used_script(output_record)
+    if not job_record.used_script:
+        job_record.used_script = _format_used_script(output_record)
+    if not job_record.image_assets:
+        job_record.image_assets = list(output_record.image_assets)
 
 
 def _format_used_script(output_record: CarouselOutput) -> str | None:

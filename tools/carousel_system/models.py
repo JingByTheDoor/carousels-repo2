@@ -563,6 +563,7 @@ class ProductionJobRecord(BaseModel):
     pdf_export_path: str | None = None
     pdf_export_url: str | None = None
     used_script: str | None = None
+    image_assets: list[ImageAsset] = Field(default_factory=list)
     visual_status: ProductionVisualStatus = "pending"
     warnings: list[ProductionJobWarning] = Field(default_factory=list)
     fit_metrics: list[PluginFitMetric] = Field(default_factory=list)

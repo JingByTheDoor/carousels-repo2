@@ -179,6 +179,8 @@ class QualityRulesTests(unittest.TestCase):
         self.assertEqual(job_record.request.output_modes, ["figma", "png"])
         self.assertEqual(job_record.style_recipe, "placeholder_media_glow_v1")
         self.assertEqual(job_record.visual_status, "visual_resolved")
+        self.assertEqual(len(job_record.image_assets), 6)
+        self.assertEqual(job_record.image_assets[0].query_or_prompt, "teacher portrait classroom")
         self.assertEqual(
             job_record.used_script,
             "\n\n".join(

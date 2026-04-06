@@ -23,6 +23,7 @@ const elements = {
   visualStatus: document.getElementById("visual-status"),
   warningsPanel: document.getElementById("warnings-panel"),
   downloadsPanel: document.getElementById("downloads-panel"),
+  imageQueriesPanel: document.getElementById("image-queries-panel"),
   copyScriptButton: document.getElementById("copy-script-button"),
   downloadScriptButton: document.getElementById("download-script-button"),
   usedScriptOutput: document.getElementById("used-script-output"),
@@ -121,6 +122,7 @@ function renderEmptyJob() {
   elements.visualStatus.textContent = "pending";
   elements.warningsPanel.innerHTML = emptyPanel("No warnings yet.");
   elements.downloadsPanel.innerHTML = emptyPanel("Downloads will appear after the render finishes.");
+  elements.imageQueriesPanel.innerHTML = emptyPanel("Resolved image queries will appear here after the visual plan runs.");
   renderUsedScript(null);
 }
 
@@ -151,6 +153,7 @@ function renderJob(job) {
   elements.visualStatus.textContent = job.visual_status || "pending";
   renderWarnings(job);
   renderDownloads(job);
+  renderImageQueries(job);
   renderUsedScript(job);
   setStatus(jobStatusMessage(job), job.status === "error");
 }
@@ -194,6 +197,44 @@ function renderDownloads(job) {
   }
 
   elements.downloadsPanel.innerHTML = `<div class="download-grid">${links.join("")}</div>`;
+}
+
+function renderImageQueries(job) {
+  const assets = Array.isArray(job.image_assets) ? [...job.image_assets] : [];
+  if (!assets.length) {
+    const copy =
+      job.status === "error"
+        ? "No image-query data is available because this job failed before visual resolution finished."
+        : "Waiting for visual resolution to capture the image queries used for this carousel.";
+    elements.imageQueriesPanel.innerHTML = emptyPanel(copy);
+    return;
+  }
+
+  assets.sort((left, right) => {
+    const slideDelta = Number(left.slide_number || 0) - Number(right.slide_number || 0);
+    if (slideDelta !== 0) {
+      return slideDelta;
+    }
+    return String(left.role || "").localeCompare(String(right.role || ""));
+  });
+
+  elements.imageQueriesPanel.innerHTML = assets
+    .map((asset) => {
+      const metaParts = [
+        asset.slide_number ? `Slide ${asset.slide_number}` : null,
+        asset.role || null,
+        asset.provider || null,
+      ].filter(Boolean);
+      const credit = asset.credit ? `<p class="query-credit">${escapeHtml(asset.credit)}</p>` : "";
+      return `
+        <article class="query-card">
+          <p class="query-meta">${escapeHtml(metaParts.join(" · "))}</p>
+          <p class="query-copy">${escapeHtml(asset.query_or_prompt || "No query recorded.")}</p>
+          ${credit}
+        </article>
+      `;
+    })
+    .join("");
 }
 
 function renderUsedScript(job) {

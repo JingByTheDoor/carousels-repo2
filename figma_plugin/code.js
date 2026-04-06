@@ -2748,7 +2748,6 @@ async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
   const footerY = getPlaceholderMediaMetaY(card.height);
   const contentBottom = footerY - 26;
 
-  await appendLabelPill(card, 744, 44, `0${slide.slide_number}`, tokens.accent_navy, "#FFFFFF");
   const hasMedia = !!slide.image_asset;
 
   const headlineNode = await createTextBlock(card, {
@@ -3159,7 +3158,6 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
   const textX = hasMedia ? (deviceOnRight ? 86 : 522) : 92;
   const textWidth = hasMedia ? 438 : 812;
   const bodyWidth = hasMedia ? 424 : 796;
-  await appendLabelPill(frame, textX, 124, `0${slide.slide_number}`, tokens.accent_blue, tokens.text_dark);
   const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
     fallbackTexts: getHeadlineFallbackTexts(slide),
@@ -3844,29 +3842,7 @@ function appendTopAccentBar(frame, tokens) {
 }
 
 async function appendSlideNumberChip(frame, slideNumber, tokens) {
-  const chip = figma.createRectangle();
-  chip.resize(110, 46);
-  chip.cornerRadius = 999;
-  chip.x = 84;
-  chip.y = 1244;
-  chip.fills = [solidPaint(tokens.text_dark)];
-  frame.appendChild(chip);
-
-  await createTextBlock(frame, {
-    text: `0${slideNumber}`,
-    fontFamily: "Inter",
-    fontStyle: "Bold",
-    fallbackStyle: "Bold",
-    x: 109,
-    y: 1252,
-    width: 60,
-    maxHeight: 28,
-    maxSize: 22,
-    minSize: 18,
-    lineHeight: 1.0,
-    color: tokens.text_light,
-    alignHorizontal: "CENTER"
-  });
+  return;
 }
 
 function appendGlow(frame, x, y, size, hex, opacity) {
@@ -4021,35 +3997,16 @@ function getPlaceholderMediaMetaY(frameHeight) {
   return Math.max(0, frameHeight - 50);
 }
 
-function appendBookmarkGlyph(frame, x, y, colorHex, opacity) {
-  const body = figma.createRectangle();
-  body.resize(14, 15);
-  body.x = x;
-  body.y = y;
-  body.cornerRadius = 3;
-  body.fills = [solidPaint(colorHex, opacity)];
-  frame.appendChild(body);
-
-  const tail = figma.createPolygon();
-  tail.pointCount = 3;
-  tail.resize(14, 9);
-  tail.rotation = 180;
-  tail.x = x;
-  tail.y = y + 10;
-  tail.fills = [solidPaint(colorHex, opacity)];
-  frame.appendChild(tail);
-}
-
 function appendCarouselMetaTone(frame) {
   const fill = getPrimarySolidFill(frame);
   if (!fill) {
-    return { colorHex: "#757B94", textOpacity: 0.52, iconOpacity: 0.38 };
+    return { colorHex: "#757B94", textOpacity: 0.78, iconOpacity: 0.74 };
   }
   const brightness = getPaintBrightness(fill);
   if (brightness < 0.42) {
-    return { colorHex: "#FFFFFF", textOpacity: 0.42, iconOpacity: 0.28 };
+    return { colorHex: "#FFFFFF", textOpacity: 0.72, iconOpacity: 0.68 };
   }
-  return { colorHex: "#757B94", textOpacity: 0.52, iconOpacity: 0.38 };
+  return { colorHex: "#757B94", textOpacity: 0.78, iconOpacity: 0.74 };
 }
 
 function getPrimarySolidFill(node) {
@@ -4073,7 +4030,7 @@ function getPaintBrightness(paint) {
 }
 
 function getCarouselMetaY(frameHeight) {
-  return Math.max(0, frameHeight - 58);
+  return Math.max(0, frameHeight - 88);
 }
 
 function getSavePostLabel(language) {
@@ -4099,36 +4056,52 @@ async function appendCarouselMeta(frame, payload) {
     fallbackStyle: "Regular",
     x: 46,
     y: y,
-    width: Math.min(420, Math.max(280, Math.round(frame.width * 0.52))),
-    maxHeight: 26,
-    maxSize: 18,
-    minSize: 12,
+    width: Math.min(720, Math.max(420, Math.round(frame.width * 0.64))),
+    maxHeight: 46,
+    maxSize: 33,
+    minSize: 18,
     lineHeight: 1.0,
     color: tone.colorHex,
     alignHorizontal: "LEFT"
   });
   leftNode.opacity = tone.textOpacity;
 
-  const iconX = frame.width - 48;
-  const textWidth = 260;
+  const iconWidth = 44;
+  const iconX = frame.width - 74;
+  const textWidth = 420;
   const actionNode = await createTextBlock(frame, {
     text: getSavePostLabel(payload && payload.language),
     fontFamily: "Inter",
     fontStyle: "Regular",
     fallbackStyle: "Regular",
-    x: iconX - textWidth - 14,
+    x: iconX - textWidth - 16,
     y: y,
     width: textWidth,
-    maxHeight: 26,
-    maxSize: 18,
-    minSize: 12,
+    maxHeight: 46,
+    maxSize: 33,
+    minSize: 18,
     lineHeight: 1.0,
     color: tone.colorHex,
     alignHorizontal: "RIGHT"
   });
   actionNode.opacity = tone.textOpacity;
 
-  appendBookmarkGlyph(frame, iconX, y + 1, tone.colorHex, tone.iconOpacity);
+  const iconNode = await createTextBlock(frame, {
+    text: "🔖",
+    fontFamily: "Segoe UI Emoji",
+    fontStyle: "Regular",
+    fallbackStyle: "Regular",
+    x: iconX,
+    y: y - 2,
+    width: iconWidth,
+    maxHeight: 46,
+    maxSize: 34,
+    minSize: 20,
+    lineHeight: 1.0,
+    color: tone.colorHex,
+    alignHorizontal: "CENTER"
+  });
+  iconNode.opacity = tone.iconOpacity;
 }
 
 async function appendLabelPill(frame, x, y, text, fillHex, textHex) {

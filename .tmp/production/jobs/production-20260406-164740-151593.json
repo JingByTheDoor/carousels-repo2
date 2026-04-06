@@ -1,0 +1,52 @@
+{
+  "job_id": "production-20260406-164740-151593",
+  "created_at": "2026-04-06T16:47:58.920267+00:00",
+  "status": "error",
+  "request": {
+    "job_id": "production-20260406-164740-151593",
+    "source": "manual",
+    "generation_mode": "production",
+    "library_item_id": "placeholder-media-glow-perfect-v1",
+    "niche_preset": null,
+    "topic": "How to become an English teacher",
+    "script": null,
+    "cta_text": null,
+    "language": "ru",
+    "aspect_ratio": "portrait_1080x1350",
+    "output_modes": [
+      "figma",
+      "png"
+    ],
+    "reference_style": "placeholder_media",
+    "image_mode": "auto",
+    "image_source_preference": "pexels",
+    "allow_ai_fallback": true,
+    "image_focus": "brand_safe",
+    "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
+    "reference_node_ids": [
+      "local:light-1",
+      "local:light-2",
+      "local:light-6"
+    ],
+    "notes": null
+  },
+  "library_item_id": "placeholder-media-glow-perfect-v1",
+  "library_label": "Placeholder Media Glow",
+  "style_family": "reference_placeholder_media_glow",
+  "style_recipe": "placeholder_media_glow_v1",
+  "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\production-20260406-164740-151593.json",
+  "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\production-20260406-164740-151593.render.json",
+  "render_result_path": null,
+  "figma_file_url": null,
+  "figma_page_url": null,
+  "figma_page_name": null,
+  "export_paths": [],
+  "export_urls": [],
+  "pdf_export_path": null,
+  "pdf_export_url": null,
+  "used_script": "Slide 1: Хотите стать учителем английского? Вот с чего начать!\n\nSlide 2: Получите профильное образование\nЗапишитесь в педагогический вуз или курсы, чтобы освоить основы преподавания и теорию языка.\n\nSlide 3: Совершенствуйте свои языковые навыки\nПрактикуйте английский каждый день, чтобы свободно говорить и грамотно писать.\n\nSlide 4: Пройдите специализированные курсы для преподавателей\nИзучите методики обучения разных возрастных категорий и уровней владения языком.\n\nSlide 5: Получите опыт преподавания\nНачните с репетиторства или стажировок, чтобы набраться опыта и понять нужды учеников.\n\nSlide 6: Развивайтесь и учитесь постоянно\nПосещайте семинары, участвуйте в вебинарах и обновляйте свои знания.\n\nSlide 7: Готовы начать?",
+  "visual_status": "visual_resolved",
+  "warnings": [],
+  "fit_metrics": [],
+  "error": "not a function"
+}

@@ -238,7 +238,7 @@ def _build_input_job(
         library_item_id=library_entry.library_item_id,
         topic=request.topic,
         script=request.script,
-        cta_text=request.cta_text or "Follow for more English teaching materials",
+        cta_text=request.cta_text,
         language=request.language,
         output_modes=["figma", "png"],
         reference_style=reference_style,

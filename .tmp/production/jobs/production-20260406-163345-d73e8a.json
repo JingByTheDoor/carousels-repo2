@@ -1,0 +1,191 @@
+{
+  "job_id": "production-20260406-163345-d73e8a",
+  "created_at": "2026-04-06T16:34:00.437461+00:00",
+  "status": "complete",
+  "request": {
+    "job_id": "production-20260406-163345-d73e8a",
+    "source": "manual",
+    "generation_mode": "production",
+    "library_item_id": "placeholder-media-glow-perfect-v1",
+    "niche_preset": null,
+    "topic": "How to become an English teacher",
+    "script": null,
+    "cta_text": "🎁 Забирайте БЕСПЛАТНО доступ к вебинару: «🔥Как с TEFL/TESOL выйти на международный рынок и начать зарабатывать, преподавая английский — онлайн, за рубежом или в своей стране.»",
+    "language": "ru",
+    "aspect_ratio": "portrait_1080x1350",
+    "output_modes": [
+      "figma",
+      "png"
+    ],
+    "reference_style": "placeholder_media",
+    "image_mode": "auto",
+    "image_source_preference": "pexels",
+    "allow_ai_fallback": true,
+    "image_focus": "brand_safe",
+    "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
+    "reference_node_ids": [
+      "local:light-1",
+      "local:light-2",
+      "local:light-6"
+    ],
+    "notes": "include the cta in the entirety of the title and do not right any thing for the info in the last slide"
+  },
+  "library_item_id": "placeholder-media-glow-perfect-v1",
+  "library_label": "Placeholder Media Glow",
+  "style_family": "reference_placeholder_media_glow",
+  "style_recipe": "placeholder_media_glow_v1",
+  "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\production-20260406-163345-d73e8a.json",
+  "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\production-20260406-163345-d73e8a.render.json",
+  "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\production-20260406-163345-d73e8a.render-result.json",
+  "figma_file_url": null,
+  "figma_page_url": null,
+  "figma_page_name": "production-20260406-163345-d73e8a-plugin-render",
+  "export_paths": [
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-163345-d73e8a\\slide-01.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-163345-d73e8a\\slide-02.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-163345-d73e8a\\slide-03.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-163345-d73e8a\\slide-04.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-163345-d73e8a\\slide-05.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-163345-d73e8a\\slide-06.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-163345-d73e8a\\slide-07.png"
+  ],
+  "export_urls": [
+    "/tmp-output/exports/production-20260406-163345-d73e8a/slide-01.png",
+    "/tmp-output/exports/production-20260406-163345-d73e8a/slide-02.png",
+    "/tmp-output/exports/production-20260406-163345-d73e8a/slide-03.png",
+    "/tmp-output/exports/production-20260406-163345-d73e8a/slide-04.png",
+    "/tmp-output/exports/production-20260406-163345-d73e8a/slide-05.png",
+    "/tmp-output/exports/production-20260406-163345-d73e8a/slide-06.png",
+    "/tmp-output/exports/production-20260406-163345-d73e8a/slide-07.png"
+  ],
+  "pdf_export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-163345-d73e8a\\carousel.pdf",
+  "pdf_export_url": "/tmp-output/exports/production-20260406-163345-d73e8a/carousel.pdf",
+  "used_script": "Slide 1: Хотите стать учителем английского и зарабатывать по всему миру?\n\nSlide 2: Получите квалификацию TEFL или TESOL\nЭто международные сертификаты, которые подтверждают ваше право преподавать английский как иностранный.\n\nSlide 3: Выберите формат преподавания\nОнлайн или офлайн, индивидуальные уроки или групповые — от этого зависит ваш график и доход.\n\nSlide 4: Развивайте свои педагогические навыки\nИзучайте методики преподавания, работайте над произношением и умением заинтересовать учеников.\n\nSlide 5: Создайте привлекательное резюме и портфолио\nПокажите свои достижения и опыт, чтобы привлечь больше учеников и работодателей.\n\nSlide 6: Найдите международные возможности\nИспользуйте онлайн-платформы и агентства, чтобы выйти на международный рынок преподавания.\n\nSlide 7: 🎁 Забирайте БЕСПЛАТНО доступ к вебинару: «🔥Как с TEFL/TESOL выйти на международный рынок и начать зарабатывать, преподавая английский — онлайн, за рубежом или в своей стране.»",
+  "visual_status": "visual_resolved",
+  "warnings": [
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 32% of the slide height.",
+      "slide_number": 3
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 33% of the slide height.",
+      "slide_number": 4
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 29% of the slide height.",
+      "slide_number": 5
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 33% of the slide height.",
+      "slide_number": 6
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 17% of the slide height.",
+      "slide_number": 7
+    }
+  ],
+  "fit_metrics": [
+    {
+      "slide_number": 1,
+      "role": "cover",
+      "headline_font_size": 94,
+      "body_font_size": null,
+      "headline_lines": 2,
+      "body_lines": null,
+      "content_top": 738,
+      "content_bottom": 1166,
+      "occupied_height_ratio": 0.317,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 2,
+      "role": "body",
+      "headline_font_size": 76,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 675,
+      "occupied_height_ratio": 0.356,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 3,
+      "role": "body",
+      "headline_font_size": 76,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 632,
+      "occupied_height_ratio": 0.324,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 4,
+      "role": "body",
+      "headline_font_size": 76,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 635,
+      "occupied_height_ratio": 0.327,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 5,
+      "role": "body",
+      "headline_font_size": 70,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 581,
+      "occupied_height_ratio": 0.287,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 6,
+      "role": "body",
+      "headline_font_size": 76,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 635,
+      "occupied_height_ratio": 0.327,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 7,
+      "role": "cta",
+      "headline_font_size": 82,
+      "body_font_size": null,
+      "headline_lines": 2,
+      "body_lines": null,
+      "content_top": 370,
+      "content_bottom": 604,
+      "occupied_height_ratio": 0.173,
+      "truncated": false,
+      "image_rendered": false
+    }
+  ],
+  "error": null
+}

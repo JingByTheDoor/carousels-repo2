@@ -175,6 +175,7 @@ class QualityRulesTests(unittest.TestCase):
 
         self.assertEqual(job_record.request.generation_mode, "production")
         self.assertEqual(job_record.request.library_item_id, "placeholder-media-glow-perfect-v1")
+        self.assertIsNone(job_record.request.cta_text)
         self.assertEqual(job_record.request.output_modes, ["figma", "png"])
         self.assertEqual(job_record.style_recipe, "placeholder_media_glow_v1")
         self.assertEqual(job_record.visual_status, "visual_resolved")
@@ -253,8 +254,10 @@ class QualityRulesTests(unittest.TestCase):
         cta_slide = payload.slides[-1]
         self.assertEqual(cta_slide.layout_variant, "cta_dark_glow")
         self.assertTrue(cta_slide.headline_display.startswith("🎁 Get FREE access"))
+        self.assertIsNone(cta_slide.headline_short)
         self.assertIsNone(cta_slide.body_display)
         self.assertIsNone(cta_slide.supporting_text)
+        self.assertGreaterEqual(cta_slide.max_headline_lines, 5)
         self.assertTrue(cta_slide.button_label)
 
     def test_cta_uses_translated_global_webinar_headline(self) -> None:
@@ -265,8 +268,10 @@ class QualityRulesTests(unittest.TestCase):
             cta_slide.headline_display,
             "🎁 Забирайте БЕСПЛАТНО доступ к вебинару: «🔥Как с TEFL/TESOL выйти на международный рынок и начать зарабатывать, преподавая английский — онлайн, за рубежом или в своей стране.»",
         )
+        self.assertIsNone(cta_slide.headline_short)
         self.assertIsNone(cta_slide.body_display)
         self.assertIsNone(cta_slide.supporting_text)
+        self.assertGreaterEqual(cta_slide.max_headline_lines, 5)
 
     def test_render_payload_includes_save_post_icon_asset(self) -> None:
         record = build_output_record(make_job("placeholder_media"), make_plan())

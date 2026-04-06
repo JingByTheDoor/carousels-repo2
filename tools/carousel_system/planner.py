@@ -16,7 +16,7 @@ Rules:
 - Produce exactly 7 slides.
 - Slide 1 must be a strong hook, not a neutral title.
 - Slides 2 through 6 must each communicate one distinct informational point.
-- Slide 7 is a CTA.
+- Slide 7 is a CTA placeholder only. The final CTA is injected later by the renderer.
 - If a script is provided, preserve its substance while restructuring it.
 - If only a topic is provided, infer the full carousel content.
 - Preserve the input language unless the user explicitly asked for another language.
@@ -27,6 +27,8 @@ Rules:
 - Do not use emojis.
 - Informational slides must include body text.
 - Hook and CTA slides may omit body text.
+- For slide 7, leave the body empty.
+- For slide 7, do not write a detailed CTA sentence because the renderer replaces it automatically.
 """
 
 
@@ -55,6 +57,11 @@ Return slides with these exact roles and design roles:
 5. info / body
 6. info / body
 7. cta / cta
+
+Important:
+- Slide 7 is a placeholder only.
+- Leave slide 7 body empty.
+- Keep slide 7 headline short because the final CTA is injected later.
 """
 
 

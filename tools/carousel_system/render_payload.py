@@ -286,16 +286,6 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
     if slide.slide_role == "cta":
         cta_headline = _build_global_cta_headline(language)
         cta_density = _cta_density(cta_headline, "")
-        cta_headline_limit = (
-            50
-            if style_recipe in {"creator_mono_minimal_v1"} | RETRO_SWIPE_STYLE_RECIPES
-            else 52
-            if style_recipe in LIGHT_GLOW_STYLE_RECIPES
-            else 44
-            if style_recipe in TWITTER_CARD_STYLE_RECIPES
-            else 38
-        )
-        headline_short = _shorten_headline(cta_headline, language, hard_limit=cta_headline_limit)
         allow_button = recipe.render_profile.cta_mode in {"headline_button", "headline_supporting_button"}
         button_label = _build_cta_button_label(language) if allow_button else None
         return RenderSlideSpec(
@@ -306,7 +296,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
             layout_preference="cta",
             text_align="center",
             headline=cta_headline,
-            headline_short=headline_short,
+            headline_short=None,
             headline_display=cta_headline,
             body=None,
             body_short=None,
@@ -316,20 +306,10 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
             text_density=cta_density,
             visual_priority="cta",
             safe_area_profile="cta_center_stack",
-            max_headline_lines=_cta_max_headline_lines(6, recipe, cta_density),
-            max_body_lines=(
-                3
-                if style_recipe in {
-                    "sadekov_black_profile_minimal_v1",
-                    "sadekov_white_profile_minimal_v1",
-                    "creator_mono_minimal_v1",
-                    *RETRO_SWIPE_STYLE_RECIPES,
-                    *TWITTER_CARD_STYLE_RECIPES,
-                }
-                else 4
-            ),
-            can_truncate_body=True,
-            emphasis_words=_extract_emphasis_words(slide.headline, language),
+            max_headline_lines=max(5, _cta_max_headline_lines(6, recipe, cta_density)),
+            max_body_lines=0,
+            can_truncate_body=False,
+            emphasis_words=_extract_emphasis_words(cta_headline, language),
             accent_motif=(
                 "profile_header_footer"
                 if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}

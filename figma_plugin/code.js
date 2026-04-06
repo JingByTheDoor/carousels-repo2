@@ -399,20 +399,28 @@ function coerceBoldFontStyle(family, style) {
 
 function normalizeSlide(slide) {
   const bodyText = typeof slide.body === "string" ? slide.body : null;
+  const headline = cleanText(slide.headline);
+  const headlineDisplay = cleanText(slide.headline_display);
+  const isCta = cleanText(slide.slide_role) === "cta";
   return Object.assign({}, slide, {
-    headline_short: cleanText(slide.headline_short),
-    headline_display: cleanText(slide.headline_display) || cleanText(slide.headline),
+    headline: headline,
+    headline_short: isCta ? null : cleanText(slide.headline_short),
+    headline_display: isCta ? (headline || headlineDisplay) : (headlineDisplay || headline),
     body: bodyText,
     body_short: cleanText(slide.body_short),
-    body_display: cleanText(slide.body_display) || bodyText,
+    body_display: isCta ? null : (cleanText(slide.body_display) || bodyText),
     supporting_text: cleanText(slide.supporting_text),
     button_label: cleanText(slide.button_label),
     image_slot: cleanText(slide.image_slot) || "none",
     image_required: Boolean(slide.image_required),
     image_treatment: cleanText(slide.image_treatment) || "none",
     image_asset: normalizeImageAsset(slide.image_asset),
-    max_headline_lines: typeof slide.max_headline_lines === "number" ? slide.max_headline_lines : 4,
-    max_body_lines: typeof slide.max_body_lines === "number" ? slide.max_body_lines : 6
+    max_headline_lines: isCta
+      ? Math.max(typeof slide.max_headline_lines === "number" ? slide.max_headline_lines : 0, 5)
+      : typeof slide.max_headline_lines === "number" ? slide.max_headline_lines : 4,
+    max_body_lines: isCta
+      ? 0
+      : typeof slide.max_body_lines === "number" ? slide.max_body_lines : 6
   });
 }
 
@@ -2854,13 +2862,13 @@ async function renderPlaceholderMediaCtaSlide(frame, slide, payload) {
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
-    x: 96,
-    y: 186,
-    width: 680,
-    maxHeight: 240,
-    maxSize: 82,
+    x: 64,
+    y: 160,
+    width: 744,
+    maxHeight: 340,
+    maxSize: 74,
     minSize: 34,
-    lineHeight: 1.02,
+    lineHeight: 1.1,
     color: tokens.text_dark,
     alignHorizontal: "CENTER",
     role: "headline",
@@ -2932,7 +2940,7 @@ async function renderPlaceholderMediaCtaSlide(frame, slide, payload) {
   await appendLabelPill(
     card,
     280,
-    Math.max(hasMedia ? 848 : 792, mediaBottom + 34),
+    Math.max(hasMedia ? 848 : 828, mediaBottom + 44),
     slide.button_label || "Follow for more",
     tokens.accent_navy,
     "#FFFFFF"
@@ -3882,7 +3890,7 @@ async function appendRemoteImageRect(frame, slide, options) {
   try {
     let image = null;
     if (slide.image_asset.data_base64) {
-      image = figma.createImage(decodeBase64(slide.image_asset.data_base64));
+      image = await createImageFromBase64(slide.image_asset.data_base64, "slide image");
     } else if (slide.image_asset.url) {
       image = await figma.createImageAsync(slide.image_asset.url);
     }
@@ -4110,7 +4118,7 @@ async function appendCarouselMeta(frame, payload) {
 }
 
 async function appendSavePostIcon(frame, payload, x, y, width, height, opacity) {
-  const imageHash = getSavePostIconHash(payload);
+  const imageHash = await getSavePostIconHash(payload);
   if (!imageHash) {
     return null;
   }
@@ -4133,7 +4141,7 @@ async function appendSavePostIcon(frame, payload, x, y, width, height, opacity) 
   return rect;
 }
 
-function getSavePostIconHash(payload) {
+async function getSavePostIconHash(payload) {
   const base64 = payload && payload.save_post_icon_data_base64 ? payload.save_post_icon_data_base64 : null;
   if (!base64) {
     return null;
@@ -4141,7 +4149,7 @@ function getSavePostIconHash(payload) {
   if (cachedSavePostIconBase64 === base64 && cachedSavePostIconHash) {
     return cachedSavePostIconHash;
   }
-  const image = figma.createImage(decodeBase64(base64));
+  const image = await createImageFromBase64(base64, "save post icon");
   cachedSavePostIconBase64 = base64;
   cachedSavePostIconHash = image.hash;
   return cachedSavePostIconHash;
@@ -5207,13 +5215,74 @@ function encodeBase64(bytes) {
   return result;
 }
 
-function decodeBase64(base64) {
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let index = 0; index < binary.length; index += 1) {
-    bytes[index] = binary.charCodeAt(index);
+async function createImageFromBase64(base64, contextLabel) {
+  const label = contextLabel || "embedded";
+  if (typeof base64 !== "string" || !base64.trim()) {
+    throw new Error(`Missing ${label} base64 data.`);
   }
-  return bytes;
+
+  const normalized = base64.trim();
+  let lastError = null;
+
+  if (typeof figma.createImage === "function") {
+    try {
+      return figma.createImage(decodeBase64(normalized));
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (typeof figma.createImageAsync === "function") {
+    try {
+      return await figma.createImageAsync(`data:image/png;base64,${normalized}`);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (lastError) {
+    throw new Error(`Failed to load ${label}: ${formatUnknownError(lastError)}`);
+  }
+  throw new Error(`Failed to load ${label}: no supported Figma image API found.`);
+}
+
+function decodeBase64(base64) {
+  if (typeof atob === "function") {
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index += 1) {
+      bytes[index] = binary.charCodeAt(index);
+    }
+    return bytes;
+  }
+  return manualDecodeBase64(base64);
+}
+
+function manualDecodeBase64(base64) {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  const clean = String(base64 || "").replace(/[^A-Za-z0-9+/=]/g, "");
+  const bytes = [];
+  let buffer = 0;
+  let bits = 0;
+
+  for (let index = 0; index < clean.length; index += 1) {
+    const character = clean.charAt(index);
+    if (character === "=") {
+      break;
+    }
+    const value = alphabet.indexOf(character);
+    if (value < 0) {
+      continue;
+    }
+    buffer = (buffer << 6) | value;
+    bits += 6;
+    if (bits >= 8) {
+      bits -= 8;
+      bytes.push((buffer >> bits) & 0xFF);
+    }
+  }
+
+  return Uint8Array.from(bytes);
 }
 
 function uniquePageName(baseName) {

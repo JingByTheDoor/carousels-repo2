@@ -50,6 +50,22 @@ const SAVE_POST_LABELS = {
   tr: "Gönderiyi kaydet",
   uk: "Збережіть допис"
 };
+const HOOK_CAPSULE_LABELS = {
+  ar: "مرروا للمتابعة →",
+  de: "Weiter wischen →",
+  en: "Keep swiping →",
+  es: "Sigue deslizando →",
+  fr: "Faites glisser →",
+  hi: "आगे स्वाइप करें →",
+  id: "Lanjut geser →",
+  it: "Continua a scorrere →",
+  nl: "Blijf swipen →",
+  pl: "Przesuwaj dalej →",
+  pt: "Continue deslizando →",
+  ru: "листай дальше →",
+  tr: "Kaydırmaya devam et →",
+  uk: "гортай далі →"
+};
 const TRAILING_CONNECTORS = new Set([
   "a", "an", "and", "as", "at", "but", "for", "from", "in", "into", "of", "on", "or", "that", "the", "to", "with",
   "и", "или", "в", "во", "на", "но", "по", "с", "со", "для", "к", "ко", "от", "из", "у", "а", "что", "чтобы"
@@ -468,6 +484,7 @@ async function renderCarousel(payload) {
     page.appendChild(frame);
 
     await renderSlide(frame, slide, payload);
+    await appendHookCapsule(frame, slide, payload);
     await appendCarouselMeta(frame, payload);
     collectSlideDiagnostics(frame, slide, payload);
     frames.push(frame);
@@ -1147,6 +1164,7 @@ async function renderCtaSlide(frame, slide, payload) {
     maxLines: slide.max_headline_lines
   });
 
+  let ctaAnchorNode = headlineNode;
   let bodyBottom = getTextBottom(headlineNode, 84, 0);
   if (slide.body_display || slide.body) {
     const bodyNode = await createTextBlock(frame, {
@@ -1166,28 +1184,23 @@ async function renderCtaSlide(frame, slide, payload) {
       role: "body",
       maxLines: slide.max_body_lines
     });
+    ctaAnchorNode = bodyNode;
     bodyBottom = getTextBottom(bodyNode, 34, 0);
   }
 
   if (slide.supporting_text) {
-    const supportingNode = await createTextBlock(frame, {
-      text: slide.supporting_text,
-      fontFamily: payload.typography.cta_body_family,
-      fontStyle: payload.typography.cta_body_style,
-      fallbackStyle: "Regular",
-      x: 180,
-      y: Math.max(684, bodyBottom + 22),
-      width: 720,
-      maxHeight: 80,
-      maxSize: 24,
-      minSize: 16,
-      lineHeight: 1.18,
+    bodyBottom = await appendCtaSecondaryHeadline(frame, slide, payload, ctaAnchorNode, {
+      x: 148,
+      minY: 640,
+      width: 784,
+      maxSize: 84,
+      minSize: 24,
+      extraPadding: 14,
+      bottomPadding: 330,
+      lineHeight: 1.02,
       color: tokens.text_light,
-      alignHorizontal: "CENTER",
-      role: "supporting",
-      maxLines: 3
+      alignHorizontal: "CENTER"
     });
-    bodyBottom = getTextBottom(supportingNode, 24, 0);
   }
 
   if (profile.ctaMode === "headline_button" || profile.ctaMode === "headline_supporting_button") {
@@ -1683,6 +1696,7 @@ async function renderTypographySignalCtaSlide(frame, slide, payload) {
     maxLines: slide.max_headline_lines
   });
 
+  let ctaAnchorNode = headlineNode;
   let ctaBottom = getTextBottom(headlineNode, 96, 0);
   if (slide.body_display || slide.body) {
     const bodyY = Math.max(528, ctaBottom + 28);
@@ -1704,34 +1718,29 @@ async function renderTypographySignalCtaSlide(frame, slide, payload) {
       role: "body",
       maxLines: slide.max_body_lines
     });
+    ctaAnchorNode = bodyNode;
     ctaBottom = getTextBottom(bodyNode, 34, 0);
   }
 
   if (slide.supporting_text) {
-    const supportingY = Math.max(690, ctaBottom + 20);
-    await createTextBlock(frame, {
-      text: slide.supporting_text,
-      fontFamily: payload.typography.cta_body_family,
-      fontStyle: payload.typography.cta_body_style,
-      fallbackStyle: "Regular",
-      x: 196,
-      y: supportingY,
-      width: 688,
-      maxHeight: clampTextHeight(frame, supportingY, 72, 430),
-      maxSize: 24,
-      minSize: 14,
-      lineHeight: 1.18,
+    ctaBottom = await appendCtaSecondaryHeadline(frame, slide, payload, ctaAnchorNode, {
+      x: 164,
+      minY: 654,
+      width: 752,
+      maxSize: 96,
+      minSize: 24,
+      extraPadding: 14,
+      bottomPadding: 408,
+      lineHeight: 1.02,
       color: tokens.text_light,
-      alignHorizontal: "CENTER",
-      role: "supporting",
-      maxLines: 3
+      alignHorizontal: "CENTER"
     });
   }
 
   const pill = figma.createRectangle();
   pill.resize(330, 76);
   pill.x = 375;
-  pill.y = 800;
+  pill.y = Math.max(800, ctaBottom + 62);
   pill.cornerRadius = 999;
   pill.fills = [solidPaint(tokens.text_light)];
   frame.appendChild(pill);
@@ -1856,6 +1865,7 @@ async function renderSadekovProfileCtaSlide(frame, slide, payload) {
   });
 
   const ctaBody = slide.body_display || slide.body;
+  let ctaAnchorNode = headlineNode;
   let ctaBottom = getTextBottom(headlineNode, 68, 0);
   if (ctaBody) {
     const bodyY = Math.max(1070, ctaBottom + 26);
@@ -1877,26 +1887,22 @@ async function renderSadekovProfileCtaSlide(frame, slide, payload) {
       role: "body",
       maxLines: slide.max_body_lines
     });
+    ctaAnchorNode = bodyNode;
     ctaBottom = getTextBottom(bodyNode, 32, 0);
   }
 
   if (slide.supporting_text) {
-    await createTextBlock(frame, {
-      text: slide.supporting_text,
-      fontFamily: payload.typography.cta_body_family,
-      fontStyle: payload.typography.cta_body_style,
-      fallbackStyle: "Regular",
-      x: 236,
-      y: Math.max(1132, ctaBottom + 18),
-      width: 608,
-      maxHeight: 70,
-      maxSize: 28,
-      minSize: 14,
-      lineHeight: 1.1,
-      color: "#D2D2D2",
-      alignHorizontal: "CENTER",
-      role: "supporting",
-      maxLines: 3
+    await appendCtaSecondaryHeadline(frame, slide, payload, ctaAnchorNode, {
+      x: 180,
+      minY: 758,
+      width: 720,
+      maxSize: 68,
+      minSize: 22,
+      extraPadding: 16,
+      bottomPadding: 220,
+      lineHeight: 1.02,
+      color: "#E2E2E2",
+      alignHorizontal: "CENTER"
     });
   }
 }
@@ -1972,7 +1978,7 @@ async function renderSadekovProfileLightCtaSlide(frame, slide, payload) {
   await appendSadekovProfileHeader(frame, 256, tokens, "light");
   await appendSadekovFooter(frame, "light");
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
@@ -1985,12 +1991,15 @@ async function renderSadekovProfileLightCtaSlide(frame, slide, payload) {
     minSize: 30,
     lineHeight: 1.04,
     color: tokens.text_dark,
-    alignHorizontal: "CENTER"
+    alignHorizontal: "CENTER",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
   const ctaBody = slide.body_display || slide.body;
+  let ctaAnchorNode = headlineNode;
   if (ctaBody) {
-    await createTextBlock(frame, {
+    ctaAnchorNode = await createTextBlock(frame, {
       text: ctaBody,
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
@@ -2003,24 +2012,23 @@ async function renderSadekovProfileLightCtaSlide(frame, slide, payload) {
       minSize: 16,
       lineHeight: 1.14,
       color: "#222222",
-      alignHorizontal: "CENTER"
+      alignHorizontal: "CENTER",
+      role: "body",
+      maxLines: slide.max_body_lines
     });
   }
 
   if (slide.supporting_text) {
-    await createTextBlock(frame, {
-      text: slide.supporting_text,
-      fontFamily: payload.typography.cta_body_family,
-      fontStyle: payload.typography.cta_body_style,
-      fallbackStyle: "Regular",
-      x: 236,
-      y: 1132,
-      width: 608,
-      maxHeight: 70,
-      maxSize: 28,
-      minSize: 14,
-      lineHeight: 1.1,
-      color: "#3F3F3F",
+    await appendCtaSecondaryHeadline(frame, slide, payload, ctaAnchorNode, {
+      x: 180,
+      minY: 758,
+      width: 720,
+      maxSize: 68,
+      minSize: 22,
+      extraPadding: 16,
+      bottomPadding: 220,
+      lineHeight: 1.02,
+      color: "#262C42",
       alignHorizontal: "CENTER"
     });
   }
@@ -2085,7 +2093,7 @@ async function renderTypographyEditorialLightCtaSlide(frame, slide, payload) {
   setSolidFill(frame, tokens.light_background);
   appendBottomBar(frame, "#020202");
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
@@ -2098,11 +2106,14 @@ async function renderTypographyEditorialLightCtaSlide(frame, slide, payload) {
     minSize: 34,
     lineHeight: 1.0,
     color: tokens.text_dark,
-    alignHorizontal: "CENTER"
+    alignHorizontal: "CENTER",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
+  let ctaAnchorNode = headlineNode;
   if (slide.body_display || slide.body) {
-    await createTextBlock(frame, {
+    ctaAnchorNode = await createTextBlock(frame, {
       text: slide.body_display || slide.body,
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
@@ -2115,24 +2126,23 @@ async function renderTypographyEditorialLightCtaSlide(frame, slide, payload) {
       minSize: 18,
       lineHeight: 1.18,
       color: tokens.text_dark,
-      alignHorizontal: "CENTER"
+      alignHorizontal: "CENTER",
+      role: "body",
+      maxLines: slide.max_body_lines
     });
   }
 
   if (slide.supporting_text) {
-    await createTextBlock(frame, {
-      text: slide.supporting_text,
-      fontFamily: payload.typography.cta_body_family,
-      fontStyle: payload.typography.cta_body_style,
-      fallbackStyle: "Regular",
-      x: 180,
-      y: 768,
-      width: 720,
-      maxHeight: 72,
-      maxSize: 24,
-      minSize: 14,
-      lineHeight: 1.16,
-      color: "#2C2C2C",
+    await appendCtaSecondaryHeadline(frame, slide, payload, ctaAnchorNode, {
+      x: 154,
+      minY: 740,
+      width: 772,
+      maxSize: 90,
+      minSize: 24,
+      extraPadding: 16,
+      bottomPadding: 300,
+      lineHeight: 1.02,
+      color: tokens.text_dark,
       alignHorizontal: "CENTER"
     });
   }
@@ -2258,6 +2268,7 @@ async function renderCpSplitCtaSlide(frame, slide, payload) {
     maxLines: slide.max_headline_lines
   });
 
+  let ctaAnchorNode = headlineNode;
   let ctaBottom = getTextBottom(headlineNode, 88, 0);
   if (slide.body_display || slide.body) {
     const bodyY = Math.max(560, ctaBottom + 26);
@@ -2279,33 +2290,29 @@ async function renderCpSplitCtaSlide(frame, slide, payload) {
       role: "body",
       maxLines: slide.max_body_lines
     });
+    ctaAnchorNode = bodyNode;
     ctaBottom = getTextBottom(bodyNode, 30, 0);
   }
 
   if (slide.supporting_text) {
-    await createTextBlock(frame, {
-      text: slide.supporting_text,
-      fontFamily: payload.typography.cta_body_family,
-      fontStyle: payload.typography.cta_body_style,
-      fallbackStyle: "Regular",
+    ctaBottom = await appendCtaSecondaryHeadline(frame, slide, payload, ctaAnchorNode, {
       x: 86,
-      y: Math.max(720, ctaBottom + 20),
-      width: 520,
-      maxHeight: 72,
-      maxSize: 22,
-      minSize: 14,
-      lineHeight: 1.18,
+      minY: 694,
+      width: 562,
+      maxSize: 72,
+      minSize: 22,
+      extraPadding: 16,
+      bottomPadding: 300,
+      lineHeight: 1.02,
       color: tokens.text_dark,
-      alignHorizontal: "LEFT",
-      role: "supporting",
-      maxLines: 3
+      alignHorizontal: "LEFT"
     });
   }
 
   const pill = figma.createRectangle();
   pill.resize(320, 76);
   pill.x = 86;
-  pill.y = 846;
+  pill.y = Math.max(846, ctaBottom + 62);
   pill.cornerRadius = 999;
   pill.fills = [solidPaint(tokens.text_dark)];
   frame.appendChild(pill);
@@ -2422,9 +2429,10 @@ async function renderCreatorMonoCtaSlide(frame, slide, payload) {
     maxLines: slide.max_headline_lines
   });
 
+  let ctaAnchorNode = headlineNode;
   if (slide.body_display || slide.body) {
     const bodyY = Math.max(560, getTextBottom(headlineNode, 112, 26));
-    await createTextBlock(frame, {
+    ctaAnchorNode = await createTextBlock(frame, {
       text: slide.body_display || slide.body,
       fallbackTexts: getBodyFallbackTexts(slide),
       fontFamily: payload.typography.cta_body_family,
@@ -2441,6 +2449,21 @@ async function renderCreatorMonoCtaSlide(frame, slide, payload) {
       alignHorizontal: "LEFT",
       role: "body",
       maxLines: slide.max_body_lines
+    });
+  }
+
+  if (slide.supporting_text) {
+    await appendCtaSecondaryHeadline(frame, slide, payload, ctaAnchorNode, {
+      x: 58,
+      minY: 744,
+      width: 928,
+      maxSize: 112,
+      minSize: 28,
+      extraPadding: 20,
+      bottomPadding: 240,
+      lineHeight: 0.98,
+      color: tokens.text_dark,
+      alignHorizontal: "LEFT"
     });
   }
 
@@ -2703,6 +2726,7 @@ async function renderLightGrainCtaSlide(frame, slide, payload) {
     maxLines: slide.max_headline_lines
   });
 
+  let ctaAnchorNode = headlineNode;
   let bodyBottom = getTextBottom(headlineNode, 74, 0);
   if (slide.body_display || slide.body) {
     const bodyY = Math.max(548, bodyBottom + 24);
@@ -2724,31 +2748,26 @@ async function renderLightGrainCtaSlide(frame, slide, payload) {
       role: "body",
       maxLines: slide.max_body_lines
     });
+    ctaAnchorNode = bodyNode;
     bodyBottom = getTextBottom(bodyNode, 28, 0);
   }
 
   if (slide.supporting_text) {
-    const supportingY = Math.max(716, bodyBottom + 22);
-    await createTextBlock(card, {
-      text: slide.supporting_text,
-      fontFamily: payload.typography.cta_body_family,
-      fontStyle: payload.typography.cta_body_style,
-      fallbackStyle: "Regular",
-      x: 160,
-      y: supportingY,
-      width: 584,
-      maxHeight: clampTextHeight(card, supportingY, 78, 108),
-      maxSize: 24,
-      minSize: 14,
-      lineHeight: 1.14,
-      color: "#40455E",
-      alignHorizontal: "CENTER",
-      role: "supporting",
-      maxLines: 3
+    bodyBottom = await appendCtaSecondaryHeadline(card, slide, payload, ctaAnchorNode, {
+      x: 130,
+      minY: 674,
+      width: 644,
+      maxSize: 74,
+      minSize: 22,
+      extraPadding: 14,
+      bottomPadding: 124,
+      lineHeight: 1.0,
+      color: tokens.text_dark,
+      alignHorizontal: "CENTER"
     });
   }
 
-  await appendLabelPill(card, 324, 818, slide.button_label || "Follow for more", tokens.accent_navy, "#FFFFFF");
+  await appendLabelPill(card, 324, Math.max(818, bodyBottom + 54), slide.button_label || "Follow for more", tokens.accent_navy, "#FFFFFF");
 }
 
 async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
@@ -2875,6 +2894,7 @@ async function renderPlaceholderMediaCtaSlide(frame, slide, payload) {
     maxLines: slide.max_headline_lines
   });
 
+  let ctaAnchorNode = headlineNode;
   let bodyBottom = getTextBottom(headlineNode, 82, 0);
   if (slide.body_display || slide.body) {
     const bodyNode = await createTextBlock(card, {
@@ -2895,28 +2915,23 @@ async function renderPlaceholderMediaCtaSlide(frame, slide, payload) {
       role: "body",
       maxLines: slide.max_body_lines
     });
+    ctaAnchorNode = bodyNode;
     bodyBottom = getTextBottom(bodyNode, 34, 0);
   }
 
   if (slide.supporting_text) {
-    const supportingNode = await createTextBlock(card, {
-      text: slide.supporting_text,
-      fontFamily: payload.typography.cta_body_family,
-      fontStyle: payload.typography.cta_body_style,
-      fallbackStyle: "Regular",
-      x: 154,
-      y: Math.max(646, bodyBottom + 18),
-      width: 564,
-      maxHeight: 72,
-      maxSize: 24,
-      minSize: 14,
-      lineHeight: 1.14,
-      color: "#5A6075",
-      alignHorizontal: "CENTER",
-      role: "supporting",
-      maxLines: 3
+    bodyBottom = await appendCtaSecondaryHeadline(card, slide, payload, ctaAnchorNode, {
+      x: 118,
+      minY: 610,
+      width: 636,
+      maxSize: 74,
+      minSize: 22,
+      extraPadding: 14,
+      bottomPadding: 188,
+      lineHeight: 1.04,
+      color: tokens.text_dark,
+      alignHorizontal: "CENTER"
     });
-    bodyBottom = getTextBottom(supportingNode, 24, 0);
   }
 
   const hasMedia = !!slide.image_asset;
@@ -3063,6 +3078,7 @@ async function renderRetroSwipeCtaSlide(frame, slide, payload) {
     alignHorizontal: "CENTER"
   });
 
+  let ctaAnchorNode = headlineNode;
   let ctaBottom = getTextBottom(headlineNode, 84, 0);
   if (slide.body_display || slide.body) {
     const bodyY = Math.max(740, ctaBottom + 24);
@@ -3082,7 +3098,23 @@ async function renderRetroSwipeCtaSlide(frame, slide, payload) {
       color: tokens.text_light,
       alignHorizontal: "CENTER"
     });
+    ctaAnchorNode = bodyNode;
     ctaBottom = getTextBottom(bodyNode, 34, 0);
+  }
+
+  if (slide.supporting_text) {
+    ctaBottom = await appendCtaSecondaryHeadline(frame, slide, payload, ctaAnchorNode, {
+      x: 142,
+      minY: 778,
+      width: 796,
+      maxSize: 84,
+      minSize: 24,
+      extraPadding: 18,
+      bottomPadding: 280,
+      lineHeight: 1.02,
+      color: tokens.text_light,
+      alignHorizontal: "CENTER"
+    });
   }
 
   await appendRetroPillButton(frame, 302, Math.max(932, ctaBottom + 52), 476, 120, tokens, slide.button_label || "Follow for more");
@@ -3235,23 +3267,26 @@ async function renderDeviceMockupBodySlide(frame, slide, payload) {
 async function renderTwitterCardCtaSlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   appendSoftGradientBackdrop(frame, tokens, "sky");
-  await appendTweetCard(frame, 50, 148, 980, 836, slide, tokens, payload, false);
+  const tweetLayout = await appendTweetCard(frame, 50, 148, 980, 836, slide, tokens, payload, false);
 
   if (slide.supporting_text) {
+    const headlineSize = Math.min(54, getTextBlockFontSize(tweetLayout && tweetLayout.headlineNode, 42));
     await createTextBlock(frame, {
       text: slide.supporting_text,
-      fontFamily: payload.typography.cta_body_family,
-      fontStyle: payload.typography.cta_body_style,
-      fallbackStyle: "Regular",
+      fontFamily: payload.typography.cta_heading_family,
+      fontStyle: payload.typography.cta_heading_style,
+      fallbackStyle: "Bold",
       x: 126,
-      y: 1030,
+      y: 1018,
       width: 828,
-      maxHeight: 72,
-      maxSize: 24,
-      minSize: 14,
-      lineHeight: 1.16,
+      maxHeight: 136,
+      maxSize: headlineSize,
+      minSize: Math.max(22, headlineSize - 12),
+      lineHeight: 1.02,
       color: tokens.text_dark,
-      alignHorizontal: "CENTER"
+      alignHorizontal: "CENTER",
+      role: "supporting",
+      maxLines: 3
     });
   }
 }
@@ -3286,6 +3321,7 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
   });
 
   const ctaBodyY = getTextBottom(headlineNode, hasMedia ? 74 : 92, 18);
+  let ctaAnchorNode = headlineNode;
   let bodyBottom = getTextBottom(headlineNode, hasMedia ? 74 : 92, 0);
   if (slide.body_display || slide.body) {
     const bodyNode = await createTextBlock(frame, {
@@ -3306,28 +3342,23 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
       role: "body",
       maxLines: slide.max_body_lines
     });
+    ctaAnchorNode = bodyNode;
     bodyBottom = getTextBottom(bodyNode, hasMedia ? 28 : 34, 0);
   }
 
   if (slide.supporting_text) {
-    const supportingNode = await createTextBlock(frame, {
-      text: slide.supporting_text,
-      fontFamily: payload.typography.cta_body_family,
-      fontStyle: payload.typography.cta_body_style,
-      fallbackStyle: "Regular",
-      x: hasMedia ? 92 : 190,
-      y: bodyBottom + 24,
-      width: hasMedia ? 396 : 700,
-      maxHeight: 80,
-      maxSize: 24,
-      minSize: 14,
-      lineHeight: 1.14,
-      color: "#596177",
-      alignHorizontal: align,
-      role: "supporting",
-      maxLines: 3
+    bodyBottom = await appendCtaSecondaryHeadline(frame, slide, payload, ctaAnchorNode, {
+      x: hasMedia ? 92 : 170,
+      minY: hasMedia ? 640 : 700,
+      width: hasMedia ? 410 : 740,
+      maxSize: hasMedia ? 74 : 92,
+      minSize: 22,
+      extraPadding: 18,
+      bottomPadding: hasMedia ? 360 : 260,
+      lineHeight: 1.02,
+      color: tokens.text_dark,
+      alignHorizontal: align
     });
-    bodyBottom = getTextBottom(supportingNode, 24, 0);
   }
 
   const buttonX = hasMedia ? 92 : 350;
@@ -4073,6 +4104,52 @@ function normalizeLanguageCode(language) {
   return cleaned.toLowerCase().split(/[-_]/)[0] || "en";
 }
 
+function getHookCapsuleLabel(language) {
+  const normalized = normalizeLanguageCode(language);
+  return HOOK_CAPSULE_LABELS[normalized] || HOOK_CAPSULE_LABELS.en;
+}
+
+function isHookSlide(slide) {
+  return cleanText(slide && slide.slide_role) === "hook" || cleanText(slide && slide.design_role) === "cover";
+}
+
+async function appendHookCapsule(frame, slide, payload) {
+  if (!isHookSlide(slide)) {
+    return;
+  }
+  const text = getHookCapsuleLabel(payload && payload.language);
+  const width = Math.max(188, Math.min(372, 54 + text.length * 12));
+  const height = 58;
+  const x = frame.width - width - 86;
+  const y = frame.height - 204;
+  const fillHex = "#5563D8";
+
+  const pill = figma.createRectangle();
+  pill.name = "Hook Capsule";
+  pill.resize(width, height);
+  pill.x = x;
+  pill.y = y;
+  pill.cornerRadius = 999;
+  pill.fills = [solidPaint(fillHex, 0.98)];
+  frame.appendChild(pill);
+
+  await createTextBlock(frame, {
+    text,
+    fontFamily: "Inter",
+    fontStyle: "Semi Bold",
+    fallbackStyle: "Bold",
+    x: x + 18,
+    y: y + 14,
+    width: width - 36,
+    maxHeight: 26,
+    maxSize: 22,
+    minSize: 14,
+    lineHeight: 1.0,
+    color: "#FFFFFF",
+    alignHorizontal: "CENTER"
+  });
+}
+
 async function appendCarouselMeta(frame, payload) {
   const y = getCarouselMetaY(frame.height);
   const tone = appendCarouselMetaTone(frame);
@@ -4629,6 +4706,12 @@ async function appendTweetCard(frame, x, y, width, height, slide, tokens, payloa
       card.appendChild(action);
     }
   }
+
+  return {
+    card,
+    headlineNode,
+    bodyBottom
+  };
 }
 
 function isTypographySignal(payload) {
@@ -4746,6 +4829,51 @@ function getRemainingTextHeight(parent, startY, bottomPadding) {
 
 function clampTextHeight(parent, startY, preferredMaxHeight, bottomPadding) {
   return Math.max(64, Math.min(preferredMaxHeight, getRemainingTextHeight(parent, startY, bottomPadding)));
+}
+
+function getTextBlockFontSize(node, fallbackFontSize) {
+  if (!node) {
+    return fallbackFontSize || 24;
+  }
+  const meta = TEXT_BLOCK_META.get(node.id) || {};
+  if (typeof meta.fontSize === "number") {
+    return meta.fontSize;
+  }
+  if (typeof node.fontSize === "number") {
+    return node.fontSize;
+  }
+  return fallbackFontSize || 24;
+}
+
+async function appendCtaSecondaryHeadline(parent, slide, payload, anchorNode, options) {
+  if (!slide.supporting_text || !anchorNode) {
+    return anchorNode ? getTextBottom(anchorNode, options.fallbackFontSize || 24, 0) : (options.minY || 0);
+  }
+  const anchorFontSize = Math.round(getTextBlockFontSize(anchorNode, options.fallbackFontSize || options.maxSize || 24));
+  const preferredMaxSize = Math.max(options.minSize || 18, Math.min(anchorFontSize, options.maxSize || anchorFontSize));
+  const shrinkAllowance = typeof options.shrinkAllowance === "number" ? options.shrinkAllowance : 10;
+  const supportingY = Math.max(options.minY || 0, getTextBottom(anchorNode, anchorFontSize, options.extraPadding || 12));
+  const supportingMaxHeight = typeof options.maxHeight === "number"
+    ? options.maxHeight
+    : clampTextHeight(parent, supportingY, Math.max(112, preferredMaxSize * 3), options.bottomPadding || 220);
+  const supportingNode = await createTextBlock(parent, {
+    text: slide.supporting_text,
+    fontFamily: payload.typography.cta_heading_family,
+    fontStyle: payload.typography.cta_heading_style,
+    fallbackStyle: "Bold",
+    x: options.x,
+    y: supportingY,
+    width: options.width,
+    maxHeight: supportingMaxHeight,
+    maxSize: preferredMaxSize,
+    minSize: Math.max(options.minSize || 18, preferredMaxSize - shrinkAllowance),
+    lineHeight: options.lineHeight || 1.02,
+    color: options.color,
+    alignHorizontal: options.alignHorizontal || "CENTER",
+    role: options.role || "supporting",
+    maxLines: options.maxLines || 3
+  });
+  return getTextBottom(supportingNode, preferredMaxSize, 0);
 }
 
 async function appendFooterSignal(frame, label, x, y, align) {

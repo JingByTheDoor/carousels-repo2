@@ -342,6 +342,15 @@
   - `node --check figma_plugin\\code.js`
   - `python -m compileall tools`
   - CTA copy smoke test: duplicate `Follow for more ...` body now collapses to `None`, while meaningful tails like `for busy teachers` survive
+- Applied the latest saved review pass from `studio-20260406-002247-e5c6d9` and generalized the fixes beyond the reviewed families:
+  - payload generation now shortens dense cover headlines earlier and uses shortened headline/body display copy more aggressively for crowded media and tight-spacing families
+  - the plugin text-fit engine now tries shared fallback copy and stronger truncation before allowing overflow
+  - shared renderer stack spacing was tightened so headline-to-body anchoring is measured in more families instead of relying on brittle fixed Y values
+  - removed parser-fragile spread syntax from the plugin render-profile map so one style-family profile cannot break the whole Figma run
+- Verified:
+  - `node --check figma_plugin\\code.js`
+  - `python -m compileall tools`
+  - `python -m unittest discover -s tests -v`
 - Reduced review-mode post-render overhead:
   - Studio review rounds now generate payloads with `output_modes=["figma"]`
   - plugin payloads now carry `include_download_exports`

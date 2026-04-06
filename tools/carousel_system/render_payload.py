@@ -178,6 +178,7 @@ def write_plugin_render_payload(output_path: Path, payload: PluginRenderPayload)
 def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: StyleRecipeSpec) -> RenderSlideSpec:
     style_recipe = recipe.style_recipe
     if slide.slide_role == "hook":
+        hook_density = _hook_density(slide.headline)
         if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}:
             hook_limit = 44
         elif style_recipe == "typography_editorial_light_v1":
@@ -193,18 +194,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
         else:
             hook_limit = 42
         headline_short = _shorten_headline(slide.headline, language, hard_limit=hook_limit)
-        display = (
-            slide.headline
-            if style_recipe in {
-                "creator_mono_minimal_v1",
-                *LIGHT_GLOW_STYLE_RECIPES,
-                *RETRO_SWIPE_STYLE_RECIPES,
-                *TWITTER_CARD_STYLE_RECIPES,
-            }
-            else headline_short
-            if len(slide.headline) > hook_limit
-            else slide.headline
-        )
+        display = _hook_display_text(slide.headline, headline_short, recipe, hook_density)
         safe_area = (
             "cover_balanced"
             if style_recipe in {
@@ -251,10 +241,10 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
             body_display=None,
             supporting_text=None,
             button_label=None,
-            text_density=_hook_density(slide.headline),
+            text_density=hook_density,
             visual_priority="headline",
             safe_area_profile=safe_area,
-            max_headline_lines=(
+            max_headline_lines=_hook_max_headline_lines(
                 4
                 if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}
                 else 4
@@ -263,7 +253,9 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
                 if style_recipe == "creator_mono_minimal_v1"
                 else 5
                 if style_recipe in {"cp_split_minimal_statement_v1", "typography_editorial_light_v1"}
-                else 6
+                else 6,
+                recipe,
+                hook_density,
             ),
             max_body_lines=0,
             can_truncate_body=False,
@@ -273,6 +265,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
 
     if slide.slide_role == "cta":
         cta_source = slide.body or record.normalized_input.cta_text or ""
+        cta_density = _cta_density(slide.headline, cta_source)
         cta_headline_limit = (
             50
             if style_recipe in {"creator_mono_minimal_v1"} | RETRO_SWIPE_STYLE_RECIPES
@@ -293,15 +286,9 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
             body_display, supporting_text = _dedupe_cta_segments(body_display, supporting_text, slide.headline)
         button_label = _build_cta_button_label(language) if allow_button else None
         display_headline = slide.headline
-        if recipe.render_profile.cta_mode in {"headline_only", "headline_button"} and headline_short:
+        if _cta_should_use_short_headline(recipe, cta_density) and headline_short:
             display_headline = headline_short
-        elif style_recipe in {
-            "sadekov_black_profile_minimal_v1",
-            "sadekov_white_profile_minimal_v1",
-            "typography_editorial_light_v1",
-            *LIGHT_GLOW_STYLE_RECIPES,
-            *TWITTER_CARD_STYLE_RECIPES,
-        } and headline_short:
+        elif style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1", "typography_editorial_light_v1"} and headline_short:
             display_headline = headline_short
         return RenderSlideSpec(
             slide_number=slide.slide_number,
@@ -318,10 +305,14 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
             body_display=body_display,
             supporting_text=supporting_text,
             button_label=button_label,
-            text_density=_cta_density(slide.headline, cta_source),
+            text_density=cta_density,
             visual_priority="cta",
             safe_area_profile="cta_center_stack",
-            max_headline_lines=3 if style_recipe in LIGHT_GLOW_STYLE_RECIPES | TWITTER_CARD_STYLE_RECIPES else 4,
+            max_headline_lines=_cta_max_headline_lines(
+                3 if style_recipe in LIGHT_GLOW_STYLE_RECIPES | TWITTER_CARD_STYLE_RECIPES else 4,
+                recipe,
+                cta_density,
+            ),
             max_body_lines=(
                 3
                 if style_recipe in {
@@ -389,6 +380,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
         body_limit = _body_hard_limit(layout_variant, text_density)
     headline_short = _shorten_headline(slide.headline, language, hard_limit=headline_limit)
     body_short = _shorten_body(body_text, language, hard_limit=body_limit)
+    use_short_copy = _body_should_use_short_copy(recipe, layout_variant, text_density)
     headline_display = (
         headline_short
         if style_recipe in {
@@ -396,16 +388,7 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
             "sadekov_white_profile_minimal_v1",
             "typography_editorial_light_v1",
         }
-        or (
-            text_density == "high"
-            and style_recipe
-            not in {
-                "creator_mono_minimal_v1",
-                *LIGHT_GLOW_STYLE_RECIPES,
-                *RETRO_SWIPE_STYLE_RECIPES,
-                *TWITTER_CARD_STYLE_RECIPES,
-            }
-        )
+        or use_short_copy
         or layout_variant == "body_mask_band_left"
         else slide.headline
     )
@@ -416,17 +399,17 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
             "sadekov_white_profile_minimal_v1",
             "typography_editorial_light_v1",
         }
-        or (
-            text_density == "high"
-            and style_recipe
-            not in {
-                "creator_mono_minimal_v1",
-                *LIGHT_GLOW_STYLE_RECIPES,
-                *RETRO_SWIPE_STYLE_RECIPES,
-                *TWITTER_CARD_STYLE_RECIPES,
-            }
-        )
+        or use_short_copy
         else body_text
+    )
+    base_body_lines = (
+        5
+        if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}
+        else 5
+        if style_recipe in {"creator_mono_minimal_v1"} | LIGHT_GLOW_STYLE_RECIPES | RETRO_SWIPE_STYLE_RECIPES | TWITTER_CARD_STYLE_RECIPES
+        else 6
+        if style_recipe == "typography_editorial_light_v1"
+        else _max_body_lines(layout_variant, text_density)
     )
 
     return RenderSlideSpec(
@@ -447,16 +430,8 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
         text_density=text_density,
         visual_priority="headline" if text_density != "high" else "body",
         safe_area_profile=_safe_area_profile(layout_variant),
-        max_headline_lines=3,
-        max_body_lines=(
-            5
-            if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}
-            else 5
-            if style_recipe in {"creator_mono_minimal_v1"} | LIGHT_GLOW_STYLE_RECIPES | RETRO_SWIPE_STYLE_RECIPES | TWITTER_CARD_STYLE_RECIPES
-            else 6
-            if style_recipe == "typography_editorial_light_v1"
-            else _max_body_lines(layout_variant, text_density)
-        ),
+        max_headline_lines=_body_max_headline_lines(recipe, layout_variant, text_density),
+        max_body_lines=_body_max_body_lines(base_body_lines, recipe, layout_variant, text_density),
         can_truncate_body=True,
         emphasis_words=_extract_emphasis_words(f"{slide.headline} {body_text}", language),
         accent_motif=_body_accent_motif(slide.slide_number, body_text, style_recipe),
@@ -471,6 +446,34 @@ def _hook_density(headline: str) -> TextDensity:
     return "low"
 
 
+def _hook_display_text(
+    headline: str,
+    headline_short: str | None,
+    recipe: StyleRecipeSpec,
+    density: TextDensity,
+) -> str:
+    if not headline_short:
+        return headline
+    profile = recipe.render_profile
+    if density == "high":
+        return headline_short
+    if profile.spacing_profile == "tight" and len(headline) > 48:
+        return headline_short
+    if profile.media_mode in {"optional_inline", "device_conditional", "tweet_card"} and len(headline) > 44:
+        return headline_short
+    return headline
+
+
+def _hook_max_headline_lines(base_lines: int, recipe: StyleRecipeSpec, density: TextDensity) -> int:
+    crowded_profile = (
+        recipe.render_profile.spacing_profile == "tight"
+        or recipe.render_profile.media_mode in {"optional_inline", "device_conditional", "tweet_card"}
+    )
+    if density == "high" and crowded_profile:
+        return max(3, base_lines - 1)
+    return base_lines
+
+
 def _cta_density(headline: str, body: str) -> TextDensity:
     combined = len(headline) + len(body)
     if combined > 120:
@@ -480,6 +483,22 @@ def _cta_density(headline: str, body: str) -> TextDensity:
     return "low"
 
 
+def _cta_should_use_short_headline(recipe: StyleRecipeSpec, density: TextDensity) -> bool:
+    if recipe.render_profile.cta_mode in {"headline_only", "headline_button"}:
+        return True
+    return density == "high" or recipe.render_profile.spacing_profile == "tight"
+
+
+def _cta_max_headline_lines(base_lines: int, recipe: StyleRecipeSpec, density: TextDensity) -> int:
+    crowded_profile = (
+        recipe.render_profile.spacing_profile == "tight"
+        or recipe.render_profile.media_mode in {"optional_inline", "device_conditional", "tweet_card"}
+    )
+    if density == "high" and crowded_profile:
+        return max(2, base_lines - 1)
+    return base_lines
+
+
 def _body_density(headline: str, body: str) -> TextDensity:
     combined = len(headline) + len(body)
     if combined > 135 or len(body) > 100 or len(headline) > 32:
@@ -487,6 +506,51 @@ def _body_density(headline: str, body: str) -> TextDensity:
     if combined > 88 or len(body) > 65 or len(headline) > 24:
         return "medium"
     return "low"
+
+
+def _body_should_use_short_copy(
+    recipe: StyleRecipeSpec,
+    layout_variant: str,
+    text_density: TextDensity,
+) -> bool:
+    if text_density == "high":
+        return True
+    if recipe.render_profile.spacing_profile == "tight" and text_density != "low":
+        return True
+    if recipe.render_profile.media_mode in {"optional_inline", "device_conditional", "tweet_card"} and text_density != "low":
+        return True
+    if layout_variant in {"body_mask_band_left", "body_spotlight_panel"} and text_density != "low":
+        return True
+    return False
+
+
+def _body_max_headline_lines(
+    recipe: StyleRecipeSpec,
+    layout_variant: str,
+    text_density: TextDensity,
+) -> int:
+    if text_density == "high" and (
+        recipe.render_profile.spacing_profile == "tight"
+        or recipe.render_profile.media_mode in {"optional_inline", "device_conditional", "tweet_card"}
+        or layout_variant in {"body_mask_band_left", "body_spotlight_panel"}
+    ):
+        return 2
+    return 3
+
+
+def _body_max_body_lines(
+    base_lines: int,
+    recipe: StyleRecipeSpec,
+    layout_variant: str,
+    text_density: TextDensity,
+) -> int:
+    if text_density == "high" and (
+        recipe.render_profile.spacing_profile == "tight"
+        or recipe.render_profile.media_mode in {"optional_inline", "device_conditional", "tweet_card"}
+        or layout_variant == "body_spotlight_panel"
+    ):
+        return max(4, base_lines - 1)
+    return base_lines
 
 
 def _layout_preference_for_variant(layout_variant: str) -> LayoutPreference:

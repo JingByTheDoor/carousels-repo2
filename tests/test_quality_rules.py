@@ -57,6 +57,30 @@ class QualityRulesTests(unittest.TestCase):
         self.assertIsNone(cta_slide.supporting_text)
         self.assertTrue(cta_slide.button_label)
 
+    def test_light_glow_hook_uses_shortened_copy_when_cover_is_dense(self) -> None:
+        plan = make_plan()
+        plan.slides[0].headline = "Boost English Learners' Thinking Speed with These Low-Prep Writing Activities!"
+        record = build_output_record(make_job("light_glow"), plan)
+        payload = build_plugin_render_payload(record, source_artifact_path=Path("test-job.json"))
+        cover_slide = payload.slides[0]
+        self.assertEqual(cover_slide.headline_display, cover_slide.headline_short)
+        self.assertEqual(cover_slide.max_headline_lines, 3)
+
+    def test_device_mockup_dense_body_uses_shortened_stack_copy(self) -> None:
+        plan = make_plan()
+        plan.slides[1].headline = "Quick prompts that ignite thinking in seconds"
+        plan.slides[1].body = (
+            "Use rapid-fire questions, timed pair talk, and visible response cues to sharpen thinking, "
+            "reduce hesitation, and keep language moving without overexplaining the task."
+        )
+        record = build_output_record(make_job("device_mockup"), plan)
+        payload = build_plugin_render_payload(record, source_artifact_path=Path("test-job.json"))
+        body_slide = payload.slides[1]
+        self.assertEqual(body_slide.headline_display, body_slide.headline_short)
+        self.assertEqual(body_slide.body_display, body_slide.body_short)
+        self.assertEqual(body_slide.max_headline_lines, 2)
+        self.assertEqual(body_slide.max_body_lines, 4)
+
     def test_image_picker_refuses_exact_reuse_when_all_candidates_are_taken(self) -> None:
         settings = Settings(
             openai_api_key=None,

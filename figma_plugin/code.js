@@ -44,28 +44,31 @@ const DEFAULT_RENDER_PROFILE = {
   decorationIntensity: "medium",
   spacingProfile: "balanced"
 };
+function makeRenderProfile(overrides) {
+  return Object.assign({}, DEFAULT_RENDER_PROFILE, overrides || {});
+}
 const STYLE_RENDER_PROFILES = {
-  alder_portrait_editorial_mix_v1: { ...DEFAULT_RENDER_PROFILE, ctaMode: "headline_button", spacingProfile: "editorial" },
-  alder_portrait_editorial_dense_v1: { ...DEFAULT_RENDER_PROFILE, ctaMode: "headline_button", spacingProfile: "tight" },
-  typography_signal_glow_v1: { ...DEFAULT_RENDER_PROFILE, ctaMode: "headline_button", footerMode: "signals" },
-  cp_split_minimal_statement_v1: { ...DEFAULT_RENDER_PROFILE, ctaMode: "headline_button", decorationIntensity: "low" },
-  alder_split_media_right_v1: { ...DEFAULT_RENDER_PROFILE, selectionTier: "review_safe", mediaMode: "optional_inline", decorationIntensity: "low", spacingProfile: "editorial" },
-  alder_split_media_left_v1: { ...DEFAULT_RENDER_PROFILE, mediaMode: "optional_inline", decorationIntensity: "low", spacingProfile: "editorial" },
-  alder_text_only_air_v1: { ...DEFAULT_RENDER_PROFILE, decorationIntensity: "low", spacingProfile: "airy" },
-  cp_split_longform_v1: { ...DEFAULT_RENDER_PROFILE, ctaMode: "headline_button", spacingProfile: "editorial", decorationIntensity: "low" },
-  cp_gallery_wall_v1: { ...DEFAULT_RENDER_PROFILE, selectionTier: "specialty_manual_only", mediaMode: "optional_inline", decorationIntensity: "high", spacingProfile: "airy" },
-  sadekov_black_profile_minimal_v1: { ...DEFAULT_RENDER_PROFILE, footerMode: "profile", decorationIntensity: "low" },
-  sadekov_white_profile_minimal_v1: { ...DEFAULT_RENDER_PROFILE, selectionTier: "specialty_manual_only", footerMode: "profile", decorationIntensity: "low" },
-  typography_editorial_light_v1: { ...DEFAULT_RENDER_PROFILE, footerMode: "signals", decorationIntensity: "medium", spacingProfile: "editorial" },
-  creator_mono_minimal_v1: { ...DEFAULT_RENDER_PROFILE, decorationIntensity: "low", spacingProfile: "tight" },
-  light_grain_glow_v1: { ...DEFAULT_RENDER_PROFILE, selectionTier: "review_safe", ctaMode: "headline_button", mediaMode: "optional_inline", decorationIntensity: "low", spacingProfile: "tight" },
-  pastel_arrow_editorial_v1: { ...DEFAULT_RENDER_PROFILE, ctaMode: "headline_button", mediaMode: "optional_inline", decorationIntensity: "low", spacingProfile: "tight" },
-  retro_swipe_creator_v1: { ...DEFAULT_RENDER_PROFILE, selectionTier: "specialty_manual_only", ctaMode: "headline_button", footerMode: "retro_creator" },
-  twitter_card_soft_v1: { ...DEFAULT_RENDER_PROFILE, selectionTier: "review_safe", footerMode: "tweet_actions", mediaMode: "tweet_card", decorationIntensity: "low" },
-  placeholder_media_glow_v1: { ...DEFAULT_RENDER_PROFILE, selectionTier: "review_safe", ctaMode: "headline_button", mediaMode: "optional_inline", decorationIntensity: "low", spacingProfile: "tight" },
-  device_mockup_gradient_v1: { ...DEFAULT_RENDER_PROFILE, selectionTier: "review_safe", ctaMode: "headline_button", mediaMode: "device_conditional", decorationIntensity: "low" },
-  social_proof_linkedin_v1: { ...DEFAULT_RENDER_PROFILE, selectionTier: "specialty_manual_only", ctaMode: "headline_button" },
-  profile_circle_pop_v1: { ...DEFAULT_RENDER_PROFILE, selectionTier: "specialty_manual_only", ctaMode: "headline_button" }
+  alder_portrait_editorial_mix_v1: makeRenderProfile({ ctaMode: "headline_button", spacingProfile: "editorial" }),
+  alder_portrait_editorial_dense_v1: makeRenderProfile({ ctaMode: "headline_button", spacingProfile: "tight" }),
+  typography_signal_glow_v1: makeRenderProfile({ ctaMode: "headline_button", footerMode: "signals" }),
+  cp_split_minimal_statement_v1: makeRenderProfile({ ctaMode: "headline_button", decorationIntensity: "low" }),
+  alder_split_media_right_v1: makeRenderProfile({ selectionTier: "review_safe", mediaMode: "optional_inline", decorationIntensity: "low", spacingProfile: "editorial" }),
+  alder_split_media_left_v1: makeRenderProfile({ mediaMode: "optional_inline", decorationIntensity: "low", spacingProfile: "editorial" }),
+  alder_text_only_air_v1: makeRenderProfile({ decorationIntensity: "low", spacingProfile: "airy" }),
+  cp_split_longform_v1: makeRenderProfile({ ctaMode: "headline_button", spacingProfile: "editorial", decorationIntensity: "low" }),
+  cp_gallery_wall_v1: makeRenderProfile({ selectionTier: "specialty_manual_only", mediaMode: "optional_inline", decorationIntensity: "high", spacingProfile: "airy" }),
+  sadekov_black_profile_minimal_v1: makeRenderProfile({ footerMode: "profile", decorationIntensity: "low" }),
+  sadekov_white_profile_minimal_v1: makeRenderProfile({ selectionTier: "specialty_manual_only", footerMode: "profile", decorationIntensity: "low" }),
+  typography_editorial_light_v1: makeRenderProfile({ footerMode: "signals", decorationIntensity: "medium", spacingProfile: "editorial" }),
+  creator_mono_minimal_v1: makeRenderProfile({ decorationIntensity: "low", spacingProfile: "tight" }),
+  light_grain_glow_v1: makeRenderProfile({ selectionTier: "review_safe", ctaMode: "headline_button", mediaMode: "optional_inline", decorationIntensity: "low", spacingProfile: "tight" }),
+  pastel_arrow_editorial_v1: makeRenderProfile({ ctaMode: "headline_button", mediaMode: "optional_inline", decorationIntensity: "low", spacingProfile: "tight" }),
+  retro_swipe_creator_v1: makeRenderProfile({ selectionTier: "specialty_manual_only", ctaMode: "headline_button", footerMode: "retro_creator" }),
+  twitter_card_soft_v1: makeRenderProfile({ selectionTier: "review_safe", footerMode: "tweet_actions", mediaMode: "tweet_card", decorationIntensity: "low" }),
+  placeholder_media_glow_v1: makeRenderProfile({ selectionTier: "review_safe", ctaMode: "headline_button", mediaMode: "optional_inline", decorationIntensity: "low", spacingProfile: "tight" }),
+  device_mockup_gradient_v1: makeRenderProfile({ selectionTier: "review_safe", ctaMode: "headline_button", mediaMode: "device_conditional", decorationIntensity: "low" }),
+  social_proof_linkedin_v1: makeRenderProfile({ selectionTier: "specialty_manual_only", ctaMode: "headline_button" }),
+  profile_circle_pop_v1: makeRenderProfile({ selectionTier: "specialty_manual_only", ctaMode: "headline_button" })
 };
 const STYLE_RENDERERS = {
   alder_split_media_right_v1: {
@@ -667,6 +670,7 @@ async function renderCoverSlide(frame, slide, payload) {
 
   await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cover_family,
     fontStyle: payload.typography.cover_style,
     fallbackStyle: "Bold",
@@ -770,8 +774,9 @@ async function renderEditorialBodySlide(frame, slide, payload) {
   dot.fills = [solidPaint(tokens.text_dark)];
   frame.appendChild(dot);
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
@@ -783,23 +788,29 @@ async function renderEditorialBodySlide(frame, slide, payload) {
     minSize: 34,
     lineHeight: 1.06,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
+  const bodyY = Math.max(276, getTextBottom(headlineNode, 64, 26));
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: 96,
-    y: 276,
+    y: bodyY,
     width: 888,
-    maxHeight: 760,
+    maxHeight: clampTextHeight(frame, bodyY, 760, 150),
     maxSize: 34,
     minSize: 20,
     lineHeight: 1.34,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "body",
+    maxLines: slide.max_body_lines
   });
 }
 
@@ -827,8 +838,9 @@ async function renderMaskBandBodySlide(frame, slide, payload) {
 
   await appendSlideNumberChip(frame, slide.slide_number, tokens);
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
@@ -840,23 +852,29 @@ async function renderMaskBandBodySlide(frame, slide, payload) {
     minSize: 34,
     lineHeight: 1.04,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
+  const bodyY = Math.max(290, getTextBottom(headlineNode, 62, 24));
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: 310,
-    y: 290,
+    y: bodyY,
     width: 690,
-    maxHeight: 830,
+    maxHeight: clampTextHeight(frame, bodyY, 830, 170),
     maxSize: 34,
     minSize: 20,
     lineHeight: 1.34,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "body",
+    maxLines: slide.max_body_lines
   });
 }
 
@@ -929,8 +947,9 @@ async function renderSpotlightBodySlide(frame, slide, payload) {
 
   await appendSlideNumberChip(frame, slide.slide_number, tokens);
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
@@ -942,23 +961,29 @@ async function renderSpotlightBodySlide(frame, slide, payload) {
     minSize: 34,
     lineHeight: 1.04,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
+  const bodyY = Math.max(286, getTextBottom(headlineNode, 62, 24));
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: 88,
-    y: 286,
+    y: bodyY,
     width: 860,
-    maxHeight: 500,
+    maxHeight: clampTextHeight(frame, bodyY, 500, 410),
     maxSize: 34,
     minSize: 20,
     lineHeight: 1.34,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "body",
+    maxLines: slide.max_body_lines
   });
 
   await createTextBlock(frame, {
@@ -1187,6 +1212,7 @@ async function renderAlderSplitMediaBodySlide(frame, slide, payload, orientation
 
   const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
@@ -1206,6 +1232,7 @@ async function renderAlderSplitMediaBodySlide(frame, slide, payload, orientation
   const bodyY = Math.max(274, getTextBottom(headlineNode, 68, 22));
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
@@ -1287,8 +1314,9 @@ async function renderCpLongformBodySlide(frame, slide, payload, orientation) {
 
   appendCpDeviceCard(frame, cardX, 248, 274, 804, tokens);
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
@@ -1300,23 +1328,29 @@ async function renderCpLongformBodySlide(frame, slide, payload, orientation) {
     minSize: 30,
     lineHeight: 1.08,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
+  const bodyY = Math.max(420, getTextBottom(headlineNode, 60, 24));
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: textX,
-    y: 420,
+    y: bodyY,
     width: textWidth,
-    maxHeight: 620,
+    maxHeight: clampTextHeight(frame, bodyY, 620, 180),
     maxSize: 28,
     minSize: 18,
     lineHeight: 1.34,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "body",
+    maxLines: slide.max_body_lines
   });
 }
 
@@ -1346,6 +1380,7 @@ async function renderCpGalleryCoverSlide(frame, slide, payload) {
 
   await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cover_family,
     fontStyle: payload.typography.cover_style,
     fallbackStyle: "Bold",
@@ -1463,8 +1498,9 @@ async function renderTypographyEditorialBodySlide(frame, slide, payload) {
   setSolidFill(frame, tokens.dark_background);
   appendTypographyGlowBackdrop(frame, tokens);
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
@@ -1476,23 +1512,29 @@ async function renderTypographyEditorialBodySlide(frame, slide, payload) {
     minSize: 32,
     lineHeight: 1.04,
     color: tokens.text_light,
-    alignHorizontal: "CENTER"
+    alignHorizontal: "CENTER",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
+  const bodyY = Math.max(350, getTextBottom(headlineNode, 66, 28));
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: 124,
-    y: 350,
+    y: bodyY,
     width: 832,
-    maxHeight: 420,
+    maxHeight: clampTextHeight(frame, bodyY, 420, 360),
     maxSize: 32,
     minSize: 18,
     lineHeight: 1.28,
     color: tokens.text_light,
-    alignHorizontal: "CENTER"
+    alignHorizontal: "CENTER",
+    role: "body",
+    maxLines: slide.max_body_lines
   });
 
   await appendSlideNumberChip(frame, slide.slide_number, tokens);
@@ -1506,8 +1548,9 @@ async function renderTypographyPanelBodySlide(frame, slide, payload) {
   appendTypographyGlowBackdrop(frame, tokens);
   await appendSlideNumberChip(frame, slide.slide_number, tokens);
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
@@ -1519,33 +1562,39 @@ async function renderTypographyPanelBodySlide(frame, slide, payload) {
     minSize: 32,
     lineHeight: 1.04,
     color: tokens.text_light,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
   const panel = figma.createRectangle();
   panel.resize(930, 480);
   panel.x = 76;
-  panel.y = 382;
+  panel.y = Math.min(460, Math.max(382, getTextBottom(headlineNode, 68, 42)));
   panel.cornerRadius = 42;
   panel.fills = [solidPaint("#FFFFFF", 0.08)];
   panel.strokes = [solidPaint(tokens.text_light, 0.16)];
   panel.strokeWeight = 2;
   frame.appendChild(panel);
 
+  const bodyY = panel.y + 70;
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: 128,
-    y: 452,
+    y: bodyY,
     width: 826,
-    maxHeight: 330,
+    maxHeight: Math.max(120, panel.height - 150),
     maxSize: 30,
     minSize: 18,
     lineHeight: 1.3,
     color: tokens.text_light,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "body",
+    maxLines: slide.max_body_lines
   });
 
   await appendFooterSignal(frame, "Note", 120, 1120, "left");
@@ -1557,8 +1606,9 @@ async function renderTypographySignalCtaSlide(frame, slide, payload) {
   setSolidFill(frame, tokens.dark_background);
   appendTypographyGlowBackdrop(frame, tokens);
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
@@ -1570,42 +1620,53 @@ async function renderTypographySignalCtaSlide(frame, slide, payload) {
     minSize: 34,
     lineHeight: 1.0,
     color: tokens.text_light,
-    alignHorizontal: "CENTER"
+    alignHorizontal: "CENTER",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
+  let ctaBottom = getTextBottom(headlineNode, 96, 0);
   if (slide.body_display || slide.body) {
-    await createTextBlock(frame, {
+    const bodyY = Math.max(528, ctaBottom + 28);
+    const bodyNode = await createTextBlock(frame, {
       text: slide.body_display || slide.body,
+      fallbackTexts: getBodyFallbackTexts(slide),
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 144,
-      y: 528,
+      y: bodyY,
       width: 792,
-      maxHeight: 140,
+      maxHeight: clampTextHeight(frame, bodyY, 140, 510),
       maxSize: 34,
       minSize: 18,
       lineHeight: 1.18,
       color: tokens.text_light,
-      alignHorizontal: "CENTER"
+      alignHorizontal: "CENTER",
+      role: "body",
+      maxLines: slide.max_body_lines
     });
+    ctaBottom = getTextBottom(bodyNode, 34, 0);
   }
 
   if (slide.supporting_text) {
+    const supportingY = Math.max(690, ctaBottom + 20);
     await createTextBlock(frame, {
       text: slide.supporting_text,
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 196,
-      y: 690,
+      y: supportingY,
       width: 688,
-      maxHeight: 72,
+      maxHeight: clampTextHeight(frame, supportingY, 72, 430),
       maxSize: 24,
       minSize: 14,
       lineHeight: 1.18,
       color: tokens.text_light,
-      alignHorizontal: "CENTER"
+      alignHorizontal: "CENTER",
+      role: "supporting",
+      maxLines: 3
     });
   }
 
@@ -1647,6 +1708,7 @@ async function renderSadekovProfileCoverSlide(frame, slide, payload) {
 
   await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cover_family,
     fontStyle: payload.typography.cover_style,
     fallbackStyle: "Bold",
@@ -1668,8 +1730,9 @@ async function renderSadekovProfileBodySlide(frame, slide, payload) {
   await appendSadekovProfileHeader(frame, 160, tokens, "dark");
   await appendSadekovFooter(frame, "dark");
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Regular",
@@ -1681,24 +1744,30 @@ async function renderSadekovProfileBodySlide(frame, slide, payload) {
     minSize: 28,
     lineHeight: 1.02,
     color: tokens.text_light,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
   if (slide.body_display || slide.body) {
+    const bodyY = Math.max(592, getTextBottom(headlineNode, 56, 24));
     await createTextBlock(frame, {
       text: slide.body_display || slide.body,
+      fallbackTexts: getBodyFallbackTexts(slide),
       fontFamily: payload.typography.body_family,
       fontStyle: payload.typography.body_style,
       fallbackStyle: "Regular",
       x: 120,
-      y: 592,
+      y: bodyY,
       width: 860,
-      maxHeight: 420,
+      maxHeight: clampTextHeight(frame, bodyY, 420, 230),
       maxSize: 34,
       minSize: 18,
       lineHeight: 1.22,
       color: "#E6E6E6",
-      alignHorizontal: "LEFT"
+      alignHorizontal: "LEFT",
+      role: "body",
+      maxLines: slide.max_body_lines
     });
   }
 }
@@ -1709,8 +1778,9 @@ async function renderSadekovProfileCtaSlide(frame, slide, payload) {
   await appendSadekovProfileHeader(frame, 256, tokens, "dark");
   await appendSadekovFooter(frame, "dark");
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Regular",
@@ -1722,26 +1792,34 @@ async function renderSadekovProfileCtaSlide(frame, slide, payload) {
     minSize: 30,
     lineHeight: 1.04,
     color: tokens.text_light,
-    alignHorizontal: "CENTER"
+    alignHorizontal: "CENTER",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
   const ctaBody = slide.body_display || slide.body;
+  let ctaBottom = getTextBottom(headlineNode, 68, 0);
   if (ctaBody) {
-    await createTextBlock(frame, {
+    const bodyY = Math.max(1070, ctaBottom + 26);
+    const bodyNode = await createTextBlock(frame, {
       text: ctaBody,
+      fallbackTexts: getBodyFallbackTexts(slide),
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 236,
-      y: 1070,
+      y: bodyY,
       width: 608,
       maxHeight: 90,
       maxSize: 32,
       minSize: 16,
       lineHeight: 1.14,
       color: "#E9E9E9",
-      alignHorizontal: "CENTER"
+      alignHorizontal: "CENTER",
+      role: "body",
+      maxLines: slide.max_body_lines
     });
+    ctaBottom = getTextBottom(bodyNode, 32, 0);
   }
 
   if (slide.supporting_text) {
@@ -1751,14 +1829,16 @@ async function renderSadekovProfileCtaSlide(frame, slide, payload) {
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 236,
-      y: 1132,
+      y: Math.max(1132, ctaBottom + 18),
       width: 608,
       maxHeight: 70,
       maxSize: 28,
       minSize: 14,
       lineHeight: 1.1,
       color: "#D2D2D2",
-      alignHorizontal: "CENTER"
+      alignHorizontal: "CENTER",
+      role: "supporting",
+      maxLines: 3
     });
   }
 }
@@ -1920,8 +2000,9 @@ async function renderTypographyEditorialLightBodySlide(frame, slide, payload) {
   appendTypographyEditorialCorners(frame, tokens);
   appendBottomBar(frame, "#020202");
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
@@ -2069,23 +2150,29 @@ async function renderCpSplitBodySlide(frame, slide, payload, orientation) {
     minSize: 30,
     lineHeight: 1.08,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
+  const bodyY = Math.max(452, getTextBottom(headlineNode, 64, 24));
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: textX,
-    y: 452,
+    y: bodyY,
     width: textWidth,
-    maxHeight: 520,
+    maxHeight: clampTextHeight(frame, bodyY, 520, 250),
     maxSize: 30,
     minSize: 18,
     lineHeight: 1.32,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "body",
+    maxLines: slide.max_body_lines
   });
 }
 
@@ -2094,8 +2181,9 @@ async function renderCpSplitCtaSlide(frame, slide, payload) {
   setSolidFill(frame, tokens.light_background);
   appendCpDeviceCard(frame, 744, 250, 250, 720, tokens);
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
@@ -2107,25 +2195,33 @@ async function renderCpSplitCtaSlide(frame, slide, payload) {
     minSize: 34,
     lineHeight: 1.02,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
+  let ctaBottom = getTextBottom(headlineNode, 88, 0);
   if (slide.body_display || slide.body) {
-    await createTextBlock(frame, {
+    const bodyY = Math.max(560, ctaBottom + 26);
+    const bodyNode = await createTextBlock(frame, {
       text: slide.body_display || slide.body,
+      fallbackTexts: getBodyFallbackTexts(slide),
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 86,
-      y: 560,
+      y: bodyY,
       width: 560,
-      maxHeight: 144,
+      maxHeight: clampTextHeight(frame, bodyY, 144, 380),
       maxSize: 30,
       minSize: 18,
       lineHeight: 1.24,
       color: tokens.text_dark,
-      alignHorizontal: "LEFT"
+      alignHorizontal: "LEFT",
+      role: "body",
+      maxLines: slide.max_body_lines
     });
+    ctaBottom = getTextBottom(bodyNode, 30, 0);
   }
 
   if (slide.supporting_text) {
@@ -2135,14 +2231,16 @@ async function renderCpSplitCtaSlide(frame, slide, payload) {
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 86,
-      y: 720,
+      y: Math.max(720, ctaBottom + 20),
       width: 520,
       maxHeight: 72,
       maxSize: 22,
       minSize: 14,
       lineHeight: 1.18,
       color: tokens.text_dark,
-      alignHorizontal: "LEFT"
+      alignHorizontal: "LEFT",
+      role: "supporting",
+      maxLines: 3
     });
   }
 
@@ -2201,8 +2299,9 @@ async function renderCreatorMonoBodySlide(frame, slide, payload) {
   const headlineColor = useRose ? tokens.text_light : tokens.text_dark;
   const bodyColor = useRose ? tokens.text_light : tokens.text_dark;
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
@@ -2214,23 +2313,29 @@ async function renderCreatorMonoBodySlide(frame, slide, payload) {
     minSize: 34,
     lineHeight: 0.98,
     color: headlineColor,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
+  const bodyY = Math.max(390, getTextBottom(headlineNode, 96, 24));
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: 58,
-    y: 390,
+    y: bodyY,
     width: 912,
-    maxHeight: 520,
+    maxHeight: clampTextHeight(frame, bodyY, 520, 220),
     maxSize: 64,
     minSize: 26,
     lineHeight: 1.14,
     color: bodyColor,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "body",
+    maxLines: slide.max_body_lines
   });
 
   await appendMonoCreatorFooter(frame, tokens, useRose ? "light" : "dark", false);
@@ -2240,8 +2345,9 @@ async function renderCreatorMonoCtaSlide(frame, slide, payload) {
   const tokens = payload.style_tokens;
   setSolidFill(frame, tokens.light_background);
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
@@ -2253,24 +2359,30 @@ async function renderCreatorMonoCtaSlide(frame, slide, payload) {
     minSize: 40,
     lineHeight: 0.98,
     color: tokens.text_dark,
-    alignHorizontal: "LEFT"
+    alignHorizontal: "LEFT",
+    role: "headline",
+    maxLines: slide.max_headline_lines
   });
 
   if (slide.body_display || slide.body) {
+    const bodyY = Math.max(560, getTextBottom(headlineNode, 112, 26));
     await createTextBlock(frame, {
       text: slide.body_display || slide.body,
+      fallbackTexts: getBodyFallbackTexts(slide),
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 58,
-      y: 560,
+      y: bodyY,
       width: 928,
-      maxHeight: 260,
+      maxHeight: clampTextHeight(frame, bodyY, 260, 260),
       maxSize: 46,
       minSize: 22,
       lineHeight: 1.1,
       color: tokens.text_dark,
-      alignHorizontal: "LEFT"
+      alignHorizontal: "LEFT",
+      role: "body",
+      maxLines: slide.max_body_lines
     });
   }
 
@@ -2301,6 +2413,7 @@ async function renderLightGrainCoverSlide(frame, slide, payload) {
 
   await createTextBlock(textCard, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cover_family,
     fontStyle: payload.typography.cover_style,
     fallbackStyle: "Bold",
@@ -2357,6 +2470,7 @@ async function renderPlaceholderMediaCoverSlide(frame, slide, payload) {
 
   const headlineNode = await createTextBlock(card, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cover_family,
     fontStyle: payload.typography.cover_style,
     fallbackStyle: "Bold",
@@ -2378,6 +2492,7 @@ async function renderPlaceholderMediaCoverSlide(frame, slide, payload) {
     const remainingHeight = Math.max(64, 1096 - bodyY);
     await createTextBlock(card, {
       text: slide.body_display || slide.body,
+      fallbackTexts: getBodyFallbackTexts(slide),
       fontFamily: payload.typography.body_family,
       fontStyle: payload.typography.body_style,
       fallbackStyle: "Regular",
@@ -2455,6 +2570,7 @@ async function renderLightGrainBodySlide(frame, slide, payload) {
 
   const headlineNode = await createTextBlock(panel, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
@@ -2474,6 +2590,7 @@ async function renderLightGrainBodySlide(frame, slide, payload) {
   const bodyY = Math.max(hasMedia ? 468 : 388, getTextBottom(headlineNode, 82, 18));
   await createTextBlock(panel, {
     text: slide.body_display || slide.body || slide.headline_display || slide.headline,
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
@@ -2503,8 +2620,9 @@ async function renderLightGrainCtaSlide(frame, slide, payload) {
   });
   appendGenericCreatorAvatar(card, 376, 74, 150, "#FFFFFF", "#161616", "#8086B5");
 
-  await createTextBlock(card, {
+  const headlineNode = await createTextBlock(card, {
     text: slide.headline_display || slide.headline_short || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
@@ -2521,16 +2639,19 @@ async function renderLightGrainCtaSlide(frame, slide, payload) {
     maxLines: slide.max_headline_lines
   });
 
+  let bodyBottom = getTextBottom(headlineNode, 74, 0);
   if (slide.body_display || slide.body) {
-    await createTextBlock(card, {
+    const bodyY = Math.max(548, bodyBottom + 24);
+    const bodyNode = await createTextBlock(card, {
       text: slide.body_display || slide.body,
+      fallbackTexts: getBodyFallbackTexts(slide),
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 128,
-      y: 548,
+      y: bodyY,
       width: 648,
-      maxHeight: 112,
+      maxHeight: clampTextHeight(card, bodyY, 112, 188),
       maxSize: 28,
       minSize: 18,
       lineHeight: 1.14,
@@ -2539,18 +2660,20 @@ async function renderLightGrainCtaSlide(frame, slide, payload) {
       role: "body",
       maxLines: slide.max_body_lines
     });
+    bodyBottom = getTextBottom(bodyNode, 28, 0);
   }
 
   if (slide.supporting_text) {
+    const supportingY = Math.max(716, bodyBottom + 22);
     await createTextBlock(card, {
       text: slide.supporting_text,
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 160,
-      y: 716,
+      y: supportingY,
       width: 584,
-      maxHeight: 78,
+      maxHeight: clampTextHeight(card, supportingY, 78, 108),
       maxSize: 24,
       minSize: 14,
       lineHeight: 1.14,
@@ -2591,6 +2714,7 @@ async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
 
   const headlineNode = await createTextBlock(card, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
@@ -2610,6 +2734,7 @@ async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
   const bodyY = Math.max(256, getTextBottom(headlineNode, 76, 18));
   const bodyNode = await createTextBlock(card, {
     text: slide.body_display || slide.body || "",
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
@@ -2659,6 +2784,7 @@ async function renderPlaceholderMediaCtaSlide(frame, slide, payload) {
 
   const headlineNode = await createTextBlock(card, {
     text: slide.headline_display || slide.headline_short || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
@@ -2679,6 +2805,7 @@ async function renderPlaceholderMediaCtaSlide(frame, slide, payload) {
   if (slide.body_display || slide.body) {
     const bodyNode = await createTextBlock(card, {
       text: slide.body_display || slide.body,
+      fallbackTexts: getBodyFallbackTexts(slide),
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
@@ -2728,6 +2855,7 @@ async function renderRetroSwipeCoverSlide(frame, slide, payload) {
 
   await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cover_family,
     fontStyle: payload.typography.cover_style,
     fallbackStyle: "Bold",
@@ -2750,8 +2878,9 @@ async function renderRetroSwipeBodySlide(frame, slide, payload) {
   setSolidFill(frame, tokens.light_background);
   appendRetroTexture(frame, tokens);
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.body_heading_family,
     fontStyle: payload.typography.body_heading_style,
     fallbackStyle: "Bold",
@@ -2766,15 +2895,17 @@ async function renderRetroSwipeBodySlide(frame, slide, payload) {
     alignHorizontal: "LEFT"
   });
 
+  const bodyY = Math.max(394, getTextBottom(headlineNode, 96, 22));
   await createTextBlock(frame, {
     text: slide.body_display || slide.body || "",
+    fallbackTexts: getBodyFallbackTexts(slide),
     fontFamily: payload.typography.body_family,
     fontStyle: payload.typography.body_style,
     fallbackStyle: "Regular",
     x: 82,
-    y: 394,
+    y: bodyY,
     width: 830,
-    maxHeight: 430,
+    maxHeight: clampTextHeight(frame, bodyY, 430, 440),
     maxSize: 46,
     minSize: 22,
     lineHeight: 1.18,
@@ -2816,8 +2947,9 @@ async function renderRetroSwipeCtaSlide(frame, slide, payload) {
     alignHorizontal: "CENTER"
   });
 
-  await createTextBlock(frame, {
+  const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
@@ -2832,25 +2964,29 @@ async function renderRetroSwipeCtaSlide(frame, slide, payload) {
     alignHorizontal: "CENTER"
   });
 
+  let ctaBottom = getTextBottom(headlineNode, 84, 0);
   if (slide.body_display || slide.body) {
-    await createTextBlock(frame, {
+    const bodyY = Math.max(740, ctaBottom + 24);
+    const bodyNode = await createTextBlock(frame, {
       text: slide.body_display || slide.body,
+      fallbackTexts: getBodyFallbackTexts(slide),
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
       x: 180,
-      y: 740,
+      y: bodyY,
       width: 720,
-      maxHeight: 140,
+      maxHeight: clampTextHeight(frame, bodyY, 140, 330),
       maxSize: 34,
       minSize: 16,
       lineHeight: 1.18,
       color: tokens.text_light,
       alignHorizontal: "CENTER"
     });
+    ctaBottom = getTextBottom(bodyNode, 34, 0);
   }
 
-  await appendRetroPillButton(frame, 302, 932, 476, 120, tokens, slide.button_label || "Follow for more");
+  await appendRetroPillButton(frame, 302, Math.max(932, ctaBottom + 52), 476, 120, tokens, slide.button_label || "Follow for more");
 }
 
 async function renderTwitterCardCoverSlide(frame, slide, payload) {
@@ -2875,6 +3011,7 @@ async function renderDeviceMockupCoverSlide(frame, slide, payload) {
   appendSoftGradientBackdrop(frame, tokens, "peach");
   const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cover_family,
     fontStyle: payload.typography.cover_style,
     fallbackStyle: "Bold",
@@ -3029,6 +3166,7 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
 
   const headlineNode = await createTextBlock(frame, {
     text: slide.headline_display || slide.headline_short || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
@@ -3050,6 +3188,7 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
   if (slide.body_display || slide.body) {
     const bodyNode = await createTextBlock(frame, {
       text: slide.body_display || slide.body,
+      fallbackTexts: getBodyFallbackTexts(slide),
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
@@ -4193,6 +4332,7 @@ async function appendTweetCard(frame, x, y, width, height, slide, tokens, payloa
 
   const headlineNode = await createTextBlock(card, {
     text: slide.headline_display || slide.headline,
+    fallbackTexts: getHeadlineFallbackTexts(slide),
     fontFamily: payload.typography.cta_heading_family,
     fontStyle: payload.typography.cta_heading_style,
     fallbackStyle: "Bold",
@@ -4213,6 +4353,7 @@ async function appendTweetCard(frame, x, y, width, height, slide, tokens, payloa
   if (slide.body_display || slide.body) {
     const bodyNode = await createTextBlock(card, {
       text: slide.body_display || slide.body,
+      fallbackTexts: getBodyFallbackTexts(slide),
       fontFamily: payload.typography.cta_body_family,
       fontStyle: payload.typography.cta_body_style,
       fallbackStyle: "Regular",
@@ -4356,6 +4497,42 @@ function cleanText(value) {
   return trimmed ? trimmed : null;
 }
 
+function collectFallbackTexts(values) {
+  const results = [];
+  const seen = new Set();
+  for (const value of values || []) {
+    const cleaned = cleanText(value);
+    if (cleaned && !seen.has(cleaned)) {
+      seen.add(cleaned);
+      results.push(cleaned);
+    }
+  }
+  return results;
+}
+
+function getHeadlineFallbackTexts(slide) {
+  return collectFallbackTexts([
+    slide && slide.headline_short,
+    slide && slide.headline
+  ]);
+}
+
+function getBodyFallbackTexts(slide) {
+  return collectFallbackTexts([
+    slide && slide.body_short,
+    slide && slide.body
+  ]);
+}
+
+function getRemainingTextHeight(parent, startY, bottomPadding) {
+  const parentHeight = typeof parent.height === "number" ? parent.height : DEFAULT_CANVAS.height;
+  return Math.max(64, Math.round(parentHeight - startY - (bottomPadding || 0)));
+}
+
+function clampTextHeight(parent, startY, preferredMaxHeight, bottomPadding) {
+  return Math.max(64, Math.min(preferredMaxHeight, getRemainingTextHeight(parent, startY, bottomPadding)));
+}
+
 async function appendFooterSignal(frame, label, x, y, align) {
   await appendFooterSignalTone(frame, label, x, y, align, "#FFFFFF");
 }
@@ -4411,10 +4588,13 @@ async function fitTextBlock(parent, options) {
   const font = await loadPreferredFont(options.fontFamily, options.fontStyle, options.fallbackStyle);
   const align = options.alignHorizontal || "LEFT";
   const minSize = options.minSize || 18;
+  const hardMinSize = Math.max(12, Math.min(minSize, typeof options.hardMinSize === "number" ? options.hardMinSize : minSize - 8));
   const baseLineHeight = options.lineHeight || 1.2;
   const maxLines = typeof options.maxLines === "number" && options.maxLines > 0 ? options.maxLines : null;
   const maxHeight = options.maxHeight || 100;
   const text = options.text || "";
+  const candidateTexts = collectFallbackTexts([text].concat(options.fallbackTexts || []));
+  const lineHeightOptions = buildLineHeightOptions(baseLineHeight);
 
   node.fontName = font;
   node.textAlignHorizontal = align;
@@ -4423,42 +4603,37 @@ async function fitTextBlock(parent, options) {
   node.textAutoResize = "HEIGHT";
   node.resize(options.width, 100);
 
-  let bestMetrics = {
-    fontSize: minSize,
-    lineCount: text ? 1 : 0,
-    truncated: false,
-    usedMinSize: false,
-    height: 0
-  };
+  let bestMetrics = null;
 
-  for (let fontSize = options.maxSize; fontSize >= minSize; fontSize -= 2) {
-    const lineHeightOptions = buildLineHeightOptions(baseLineHeight);
-    for (const lineHeight of lineHeightOptions) {
-      const metrics = applyTextFit(node, text, options.width, fontSize, lineHeight, maxHeight, maxLines, minSize);
-      bestMetrics = metrics;
-      if (metrics.fits) {
-        node.x = options.x;
-        node.y = options.y;
-        registerTextBlockMeta(node, options, metrics);
-        return { node, metrics };
+  for (let textIndex = 0; textIndex < candidateTexts.length; textIndex += 1) {
+    const candidateText = candidateTexts[textIndex];
+    const candidateMinSize = textIndex === 0 ? minSize : hardMinSize;
+    for (let fontSize = options.maxSize; fontSize >= candidateMinSize; fontSize -= 2) {
+      for (const lineHeight of lineHeightOptions) {
+        const metrics = applyTextFit(node, candidateText, options.width, fontSize, lineHeight, maxHeight, maxLines, candidateMinSize);
+        bestMetrics = selectBetterTextMetrics(bestMetrics, metrics);
+        if (metrics.fits) {
+          return finalizeTextBlock(node, options, metrics, maxLines, maxHeight, candidateMinSize, baseLineHeight);
+        }
       }
     }
   }
 
   if (text && options.allowTruncation !== false) {
-    const truncated = applyTruncatedTextFit(node, text, options.width, minSize, baseLineHeight, maxHeight, maxLines);
-    if (truncated) {
-      node.x = options.x;
-      node.y = options.y;
-      registerTextBlockMeta(node, options, truncated);
-      return { node, metrics: truncated };
+    for (const candidateText of candidateTexts) {
+      const truncated = applyTruncatedTextFit(node, candidateText, options.width, minSize, baseLineHeight, maxHeight, maxLines, hardMinSize);
+      bestMetrics = selectBetterTextMetrics(bestMetrics, truncated);
+      if (truncated && truncated.fits) {
+        return finalizeTextBlock(node, options, truncated, maxLines, maxHeight, hardMinSize, baseLineHeight);
+      }
     }
   }
 
-  node.x = options.x;
-  node.y = options.y;
-  registerTextBlockMeta(node, options, bestMetrics);
-  return { node, metrics: bestMetrics };
+  if (!bestMetrics) {
+    bestMetrics = applyTextFit(node, text, options.width, hardMinSize, baseLineHeight, maxHeight, maxLines, hardMinSize);
+  }
+
+  return finalizeTextBlock(node, options, bestMetrics, maxLines, maxHeight, hardMinSize, baseLineHeight);
 }
 
 function buildLineHeightOptions(baseLineHeight) {
@@ -4470,6 +4645,53 @@ function buildLineHeightOptions(baseLineHeight) {
   return values.filter((value, index) => values.indexOf(value) === index);
 }
 
+function buildEmergencyLineHeightOptions(baseLineHeight) {
+  const values = buildLineHeightOptions(baseLineHeight).concat([
+    Math.max(0.86, baseLineHeight - 0.14),
+    Math.max(0.82, baseLineHeight - 0.18)
+  ]);
+  return values.filter((value, index) => values.indexOf(value) === index);
+}
+
+function selectBetterTextMetrics(current, candidate) {
+  if (!candidate) {
+    return current;
+  }
+  if (!current) {
+    return candidate;
+  }
+  if (candidate.fits !== current.fits) {
+    return candidate.fits ? candidate : current;
+  }
+  if ((candidate.overflowScore || 0) !== (current.overflowScore || 0)) {
+    return (candidate.overflowScore || 0) < (current.overflowScore || 0) ? candidate : current;
+  }
+  if ((candidate.lineCount || 0) !== (current.lineCount || 0)) {
+    return (candidate.lineCount || 0) < (current.lineCount || 0) ? candidate : current;
+  }
+  return (candidate.fontSize || 0) > (current.fontSize || 0) ? candidate : current;
+}
+
+function finalizeTextBlock(node, options, metrics, maxLines, maxHeight, minSize, baseLineHeight) {
+  const stabilized = applyTextFit(
+    node,
+    metrics && metrics.text ? metrics.text : options.text || "",
+    options.width,
+    metrics && metrics.fontSize ? metrics.fontSize : minSize,
+    metrics && metrics.lineHeight ? metrics.lineHeight : baseLineHeight,
+    maxHeight,
+    maxLines,
+    minSize
+  );
+  stabilized.truncated = Boolean(metrics && metrics.truncated);
+  stabilized.usedMinSize = Boolean((metrics && metrics.usedMinSize) || stabilized.usedMinSize);
+  stabilized.text = metrics && metrics.text ? metrics.text : options.text || "";
+  node.x = options.x;
+  node.y = options.y;
+  registerTextBlockMeta(node, options, stabilized);
+  return { node, metrics: stabilized };
+}
+
 function applyTextFit(node, text, width, fontSize, lineHeight, maxHeight, maxLines, minSize) {
   node.characters = text;
   node.fontSize = fontSize;
@@ -4477,36 +4699,44 @@ function applyTextFit(node, text, width, fontSize, lineHeight, maxHeight, maxLin
   node.lineHeight = { unit: "PIXELS", value: lineHeightPixels };
   node.resize(width, 100);
   const lineCount = text ? estimateLineCount(node.height, lineHeightPixels) : 0;
+  const overflowHeight = Math.max(0, node.height - maxHeight);
+  const overflowLines = maxLines ? Math.max(0, lineCount - maxLines) : 0;
   return {
     fits: node.height <= maxHeight && (!maxLines || lineCount <= maxLines),
     fontSize,
+    lineHeight,
+    lineHeightPixels,
     lineCount,
+    text,
     truncated: false,
-    usedMinSize: fontSize === minSize,
-    height: node.height
+    usedMinSize: fontSize <= minSize,
+    height: node.height,
+    overflowScore: overflowHeight + overflowLines * lineHeightPixels
   };
 }
 
-function applyTruncatedTextFit(node, text, width, minSize, baseLineHeight, maxHeight, maxLines) {
+function applyTruncatedTextFit(node, text, width, minSize, baseLineHeight, maxHeight, maxLines, hardMinSize) {
   const words = text.split(/\s+/).filter(Boolean);
   if (words.length < 2) {
     return null;
   }
+  const lineHeightOptions = buildEmergencyLineHeightOptions(baseLineHeight);
+  const floorSize = Math.max(12, Math.min(minSize, hardMinSize || minSize));
 
   for (let wordCount = words.length - 1; wordCount >= 2; wordCount -= 1) {
     const candidate = truncatePhrase(words.slice(0, wordCount).join(" "));
     if (!candidate) {
       continue;
     }
-    const metrics = applyTextFit(node, `${candidate}...`, width, minSize, baseLineHeight, maxHeight, maxLines, minSize);
-    if (metrics.fits) {
-      return {
-        fontSize: minSize,
-        lineCount: metrics.lineCount,
-        truncated: true,
-        usedMinSize: true,
-        height: metrics.height
-      };
+    for (let fontSize = minSize; fontSize >= floorSize; fontSize -= 2) {
+      for (const lineHeight of lineHeightOptions) {
+        const metrics = applyTextFit(node, `${candidate}...`, width, fontSize, lineHeight, maxHeight, maxLines, floorSize);
+        if (metrics.fits) {
+          metrics.truncated = true;
+          metrics.usedMinSize = fontSize <= minSize;
+          return metrics;
+        }
+      }
     }
   }
 
@@ -4516,15 +4746,15 @@ function applyTruncatedTextFit(node, text, width, minSize, baseLineHeight, maxHe
     if (!fallback) {
       break;
     }
-    const metrics = applyTextFit(node, `${fallback}...`, width, minSize, Math.max(0.94, baseLineHeight - 0.08), maxHeight, maxLines, minSize);
-    if (metrics.fits) {
-      return {
-        fontSize: minSize,
-        lineCount: metrics.lineCount,
-        truncated: true,
-        usedMinSize: true,
-        height: metrics.height
-      };
+    for (let fontSize = minSize; fontSize >= floorSize; fontSize -= 2) {
+      for (const lineHeight of lineHeightOptions) {
+        const metrics = applyTextFit(node, `${fallback}...`, width, fontSize, lineHeight, maxHeight, maxLines, floorSize);
+        if (metrics.fits) {
+          metrics.truncated = true;
+          metrics.usedMinSize = fontSize <= minSize;
+          return metrics;
+        }
+      }
     }
   }
   return null;
@@ -4548,7 +4778,7 @@ function estimateLineCount(height, lineHeightPixels) {
 }
 
 function registerTextBlockMeta(node, options, metrics) {
-  const lineHeightPixels = Math.max(1, Math.round((metrics.fontSize || options.minSize || 18) * (options.lineHeight || 1.2)));
+  const lineHeightPixels = metrics.lineHeightPixels || Math.max(1, Math.round((metrics.fontSize || options.minSize || 18) * (options.lineHeight || 1.2)));
   TEXT_BLOCK_META.set(node.id, {
     role: options.role || null,
     fontSize: metrics.fontSize || options.minSize || 18,
@@ -4586,14 +4816,25 @@ function collectSlideDiagnostics(frame, slide, payload) {
     .filter((entry) => entry.role || ((entry.fontSize && entry.fontSize >= 24) && entry.top < frame.height - 180))
     .sort((left, right) => left.top - right.top);
 
+  const entriesByFontSize = contentEntries.slice().sort((left, right) => (right.fontSize || 0) - (left.fontSize || 0));
   const headlineEntry = contentEntries.find((entry) => entry.role === "headline")
-    || [...contentEntries].sort((left, right) => (right.fontSize || 0) - (left.fontSize || 0))[0]
+    || entriesByFontSize[0]
     || null;
   const bodyEntry = contentEntries.find((entry) => entry.role === "body")
-    || [...contentEntries].sort((left, right) => (right.fontSize || 0) - (left.fontSize || 0))[1]
+    || entriesByFontSize[1]
     || null;
-  const contentTop = contentEntries.length ? Math.max(0, Math.round(Math.min(...contentEntries.map((entry) => entry.top)))) : null;
-  const contentBottom = contentEntries.length ? Math.round(Math.max(...contentEntries.map((entry) => entry.bottom))) : null;
+  let contentTop = null;
+  let contentBottom = null;
+  if (contentEntries.length) {
+    let minTop = contentEntries[0].top;
+    let maxBottom = contentEntries[0].bottom;
+    for (let index = 1; index < contentEntries.length; index += 1) {
+      minTop = Math.min(minTop, contentEntries[index].top);
+      maxBottom = Math.max(maxBottom, contentEntries[index].bottom);
+    }
+    contentTop = Math.max(0, Math.round(minTop));
+    contentBottom = Math.round(maxBottom);
+  }
   const occupiedHeightRatio = contentTop === null || contentBottom === null
     ? null
     : Number(((contentBottom - contentTop) / Math.max(frame.height, 1)).toFixed(3));
@@ -4671,8 +4912,16 @@ function recordRenderWarning(slideNumber, code, severity, message) {
 }
 
 function getTextBottom(node, fallbackFontSize, extraPadding) {
-  const fontSize = typeof node.fontSize === "number" ? node.fontSize : fallbackFontSize;
-  const overshoot = Math.max(12, Math.round(fontSize * 0.4));
+  const meta = TEXT_BLOCK_META.get(node.id) || {};
+  const fontSize = typeof meta.fontSize === "number"
+    ? meta.fontSize
+    : typeof node.fontSize === "number"
+      ? node.fontSize
+      : fallbackFontSize;
+  const lineHeightPixels = typeof meta.lineHeightPixels === "number"
+    ? meta.lineHeightPixels
+    : Math.max(1, Math.round(fontSize * 1.08));
+  const overshoot = Math.max(16, Math.round(lineHeightPixels * 0.52));
   return Math.round(node.y + node.height + overshoot + (extraPadding || 0));
 }
 

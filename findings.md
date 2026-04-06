@@ -233,3 +233,7 @@
 - Multi-line Figma text blocks need a renderer-level overshoot buffer, not just raw `TextNode.height`. On `light_grain_glow`, `placeholder_media`, and `device_mockup`, stacked body/CTA elements still landed too high until the plugin added extra headline/body clearance on top of the measured node height.
 - The CTA cleanest-default rule is broader than one family: review feedback keeps converging on headline-only CTA slides, so the payload should omit CTA subcopy by default and renderers should never invent fallback CTA helper text on their own.
 - `Alder Split Right` needs larger, tighter text composition for short-copy rounds. Its split/text-only body layouts looked structurally correct but underfilled because the text column was too small in presence and too fixed in vertical placement.
+- The latest saved Studio round `studio-20260406-002247-e5c6d9` confirmed two system-level issues that need shared guardrails instead of family-by-family fixes:
+  - cover headlines on dense families must prefer shortened display copy earlier
+  - renderer text stacks need fallback copy and measured body anchoring even when a family still uses fixed decorative scaffolding
+- Figma plugin compatibility is stricter than local Node syntax checks. Shared renderer maps should avoid newer syntax like object spread so one family-profile change does not break the whole plugin at parse time.

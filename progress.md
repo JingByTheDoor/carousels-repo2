@@ -368,6 +368,32 @@
   - `node --check figma_plugin\\code.js`
   - `python -m compileall tools`
   - `.venv\\Scripts\\python.exe -m unittest discover -s tests -v`
+- Fixed the Studio preferred-style review bug:
+  - review-mode request normalization no longer rewrites explicit non-safe style choices back to `auto`
+  - when the user picks a specific style in review mode, all three variants now stay on that family and vary copy instead of silently rotating through the safe review pool
+  - next review rounds now preserve the winning style even when it is outside the default review-safe set
+  - added regressions covering:
+    - explicit non-safe preferred style survives review-mode normalization
+    - review variant specs lock to the chosen style
+    - next review rounds keep a winning non-safe style
+- Verified:
+  - `python -m compileall tools`
+  - `.venv\\Scripts\\python.exe -m unittest discover -s tests -v`
+- Changed review-mode style exploration policy:
+  - review-mode `auto` no longer rotates only through the old safe trio/five
+  - Studio now builds auto review rounds from tier buckets in this order:
+    - `specialty_manual_only`
+    - `default_auto`
+    - `review_safe`
+  - as a result, auto review rounds now pressure-test the least-safe families first instead of repeatedly sampling the already-safe pool
+  - `style_library.select_style_recipe()` now uses the same explicit-style resolver in review and standard modes, so non-safe explicit requests survive all the way to the render payload
+  - added regressions covering:
+    - review-mode explicit non-safe style resolution in the style library
+    - review-mode auto recipe selection preferring the least-safe tier
+    - Studio auto review specs drawing from styles outside the safe pool first
+- Verified:
+  - `python -m compileall tools`
+  - `.venv\\Scripts\\python.exe -m unittest discover -s tests -v`
 - Reduced review-mode post-render overhead:
   - Studio review rounds now generate payloads with `output_modes=["figma"]`
   - plugin payloads now carry `include_download_exports`

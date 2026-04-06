@@ -246,3 +246,15 @@
   - `device_mockup_gradient` body slides let the phone shell dominate the composition while the body copy stayed in a narrow, shallow text column, so the text read as too small even without literal overflow.
   - This round was a geometry problem more than a planner problem: media-slot size, text-column width, and allowed body-text height all needed to move together.
   - Readability regressions should also emit diagnostics, not wait for visual review notes, so body-slide telemetry now needs a minimum-font warning.
+- Studio review-mode style forcing had a separate backend bug: the Advanced `preferred_style` dropdown could accept any valid family, but review-round normalization silently downgraded non-review-safe choices back to `auto`.
+  - That made the generator appear to ignore explicit user style requests and rotate back through the safe review pool.
+  - The correct behavior is split by intent:
+    - `auto` should keep the review-safe rotation
+    - an explicit style choice should lock all three review variants to that family and only vary copy
+- That “safe rotation” assumption was also the wrong review policy for this repo.
+  - If the goal is to make every family safe, review mode should not bias toward the already-safe set.
+  - `auto` review generation is more useful when it pressures the riskiest families first:
+    - `specialty_manual_only` first
+    - then `default_auto`
+    - then `review_safe`
+  - Review-mode style resolution also has to honor every explicit family alias, not just the old safe-family shortcuts, or the backend will silently erase the very exploration the Studio UI is asking for.

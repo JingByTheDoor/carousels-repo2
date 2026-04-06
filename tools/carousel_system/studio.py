@@ -21,6 +21,7 @@ from carousel_system.render_payload import (
     infer_language,
     write_plugin_render_payload,
 )
+from carousel_system.style_library import resolve_style_preference
 
 
 STUDIO_DIR = ROOT_DIR / ".tmp" / "studio"
@@ -33,12 +34,10 @@ REVIEW_NOTES_DIR = ROOT_DIR / "notes" / "review_feedback"
 REVIEW_NICHE_PRESET = "english_teacher_materials"
 REVIEW_NICHE_LABEL = "Materials helpful to English teachers"
 REVIEW_DEFAULT_CTA = "Follow for more English teaching materials"
-REVIEW_SAFE_STYLE_VALUES: tuple[str, ...] = (
-    "alder_split_right",
-    "placeholder_media",
-    "light_glow",
-    "device_mockup",
-    "twitter_card",
+REVIEW_SELECTION_PRIORITY: tuple[str, ...] = (
+    "specialty_manual_only",
+    "default_auto",
+    "review_safe",
 )
 REVIEW_COPY_SEQUENCE: tuple["StudioCopyLength", ...] = ("tight", "balanced", "expanded")
 REVIEW_BRIEF_BANK: tuple[str, ...] = (
@@ -118,6 +117,7 @@ STYLE_POOL_VALUES: dict[StudioStylePool, tuple[str, ...]] = {
         "twitter_card",
     ),
 }
+REVIEW_STYLE_BUCKETS: dict[str, tuple[str, ...]] = {}
 COPY_LENGTH_OPTIONS: tuple[tuple[StudioCopyLength, str], ...] = (
     ("tight", "Tight"),
     ("balanced", "Balanced"),
@@ -157,6 +157,15 @@ RATING_SCORES: dict[StudioRating, int] = {
     "good": 2,
     "bad": -2,
 }
+
+for _style_value, _style_label in STYLE_OPTIONS:
+    if _style_value == "auto":
+        continue
+    _spec = resolve_style_preference(_style_value, "en")
+    if _spec is None:
+        continue
+    REVIEW_STYLE_BUCKETS.setdefault(_spec.selection_tier, tuple())
+    REVIEW_STYLE_BUCKETS[_spec.selection_tier] = REVIEW_STYLE_BUCKETS[_spec.selection_tier] + (_style_value,)
 
 
 class StudioCreateRequest(BaseModel):
@@ -816,8 +825,6 @@ def _resolve_round_request(request: StudioCreateRequest) -> StudioCreateRequest:
         resolved.niche_preset = resolved.niche_preset or REVIEW_NICHE_PRESET
         if resolved.image_mode == "auto":
             resolved.image_mode = "hybrid"
-        if resolved.preferred_style not in {"auto", *REVIEW_SAFE_STYLE_VALUES}:
-            resolved.preferred_style = "auto"
     return resolved
 
 
@@ -890,15 +897,23 @@ def _build_review_variant_specs(
 ) -> list[_VariantSpec]:
     signature = _signature(request, round_number)
     anchor_variant = _winner_variant(previous_round) or _best_rated_variant(previous_round)
-    anchor_style = request.preferred_style if request.preferred_style != "auto" else None
-    if anchor_variant and anchor_variant.rating in {"love", "good"} and anchor_variant.requested_style in REVIEW_SAFE_STYLE_VALUES:
-        anchor_style = anchor_style or anchor_variant.requested_style
-    style_pool = list(_rotated_values(list(REVIEW_SAFE_STYLE_VALUES), signature))
-    if anchor_style in style_pool:
-        styles = [anchor_style] + [value for value in style_pool if value != anchor_style]
+    if request.preferred_style != "auto":
+        styles = [request.preferred_style] * 3
     else:
-        styles = style_pool
-    styles = styles[:3]
+        anchor_style = None
+        if anchor_variant and anchor_variant.rating in {"love", "good"} and anchor_variant.requested_style != "auto":
+            anchor_style = anchor_variant.requested_style
+        ordered_pool: list[str] = []
+        for tier in REVIEW_SELECTION_PRIORITY:
+            tier_values = list(REVIEW_STYLE_BUCKETS.get(tier, ()))
+            if not tier_values:
+                continue
+            ordered_pool.extend(_rotated_values(tier_values, signature))
+        if anchor_style in ordered_pool:
+            styles = [anchor_style] + [value for value in ordered_pool if value != anchor_style]
+        else:
+            styles = ordered_pool
+        styles = styles[:3]
 
     anchor_copy = request.base_copy_length
     if anchor_variant and anchor_variant.rating in {"love", "good"}:
@@ -1058,7 +1073,7 @@ def _request_for_next_review_round(previous_round: StudioRoundRecord) -> StudioC
     request.script = None
     winner = _winner_variant(previous_round) or _best_rated_variant(previous_round)
     if winner:
-        request.preferred_style = winner.requested_style if winner.requested_style in REVIEW_SAFE_STYLE_VALUES else "auto"
+        request.preferred_style = winner.requested_style
         request.base_copy_length = winner.copy_length
     if previous_round.generated_brief:
         request.notes = _compose_next_review_note(previous_round)

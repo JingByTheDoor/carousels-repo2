@@ -749,6 +749,11 @@ STYLE_RECIPES: dict[str, StyleRecipeSpec] = {
 
 
 AUTO_SELECTION_TIERS = {"review_safe", "default_auto"}
+REVIEW_SELECTION_PRIORITY: tuple[SelectionTier, ...] = (
+    "specialty_manual_only",
+    "default_auto",
+    "review_safe",
+)
 
 
 def get_style_recipe_spec(style_recipe: str) -> StyleRecipeSpec:
@@ -761,67 +766,68 @@ def _pick_candidate(candidates: list[StyleRecipeSpec], signature: int) -> StyleR
     return pool[signature % len(pool)]
 
 
+def resolve_style_preference(preference: str, language: str) -> StyleRecipeSpec | None:
+    normalized = (preference or "").strip().lower()
+    if normalized in {"alder_forced", "alder_locked", "reference_mix_alder_portrait"}:
+        return ALDER_DENSE_RECIPE if language == "ru" else ALDER_RECIPE
+    if normalized in {"alder_split_right", "alder_right"}:
+        return ALDER_SPLIT_RIGHT_RECIPE
+    if normalized in {"alder_split_left", "alder_left"}:
+        return ALDER_SPLIT_LEFT_RECIPE
+    if normalized in {"alder_text_only", "alder_text"}:
+        return ALDER_TEXT_ONLY_RECIPE
+    if normalized in {"typography", "typography_signal", "signal"}:
+        return TYPOGRAPHY_SIGNAL_RECIPE
+    if normalized in {"cp_3", "cp3", "minimal", "cp_split"}:
+        return CP_SPLIT_RECIPE
+    if normalized in {"cp_longform", "cp_long"}:
+        return CP_LONGFORM_RECIPE
+    if normalized in {"cp_gallery", "gallery_wall", "gallery"}:
+        return CP_GALLERY_RECIPE
+    if normalized in {"sadekov", "black_profile", "profile_black", "reference_sadekov_black_profile"}:
+        return SADEKOV_BLACK_PROFILE_RECIPE
+    if normalized in {"sadekov_light", "white_profile", "profile_white", "reference_sadekov_white_profile"}:
+        return SADEKOV_WHITE_PROFILE_RECIPE
+    if normalized in {"typography_light", "typography_editorial", "reference_typography_editorial_light"}:
+        return TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE
+    if normalized in {"creator_mono", "mono_minimal", "minimal_creator", "long_title", "reference_creator_mono_minimal"}:
+        return CREATOR_MONO_RECIPE
+    if normalized in {"pastel_arrow", "gradient_arrow", "arrow_editorial", "11_3", "reference_pastel_arrow_editorial"}:
+        return PASTEL_ARROW_RECIPE
+    if normalized in {"placeholder_media", "image_placeholder", "glow_placeholder", "reference_placeholder_media_glow"}:
+        return PLACEHOLDER_MEDIA_RECIPE
+    if normalized in {"light_glow", "light_grain", "soft_light", "reference_light_grain_glow"}:
+        return LIGHT_GRAIN_GLOW_RECIPE
+    if normalized in {"device_mockup", "phone_card", "mockup_gradient", "reference_device_mockup_gradient"}:
+        return DEVICE_MOCKUP_RECIPE
+    if normalized in {"retro_swipe", "title01", "swipe_creator", "reference_retro_swipe_creator"}:
+        return RETRO_SWIPE_RECIPE
+    if normalized in {"social_proof", "linkedin", "linkedin_cards", "reference_social_proof_linkedin"}:
+        return SOCIAL_PROOF_RECIPE
+    if normalized in {"profile_circle", "circle_pop", "profile_pop", "reference_profile_circle_pop"}:
+        return PROFILE_CIRCLE_RECIPE
+    if normalized in {"twitter_card", "tweet", "twitter_post", "reference_twitter_card_soft"}:
+        return TWITTER_CARD_SOFT_RECIPE
+    return None
+
+
+def _pick_review_candidate(signature: int) -> StyleRecipeSpec:
+    all_recipes = list(STYLE_RECIPES.values())
+    for tier in REVIEW_SELECTION_PRIORITY:
+        candidates = [recipe for recipe in all_recipes if recipe.selection_tier == tier]
+        if candidates:
+            return candidates[signature % len(candidates)]
+    return all_recipes[signature % len(all_recipes)]
+
+
 def select_style_recipe(record: CarouselOutput, language: str) -> StyleRecipeSpec:
     preference = (record.normalized_input.reference_style or "").strip().lower()
+    explicit_recipe = resolve_style_preference(preference, language)
+    if explicit_recipe is not None:
+        return explicit_recipe
+
     if record.normalized_input.generation_mode == "review":
-        if preference in {"alder_split_right", "alder_right"}:
-            return ALDER_SPLIT_RIGHT_RECIPE
-        if preference in {"placeholder_media", "image_placeholder", "glow_placeholder", "reference_placeholder_media_glow"}:
-            return PLACEHOLDER_MEDIA_RECIPE
-        if preference in {"light_glow", "light_grain", "soft_light", "reference_light_grain_glow"}:
-            return LIGHT_GRAIN_GLOW_RECIPE
-        if preference in {"device_mockup", "phone_card", "mockup_gradient", "reference_device_mockup_gradient"}:
-            return DEVICE_MOCKUP_RECIPE
-        if preference in {"twitter_card", "tweet", "twitter_post", "reference_twitter_card_soft"}:
-            return TWITTER_CARD_SOFT_RECIPE
-        review_candidates = [
-            ALDER_SPLIT_RIGHT_RECIPE,
-            PLACEHOLDER_MEDIA_RECIPE,
-            LIGHT_GRAIN_GLOW_RECIPE,
-            DEVICE_MOCKUP_RECIPE,
-            TWITTER_CARD_SOFT_RECIPE,
-        ]
-        return _pick_candidate(review_candidates, _content_signature(record))
-    if preference in {"alder_forced", "alder_locked", "reference_mix_alder_portrait"}:
-        return ALDER_DENSE_RECIPE if language == "ru" else ALDER_RECIPE
-    if preference in {"alder_split_right", "alder_right"}:
-        return ALDER_SPLIT_RIGHT_RECIPE
-    if preference in {"alder_split_left", "alder_left"}:
-        return ALDER_SPLIT_LEFT_RECIPE
-    if preference in {"alder_text_only", "alder_text"}:
-        return ALDER_TEXT_ONLY_RECIPE
-    if preference in {"typography", "typography_signal", "signal"}:
-        return TYPOGRAPHY_SIGNAL_RECIPE
-    if preference in {"cp_3", "cp3", "minimal", "cp_split"}:
-        return CP_SPLIT_RECIPE
-    if preference in {"cp_longform", "cp_long"}:
-        return CP_LONGFORM_RECIPE
-    if preference in {"cp_gallery", "gallery_wall", "gallery"}:
-        return CP_GALLERY_RECIPE
-    if preference in {"sadekov", "black_profile", "profile_black", "reference_sadekov_black_profile"}:
-        return SADEKOV_BLACK_PROFILE_RECIPE
-    if preference in {"sadekov_light", "white_profile", "profile_white", "reference_sadekov_white_profile"}:
-        return SADEKOV_WHITE_PROFILE_RECIPE
-    if preference in {"typography_light", "typography_editorial", "reference_typography_editorial_light"}:
-        return TYPOGRAPHY_EDITORIAL_LIGHT_RECIPE
-    if preference in {"creator_mono", "mono_minimal", "minimal_creator", "long_title", "reference_creator_mono_minimal"}:
-        return CREATOR_MONO_RECIPE
-    if preference in {"pastel_arrow", "gradient_arrow", "arrow_editorial", "11_3", "reference_pastel_arrow_editorial"}:
-        return PASTEL_ARROW_RECIPE
-    if preference in {"placeholder_media", "image_placeholder", "glow_placeholder", "reference_placeholder_media_glow"}:
-        return PLACEHOLDER_MEDIA_RECIPE
-    if preference in {"light_glow", "light_grain", "soft_light", "reference_light_grain_glow"}:
-        return LIGHT_GRAIN_GLOW_RECIPE
-    if preference in {"device_mockup", "phone_card", "mockup_gradient", "reference_device_mockup_gradient"}:
-        return DEVICE_MOCKUP_RECIPE
-    if preference in {"retro_swipe", "title01", "swipe_creator", "reference_retro_swipe_creator"}:
-        return RETRO_SWIPE_RECIPE
-    if preference in {"social_proof", "linkedin", "linkedin_cards", "reference_social_proof_linkedin"}:
-        return SOCIAL_PROOF_RECIPE
-    if preference in {"profile_circle", "circle_pop", "profile_pop", "reference_profile_circle_pop"}:
-        return PROFILE_CIRCLE_RECIPE
-    if preference in {"twitter_card", "tweet", "twitter_post", "reference_twitter_card_soft"}:
-        return TWITTER_CARD_SOFT_RECIPE
+        return _pick_review_candidate(_content_signature(record))
 
     body_lengths = [len(slide.body or "") for slide in record.content_plan if slide.slide_role == "info"]
     average_body = sum(body_lengths) / len(body_lengths) if body_lengths else 0

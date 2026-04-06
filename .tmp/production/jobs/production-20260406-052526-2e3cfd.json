@@ -1,0 +1,167 @@
+{
+  "job_id": "production-20260406-052526-2e3cfd",
+  "created_at": "2026-04-06T05:25:34.004710+00:00",
+  "status": "complete",
+  "request": {
+    "job_id": "production-20260406-052526-2e3cfd",
+    "source": "manual",
+    "generation_mode": "production",
+    "library_item_id": "placeholder-media-glow-perfect-v1",
+    "niche_preset": null,
+    "topic": "How to become an English teacher",
+    "script": null,
+    "cta_text": "🎁 Забирайте БЕСПЛАТНО доступ к вебинару: «🔥Как с TEFL/TESOL выйти на международный рынок и начать зарабатывать, преподавая английский — онлайн, за рубежом или в своей стране.»",
+    "language": "ru",
+    "aspect_ratio": "portrait_1080x1350",
+    "output_modes": [
+      "figma",
+      "png"
+    ],
+    "reference_style": "placeholder_media",
+    "image_mode": "auto",
+    "image_source_preference": "pexels",
+    "allow_ai_fallback": true,
+    "image_focus": "brand_safe",
+    "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
+    "reference_node_ids": [
+      "local:light-1",
+      "local:light-2",
+      "local:light-6"
+    ],
+    "notes": null
+  },
+  "library_item_id": "placeholder-media-glow-perfect-v1",
+  "library_label": "Placeholder Media Glow",
+  "style_family": "reference_placeholder_media_glow",
+  "style_recipe": "placeholder_media_glow_v1",
+  "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\production-20260406-052526-2e3cfd.json",
+  "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\production-20260406-052526-2e3cfd.render.json",
+  "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\production-20260406-052526-2e3cfd.render-result.json",
+  "figma_file_url": null,
+  "figma_page_url": null,
+  "figma_page_name": "production-20260406-052526-2e3cfd-plugin-render",
+  "export_paths": [
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-052526-2e3cfd\\slide-01.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-052526-2e3cfd\\slide-02.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-052526-2e3cfd\\slide-03.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-052526-2e3cfd\\slide-04.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-052526-2e3cfd\\slide-05.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-052526-2e3cfd\\slide-06.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-052526-2e3cfd\\slide-07.png"
+  ],
+  "export_urls": [
+    "/tmp-output/exports/production-20260406-052526-2e3cfd/slide-01.png",
+    "/tmp-output/exports/production-20260406-052526-2e3cfd/slide-02.png",
+    "/tmp-output/exports/production-20260406-052526-2e3cfd/slide-03.png",
+    "/tmp-output/exports/production-20260406-052526-2e3cfd/slide-04.png",
+    "/tmp-output/exports/production-20260406-052526-2e3cfd/slide-05.png",
+    "/tmp-output/exports/production-20260406-052526-2e3cfd/slide-06.png",
+    "/tmp-output/exports/production-20260406-052526-2e3cfd/slide-07.png"
+  ],
+  "pdf_export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-052526-2e3cfd\\carousel.pdf",
+  "pdf_export_url": "/tmp-output/exports/production-20260406-052526-2e3cfd/carousel.pdf",
+  "used_script": "Slide 1: Хотите стать преподавателем английского и начать зарабатывать?\n\nSlide 2: Шаг 1: Получите TEFL/TESOL сертификат\nЭто основной международный стандарт для обучения английскому как иностранному. Сертификат откроет двери к работе за рубежом и онлайн.\n\nSlide 3: Шаг 2: Развивайте навыки преподавания\nНаучитесь создавать уроки, мотивировать учеников и использовать современные образовательные технологии для максимального эффекта.\n\nSlide 4: Шаг 3: Ищите работу онлайн или за границей\nС сертификатом TEFL/TESOL легко найти вакансии как в международных школах, так и на платформах удаленного преподавания.\n\nSlide 5: Шаг 4: Постоянно совершенствуйтесь\nУчаствуйте в вебинарах, повышайте квалификацию и расширяйте свои методики, чтобы удерживать интерес учеников и расти профессионально.\n\nSlide 6: Преимущества работы преподавателем английского\nГибкий график, возможность работать из любой точки мира и реальный доход в международной валюте — всё доступно после сертификации.\n\nSlide 7: 🎁 Забирайте бесплатный доступ к нашему вебинару!\n«Как с TEFL/TESOL выйти на международный рынок и начать зарабатывать, преподавая английский — онлайн, за рубежом или в своей стране.»",
+  "visual_status": "visual_resolved",
+  "warnings": [
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 15% of the slide height.",
+      "slide_number": 7
+    }
+  ],
+  "fit_metrics": [
+    {
+      "slide_number": 1,
+      "role": "cover",
+      "headline_font_size": 94,
+      "body_font_size": null,
+      "headline_lines": 2,
+      "body_lines": null,
+      "content_top": 738,
+      "content_bottom": 1166,
+      "occupied_height_ratio": 0.317,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 2,
+      "role": "body",
+      "headline_font_size": 70,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 674,
+      "occupied_height_ratio": 0.356,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 3,
+      "role": "body",
+      "headline_font_size": 70,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 674,
+      "occupied_height_ratio": 0.356,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 4,
+      "role": "body",
+      "headline_font_size": 70,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 678,
+      "occupied_height_ratio": 0.359,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 5,
+      "role": "body",
+      "headline_font_size": 76,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 674,
+      "occupied_height_ratio": 0.356,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 6,
+      "role": "body",
+      "headline_font_size": 66,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 666,
+      "occupied_height_ratio": 0.35,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 7,
+      "role": "cta",
+      "headline_font_size": 66,
+      "body_font_size": null,
+      "headline_lines": 2,
+      "body_lines": null,
+      "content_top": 370,
+      "content_bottom": 576,
+      "occupied_height_ratio": 0.153,
+      "truncated": false,
+      "image_rendered": false
+    }
+  ],
+  "error": null
+}

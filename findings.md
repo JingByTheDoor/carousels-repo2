@@ -246,6 +246,13 @@
   - `device_mockup_gradient` body slides let the phone shell dominate the composition while the body copy stayed in a narrow, shallow text column, so the text read as too small even without literal overflow.
   - This round was a geometry problem more than a planner problem: media-slot size, text-column width, and allowed body-text height all needed to move together.
   - Readability regressions should also emit diagnostics, not wait for visual review notes, so body-slide telemetry now needs a minimum-font warning.
+- Abrupt text cutoffs can come from the payload builder even when the renderer is behaving correctly.
+  - In the latest production batch, `headline_display` and `body_display` were already shortened to incomplete fragments before the plugin rendered them.
+  - Because the plugin tries `*_display` first and only uses `*_short` or full-copy fallbacks if the first choice fails to fit, a prematurely shortened `*_display` can lock in broken-looking copy even on underfilled slides.
+  - The safer default is:
+    - keep full copy in `headline_display` / `body_display`
+    - reserve `headline_short` / `body_short` for renderer fallback only
+    - whenever the planner must truncate, append an ellipsis so the cut reads intentional instead of glitched
 - Studio review-mode style forcing had a separate backend bug: the Advanced `preferred_style` dropdown could accept any valid family, but review-round normalization silently downgraded non-review-safe choices back to `auto`.
   - That made the generator appear to ignore explicit user style requests and rotate back through the safe review pool.
   - The correct behavior is split by intent:

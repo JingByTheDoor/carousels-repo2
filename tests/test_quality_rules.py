@@ -20,7 +20,7 @@ from carousel_system.payload import build_output_record
 from carousel_system.perfect_library import active_perfect_library_requested_styles, load_perfect_library_status
 from carousel_system.production import ProductionJobCreateRequest, create_production_job, production_library_payload
 from carousel_system.render_bridge import acquire_next_render_item
-from carousel_system.render_payload import build_plugin_render_payload
+from carousel_system.render_payload import _truncate_to_limit, build_plugin_render_payload
 from carousel_system.style_library import select_style_recipe
 from carousel_system.studio import (
     REVIEW_STYLE_BUCKETS,
@@ -255,25 +255,27 @@ class QualityRulesTests(unittest.TestCase):
         self.assertIsNone(cta_slide.supporting_text)
         self.assertTrue(cta_slide.button_label)
 
-    def test_light_glow_hook_uses_shortened_copy_when_cover_is_dense(self) -> None:
+    def test_light_glow_hook_keeps_full_display_copy_and_shortens_only_as_fallback(self) -> None:
         plan = make_plan()
         plan.slides[0].headline = "Boost English Learners' Thinking Speed with These Low-Prep Writing Activities!"
         record = build_output_record(make_job("light_glow"), plan)
         payload = build_plugin_render_payload(record, source_artifact_path=Path("test-job.json"))
         cover_slide = payload.slides[0]
-        self.assertEqual(cover_slide.headline_display, cover_slide.headline_short)
+        self.assertEqual(cover_slide.headline_display, plan.slides[0].headline)
+        self.assertTrue(cover_slide.headline_short.endswith("..."))
         self.assertEqual(cover_slide.max_headline_lines, 3)
 
-    def test_placeholder_media_hook_uses_shortened_copy_when_cover_is_dense(self) -> None:
+    def test_placeholder_media_hook_keeps_full_display_copy_and_shortens_only_as_fallback(self) -> None:
         plan = make_plan()
         plan.slides[0].headline = "Boost Your English Students' Speedy Thinking with These Low-Prep Writing Activities!"
         record = build_output_record(make_job("placeholder_media"), plan)
         payload = build_plugin_render_payload(record, source_artifact_path=Path("test-job.json"))
         cover_slide = payload.slides[0]
-        self.assertEqual(cover_slide.headline_display, cover_slide.headline_short)
+        self.assertEqual(cover_slide.headline_display, plan.slides[0].headline)
+        self.assertTrue(cover_slide.headline_short.endswith("..."))
         self.assertEqual(cover_slide.max_headline_lines, 3)
 
-    def test_device_mockup_dense_body_uses_shortened_stack_copy(self) -> None:
+    def test_device_mockup_dense_body_keeps_full_display_copy_and_shortens_only_as_fallback(self) -> None:
         plan = make_plan()
         plan.slides[1].headline = "Quick prompts that ignite thinking in seconds"
         plan.slides[1].body = (
@@ -283,10 +285,14 @@ class QualityRulesTests(unittest.TestCase):
         record = build_output_record(make_job("device_mockup"), plan)
         payload = build_plugin_render_payload(record, source_artifact_path=Path("test-job.json"))
         body_slide = payload.slides[1]
-        self.assertEqual(body_slide.headline_display, body_slide.headline_short)
-        self.assertEqual(body_slide.body_display, body_slide.body_short)
+        self.assertEqual(body_slide.headline_display, plan.slides[1].headline)
+        self.assertEqual(body_slide.body_display, plan.slides[1].body)
+        self.assertTrue(body_slide.body_short.endswith("..."))
         self.assertEqual(body_slide.max_headline_lines, 2)
         self.assertEqual(body_slide.max_body_lines, 4)
+
+    def test_truncate_to_limit_marks_cut_text_with_ellipsis(self) -> None:
+        self.assertEqual(_truncate_to_limit("Хотите преподавать английский по всему миру", 34), "Хотите преподавать английский...")
 
     def test_image_picker_refuses_exact_reuse_when_all_candidates_are_taken(self) -> None:
         settings = Settings(

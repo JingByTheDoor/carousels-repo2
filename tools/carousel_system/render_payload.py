@@ -380,28 +380,8 @@ def _build_render_slide(record: CarouselOutput, slide, language: str, recipe: St
         body_limit = _body_hard_limit(layout_variant, text_density)
     headline_short = _shorten_headline(slide.headline, language, hard_limit=headline_limit)
     body_short = _shorten_body(body_text, language, hard_limit=body_limit)
-    use_short_copy = _body_should_use_short_copy(recipe, layout_variant, text_density)
-    headline_display = (
-        headline_short
-        if style_recipe in {
-            "sadekov_black_profile_minimal_v1",
-            "sadekov_white_profile_minimal_v1",
-            "typography_editorial_light_v1",
-        }
-        or use_short_copy
-        or layout_variant == "body_mask_band_left"
-        else slide.headline
-    )
-    body_display = (
-        body_short
-        if style_recipe in {
-            "sadekov_black_profile_minimal_v1",
-            "sadekov_white_profile_minimal_v1",
-            "typography_editorial_light_v1",
-        }
-        or use_short_copy
-        else body_text
-    )
+    headline_display = slide.headline
+    body_display = body_text
     base_body_lines = (
         5
         if style_recipe in {"sadekov_black_profile_minimal_v1", "sadekov_white_profile_minimal_v1"}
@@ -452,15 +432,6 @@ def _hook_display_text(
     recipe: StyleRecipeSpec,
     density: TextDensity,
 ) -> str:
-    if not headline_short:
-        return headline
-    profile = recipe.render_profile
-    if density == "high":
-        return headline_short
-    if profile.spacing_profile == "tight" and len(headline) > 48:
-        return headline_short
-    if profile.media_mode in {"optional_inline", "device_conditional", "tweet_card"} and len(headline) > 44:
-        return headline_short
     return headline
 
 
@@ -694,6 +665,8 @@ def _shorten_headline(text: str, language: str, hard_limit: int) -> str | None:
     trimmed = " ".join(words[:max_words]).strip()
     if len(trimmed) > hard_limit:
         trimmed = _truncate_to_limit(trimmed, hard_limit)
+    if len(words) > max_words:
+        return _mark_as_truncated(trimmed, hard_limit)
     return trimmed or _truncate_to_limit(normalized, hard_limit)
 
 
@@ -713,11 +686,13 @@ def _shorten_body(text: str, language: str, hard_limit: int) -> str | None:
     for clause in clauses:
         cleaned = clause.strip()
         if cleaned and len(cleaned) <= hard_limit:
-            return cleaned
+            return _mark_as_truncated(cleaned, hard_limit)
 
     max_words = 14 if language == "ru" else 16
     trimmed = " ".join(normalized.split()[:max_words])
     if len(trimmed) <= hard_limit:
+        if len(normalized.split()) > max_words:
+            return _mark_as_truncated(trimmed, hard_limit)
         return trimmed
     return _truncate_to_limit(trimmed, hard_limit)
 
@@ -725,12 +700,24 @@ def _shorten_body(text: str, language: str, hard_limit: int) -> str | None:
 def _truncate_to_limit(text: str, hard_limit: int) -> str:
     if len(text) <= hard_limit:
         return text
-    cutoff = text[:hard_limit].rsplit(" ", 1)[0].strip()
+    if hard_limit <= 3:
+        return "." * max(1, hard_limit)
+    cutoff = text[: hard_limit - 3].rsplit(" ", 1)[0].strip()
     cleaned = _strip_trailing_connector(cutoff)
     if cleaned:
-        return cleaned
-    fallback = text[:hard_limit].strip()
-    return _strip_trailing_connector(fallback) or fallback
+        return f"{cleaned}..."
+    fallback = text[: hard_limit - 3].strip()
+    truncated = _strip_trailing_connector(fallback) or fallback
+    return f"{truncated}..." if truncated else "..."
+
+
+def _mark_as_truncated(text: str, hard_limit: int) -> str:
+    cleaned = _strip_trailing_connector(text.strip())
+    if not cleaned:
+        return _truncate_to_limit(text, hard_limit)
+    if len(cleaned) + 3 <= hard_limit:
+        return f"{cleaned}..."
+    return _truncate_to_limit(cleaned, hard_limit)
 
 
 def _strip_trailing_connector(text: str) -> str:

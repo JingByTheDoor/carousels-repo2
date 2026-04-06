@@ -379,6 +379,14 @@
 - Verified:
   - `python -m compileall tools`
   - `.venv\\Scripts\\python.exe -m unittest discover -s tests -v`
+- Fixed a payload-side cutoff bug that showed up in the latest production batch:
+  - hook/body slides now keep full copy in `headline_display` / `body_display`
+  - shortened copy remains available only as renderer fallback
+  - truncation helpers now append `...` when they have to cut text, instead of returning bare fragments
+- Verified:
+  - `python -m compileall tools`
+  - `.venv\\Scripts\\python.exe -m unittest discover -s tests -v`
+  - `node --check figma_plugin\\code.js`
 - Changed review-mode style exploration policy:
   - review-mode `auto` no longer rotates only through the old safe trio/five
   - Studio now builds auto review rounds from tier buckets in this order:

@@ -4058,13 +4058,16 @@ function getPlaceholderMediaMetaY(frameHeight) {
 function appendCarouselMetaTone(frame) {
   const fill = getPrimarySolidFill(frame);
   if (!fill) {
-    return { colorHex: "#757B94", textOpacity: 0.9, iconOpacity: 0.94 };
+    return { colorHex: "#9EA7C2", textOpacity: 0.94, iconOpacity: 0.6 };
   }
   const brightness = getPaintBrightness(fill);
   if (brightness < 0.42) {
-    return { colorHex: "#FFFFFF", textOpacity: 0.84, iconOpacity: 0.96 };
+    return { colorHex: "#F3F6FF", textOpacity: 0.78, iconOpacity: 0.72 };
   }
-  return { colorHex: "#757B94", textOpacity: 0.9, iconOpacity: 0.94 };
+  if (brightness < 0.7) {
+    return { colorHex: "#C6CEE1", textOpacity: 0.88, iconOpacity: 0.66 };
+  }
+  return { colorHex: "#9EA7C2", textOpacity: 0.94, iconOpacity: 0.6 };
 }
 
 function getPrimarySolidFill(node) {
@@ -4088,7 +4091,7 @@ function getPaintBrightness(paint) {
 }
 
 function getCarouselMetaY(frameHeight) {
-  return Math.max(0, frameHeight - 102);
+  return Math.max(0, frameHeight - 98);
 }
 
 function getSavePostLabel(language) {
@@ -4158,40 +4161,40 @@ async function appendCarouselMeta(frame, payload) {
     fontFamily: "Inter",
     fontStyle: "Regular",
     fallbackStyle: "Regular",
-    x: 46,
+    x: 58,
     y: y,
-    width: Math.min(760, Math.max(480, Math.round(frame.width * 0.66))),
-    maxHeight: 56,
-    maxSize: 46,
-    minSize: 24,
-    lineHeight: 1.0,
+    width: Math.min(560, Math.max(360, Math.round(frame.width * 0.46))),
+    maxHeight: 42,
+    maxSize: 34,
+    minSize: 18,
+    lineHeight: 1.02,
     color: tone.colorHex,
     alignHorizontal: "LEFT"
   });
   leftNode.opacity = tone.textOpacity;
 
-  const iconWidth = 34;
-  const iconHeight = 60;
-  const iconX = frame.width - 70;
-  const textWidth = 470;
+  const iconWidth = 17;
+  const iconHeight = 43;
+  const iconX = frame.width - 60;
+  const textWidth = 300;
   const actionNode = await createTextBlock(frame, {
     text: getSavePostLabel(payload && payload.language),
     fontFamily: "Inter",
     fontStyle: "Regular",
     fallbackStyle: "Regular",
-    x: iconX - textWidth - 18,
+    x: iconX - textWidth - 14,
     y: y,
     width: textWidth,
-    maxHeight: 56,
-    maxSize: 46,
-    minSize: 24,
-    lineHeight: 1.0,
+    maxHeight: 42,
+    maxSize: 34,
+    minSize: 18,
+    lineHeight: 1.02,
     color: tone.colorHex,
     alignHorizontal: "RIGHT"
   });
   actionNode.opacity = tone.textOpacity;
 
-  await appendSavePostIcon(frame, payload, iconX, y - 6, iconWidth, iconHeight, tone.iconOpacity);
+  await appendSavePostIcon(frame, payload, iconX, y - 4, iconWidth, iconHeight, tone.iconOpacity);
 }
 
 async function appendSavePostIcon(frame, payload, x, y, width, height, opacity) {
@@ -4214,6 +4217,7 @@ async function appendSavePostIcon(frame, payload, x, y, width, height, opacity) 
   if (typeof opacity === "number") {
     rect.opacity = opacity;
   }
+  rect.effects = [{ type: "LAYER_BLUR", radius: 0.6, visible: true }];
   frame.appendChild(rect);
   return rect;
 }

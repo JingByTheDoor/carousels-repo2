@@ -6,9 +6,43 @@ from carousel_system.config import Settings
 from carousel_system.models import CarouselInput, CarouselPlanResponse
 
 
-PROMPT_VERSION = "baseline_v2"
+PROMPT_VERSION = "baseline_v6"
 
-SYSTEM_PROMPT = """You are planning Instagram carousel copy.
+AUTOMATION_CONTRACT = """Automation constraints:
+- Produce exactly 7 slides that validate against the schema.
+- Slide 1 is the hook.
+- Slides 2 through 6 are the only substantive informational slides.
+- Slide 7 is a lightweight CTA placeholder only; the renderer replaces the final CTA copy later.
+- Slide 6 must land the final substantive point so the argument feels complete before slide 7.
+- Keep slides 2 through 6 mutually distinct; do not repeat the same idea in different words.
+- If cta_text is provided, treat it as audience/action context only, not as final slide-7 copy.
+- Treat the notes field as high-priority planner guidance. It may contain copy-length instructions, audience constraints, review feedback, or style direction.
+- generation_mode may be standard, review, or production. It changes the planning constraints, not the core voice.
+- niche_preset and library_item_id, when present, narrow the audience and use case. Align examples, terminology, and specificity to that context.
+- Do not mention slide numbers inside headlines or body text.
+- Output plain text only inside the JSON fields.
+"""
+
+SCRIPT_WRITER_STYLE_GUIDE = """Writing style:
+- Keep the original custom-prompt style intact. Only the output container changes.
+- The original human-readable format was slide number + TITLE + TEXT. In this automation, map TITLE -> headline and TEXT -> body.
+- Treat each slide as a standalone idea block that feels repostable.
+- Make each slide polarizing, curiosity-driven, surprising, or provocative without becoming clickbait.
+- Prefer non-obvious framing over generic questions or safe consensus takes.
+- Avoid banal rhetorical prompts such as "are you with us or against us?"
+- Every claim should feel like a complete thought with maximum information density.
+- Use concrete details, recognizable situations, examples, insights, or credible facts whenever possible.
+- Remove any word that does not carry meaning.
+- Do not accuse or shame the reader; instead, introduce a new perspective or break a stereotype.
+- If there is a shared enemy such as a system, myth, or stereotype, make it explicit.
+- If you mention a solution, keep it realistic, not magical.
+- Keep the tone punchy, swipe-friendly, and close to the original custom prompt. Do not recast it into a softer educational explainer voice unless the notes explicitly require that.
+- Headlines should be vivid, hooky, and ideally 40 characters or fewer.
+- For informational slides, prefer 1 crisp sentence. Use 2 only when needed. Use 3 only if the notes explicitly call for more room. Stay within 160 characters whenever possible.
+- The hook should feel bold and debate-worthy, not merely descriptive.
+"""
+
+SYSTEM_PROMPT = f"""You are planning Instagram carousel copy.
 
 Return a JSON object that matches the supplied schema.
 
@@ -29,10 +63,16 @@ Rules:
 - Hook and CTA slides may omit body text.
 - For slide 7, leave the body empty.
 - For slide 7, do not write a detailed CTA sentence because the renderer replaces it automatically.
+
+{AUTOMATION_CONTRACT}
+
+{SCRIPT_WRITER_STYLE_GUIDE}
 """
 
 
 def build_user_prompt(job: CarouselInput) -> str:
+    library_item_id = job.library_item_id or ""
+    niche_preset = job.niche_preset or ""
     topic = job.topic or ""
     script = job.script or ""
     cta_text = job.cta_text or ""
@@ -41,6 +81,10 @@ def build_user_prompt(job: CarouselInput) -> str:
     return f"""Create a carousel plan using this input:
 
 job_id: {job.job_id}
+source: {job.source}
+generation_mode: {job.generation_mode}
+library_item_id: {library_item_id}
+niche_preset: {niche_preset}
 aspect_ratio: {job.aspect_ratio}
 reference_style: {job.reference_style}
 language: {language}
@@ -59,9 +103,13 @@ Return slides with these exact roles and design roles:
 7. cta / cta
 
 Important:
+- Keep the original custom-prompt style and per-slide writing pattern. Only the response shape changes from TITLE/TEXT blocks to headline/body fields.
+- Slides 1 through 6 do the real content work.
+- Slide 6 should complete the argument before the CTA placeholder.
 - Slide 7 is a placeholder only.
 - Leave slide 7 body empty.
 - Keep slide 7 headline short because the final CTA is injected later.
+- Follow notes as planner instructions unless they conflict with the hard slide structure above.
 """
 
 

@@ -40,7 +40,7 @@ DEFAULT_REFERENCE_NODE_IDS = [
     "local:twitter-post-default",
     "local:twitter-post-soft",
 ]
-DEFAULT_PROMPT_VERSION = "baseline_v2"
+DEFAULT_PROMPT_VERSION = "baseline_v6"
 DEFAULT_STYLE_FAMILY = "reference_mix_alder_portrait"
 DEFAULT_STYLE_RECIPE = "alder_portrait_editorial_mix_v1"
 DEFAULT_RENDER_SCHEMA_VERSION = "figma_plugin_payload_v2"

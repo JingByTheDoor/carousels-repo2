@@ -1203,7 +1203,7 @@ async function renderCtaSlide(frame, slide, payload) {
     });
   }
 
-  if (profile.ctaMode === "headline_button" || profile.ctaMode === "headline_supporting_button") {
+  if (!isCtaSlide(slide) && (profile.ctaMode === "headline_button" || profile.ctaMode === "headline_supporting_button")) {
     const pillY = Math.max(804, bodyBottom + 72);
     const pill = figma.createRectangle();
     pill.resize(360, 82);
@@ -1737,29 +1737,32 @@ async function renderTypographySignalCtaSlide(frame, slide, payload) {
     });
   }
 
-  const pill = figma.createRectangle();
-  pill.resize(330, 76);
-  pill.x = 375;
-  pill.y = Math.max(800, ctaBottom + 62);
-  pill.cornerRadius = 999;
-  pill.fills = [solidPaint(tokens.text_light)];
-  frame.appendChild(pill);
+  if (!isCtaSlide(slide)) {
+    const pillY = Math.max(800, ctaBottom + 62);
+    const pill = figma.createRectangle();
+    pill.resize(330, 76);
+    pill.x = 375;
+    pill.y = pillY;
+    pill.cornerRadius = 999;
+    pill.fills = [solidPaint(tokens.text_light)];
+    frame.appendChild(pill);
 
-  await createTextBlock(frame, {
-    text: slide.button_label || "Get access",
-    fontFamily: "Inter",
-    fontStyle: "Bold",
-    fallbackStyle: "Bold",
-    x: 398,
-    y: 820,
-    width: 284,
-    maxHeight: 34,
-    maxSize: 24,
-    minSize: 16,
-    lineHeight: 1.0,
-    color: tokens.text_dark,
-    alignHorizontal: "CENTER"
-  });
+    await createTextBlock(frame, {
+      text: slide.button_label || "Get access",
+      fontFamily: "Inter",
+      fontStyle: "Bold",
+      fallbackStyle: "Bold",
+      x: 398,
+      y: pillY + 20,
+      width: 284,
+      maxHeight: 34,
+      maxSize: 24,
+      minSize: 16,
+      lineHeight: 1.0,
+      color: tokens.text_dark,
+      alignHorizontal: "CENTER"
+    });
+  }
 
   await appendFooterSignal(frame, "Like", 86, 1110, "left");
   await appendFooterSignal(frame, "Comment", 248, 1210, "center");
@@ -2309,29 +2312,32 @@ async function renderCpSplitCtaSlide(frame, slide, payload) {
     });
   }
 
-  const pill = figma.createRectangle();
-  pill.resize(320, 76);
-  pill.x = 86;
-  pill.y = Math.max(846, ctaBottom + 62);
-  pill.cornerRadius = 999;
-  pill.fills = [solidPaint(tokens.text_dark)];
-  frame.appendChild(pill);
+  if (!isCtaSlide(slide)) {
+    const pillY = Math.max(846, ctaBottom + 62);
+    const pill = figma.createRectangle();
+    pill.resize(320, 76);
+    pill.x = 86;
+    pill.y = pillY;
+    pill.cornerRadius = 999;
+    pill.fills = [solidPaint(tokens.text_dark)];
+    frame.appendChild(pill);
 
-  await createTextBlock(frame, {
-    text: slide.button_label || "Get access",
-    fontFamily: "Inter",
-    fontStyle: "Bold",
-    fallbackStyle: "Bold",
-    x: 114,
-    y: 866,
-    width: 264,
-    maxHeight: 34,
-    maxSize: 24,
-    minSize: 16,
-    lineHeight: 1.0,
-    color: tokens.text_light,
-    alignHorizontal: "CENTER"
-  });
+    await createTextBlock(frame, {
+      text: slide.button_label || "Get access",
+      fontFamily: "Inter",
+      fontStyle: "Bold",
+      fallbackStyle: "Bold",
+      x: 114,
+      y: pillY + 20,
+      width: 264,
+      maxHeight: 34,
+      maxSize: 24,
+      minSize: 16,
+      lineHeight: 1.0,
+      color: tokens.text_light,
+      alignHorizontal: "CENTER"
+    });
+  }
 }
 
 async function renderCreatorMonoCoverSlide(frame, slide, payload) {
@@ -2767,7 +2773,9 @@ async function renderLightGrainCtaSlide(frame, slide, payload) {
     });
   }
 
-  await appendLabelPill(card, 324, Math.max(818, bodyBottom + 54), slide.button_label || "Follow for more", tokens.accent_navy, "#FFFFFF");
+  if (!isCtaSlide(slide)) {
+    await appendLabelPill(card, 324, Math.max(818, bodyBottom + 54), slide.button_label || "Follow for more", tokens.accent_navy, "#FFFFFF");
+  }
 }
 
 async function renderPlaceholderMediaBodySlide(frame, slide, payload) {
@@ -2952,14 +2960,16 @@ async function renderPlaceholderMediaCtaSlide(frame, slide, payload) {
     mediaBottom = imageY + imageHeight;
   }
 
-  await appendLabelPill(
-    card,
-    280,
-    Math.max(hasMedia ? 848 : 828, mediaBottom + 44),
-    slide.button_label || "Follow for more",
-    tokens.accent_navy,
-    "#FFFFFF"
-  );
+  if (!isCtaSlide(slide)) {
+    await appendLabelPill(
+      card,
+      280,
+      Math.max(hasMedia ? 848 : 828, mediaBottom + 44),
+      slide.button_label || "Follow for more",
+      tokens.accent_navy,
+      "#FFFFFF"
+    );
+  }
 }
 
 async function renderRetroSwipeCoverSlide(frame, slide, payload) {
@@ -3117,7 +3127,9 @@ async function renderRetroSwipeCtaSlide(frame, slide, payload) {
     });
   }
 
-  await appendRetroPillButton(frame, 302, Math.max(932, ctaBottom + 52), 476, 120, tokens, slide.button_label || "Follow for more");
+  if (!isCtaSlide(slide)) {
+    await appendRetroPillButton(frame, 302, Math.max(932, ctaBottom + 52), 476, 120, tokens, slide.button_label || "Follow for more");
+  }
 }
 
 async function renderTwitterCardCoverSlide(frame, slide, payload) {
@@ -3365,7 +3377,9 @@ async function renderDeviceMockupCtaSlide(frame, slide, payload) {
   const buttonY = hasMedia
     ? Math.max(824, bodyBottom + 72)
     : Math.min(1010, Math.max(824, bodyBottom + 96));
-  await appendLabelPill(frame, buttonX, buttonY, slide.button_label || "Follow for more", tokens.accent_blue, tokens.text_dark);
+  if (!isCtaSlide(slide)) {
+    await appendLabelPill(frame, buttonX, buttonY, slide.button_label || "Follow for more", tokens.accent_blue, tokens.text_dark);
+  }
   if (hasMedia) {
     await appendDeviceMockupShell(frame, slide, 588, 142, 406, 1088, tokens, {
       screenOpacity: 1,
@@ -4058,16 +4072,16 @@ function getPlaceholderMediaMetaY(frameHeight) {
 function appendCarouselMetaTone(frame) {
   const fill = getPrimarySolidFill(frame);
   if (!fill) {
-    return { colorHex: "#9EA7C2", textOpacity: 0.94, iconOpacity: 0.6 };
+    return { colorHex: "#9EA7C2", textOpacity: 0.94, iconOpacity: 0.46 };
   }
   const brightness = getPaintBrightness(fill);
   if (brightness < 0.42) {
-    return { colorHex: "#F3F6FF", textOpacity: 0.78, iconOpacity: 0.72 };
+    return { colorHex: "#F3F6FF", textOpacity: 0.78, iconOpacity: 0.56 };
   }
   if (brightness < 0.7) {
-    return { colorHex: "#C6CEE1", textOpacity: 0.88, iconOpacity: 0.66 };
+    return { colorHex: "#C6CEE1", textOpacity: 0.88, iconOpacity: 0.52 };
   }
-  return { colorHex: "#9EA7C2", textOpacity: 0.94, iconOpacity: 0.6 };
+  return { colorHex: "#9EA7C2", textOpacity: 0.94, iconOpacity: 0.46 };
 }
 
 function getPrimarySolidFill(node) {
@@ -4116,6 +4130,10 @@ function isHookSlide(slide) {
   return cleanText(slide && slide.slide_role) === "hook" || cleanText(slide && slide.design_role) === "cover";
 }
 
+function isCtaSlide(slide) {
+  return cleanText(slide && slide.slide_role) === "cta" || cleanText(slide && slide.design_role) === "cta";
+}
+
 async function appendHookCapsule(frame, slide, payload) {
   if (!isHookSlide(slide)) {
     return;
@@ -4157,8 +4175,8 @@ async function appendCarouselMeta(frame, slide, payload) {
   const y = getCarouselMetaY(frame.height);
   const tone = appendCarouselMetaTone(frame);
   const isHook = isHookSlide(slide);
-  const leftY = y + 2;
   const actionY = y + (isHook ? 14 : 8);
+  const leftY = actionY;
   const leftNode = await createTextBlock(frame, {
     text: "© TEFL-TESOL-Certificate.com",
     fontFamily: "Inter",

@@ -1,7 +1,7 @@
 {
   "job_id": "production-20260407-032442-a38415",
   "created_at": "2026-04-07T03:24:50.046811+00:00",
-  "status": "planned",
+  "status": "complete",
   "request": {
     "job_id": "production-20260407-032442-a38415",
     "source": "manual",
@@ -36,14 +36,30 @@
   "style_recipe": "placeholder_media_glow_v1",
   "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\production-20260407-032442-a38415.json",
   "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\production-20260407-032442-a38415.render.json",
-  "render_result_path": null,
+  "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\production-20260407-032442-a38415.render-result.json",
   "figma_file_url": null,
   "figma_page_url": null,
-  "figma_page_name": null,
-  "export_paths": [],
-  "export_urls": [],
-  "pdf_export_path": null,
-  "pdf_export_url": null,
+  "figma_page_name": "production-20260407-032442-a38415-plugin-render",
+  "export_paths": [
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260407-032442-a38415\\slide-01.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260407-032442-a38415\\slide-02.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260407-032442-a38415\\slide-03.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260407-032442-a38415\\slide-04.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260407-032442-a38415\\slide-05.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260407-032442-a38415\\slide-06.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260407-032442-a38415\\slide-07.png"
+  ],
+  "export_urls": [
+    "/tmp-output/exports/production-20260407-032442-a38415/slide-01.png",
+    "/tmp-output/exports/production-20260407-032442-a38415/slide-02.png",
+    "/tmp-output/exports/production-20260407-032442-a38415/slide-03.png",
+    "/tmp-output/exports/production-20260407-032442-a38415/slide-04.png",
+    "/tmp-output/exports/production-20260407-032442-a38415/slide-05.png",
+    "/tmp-output/exports/production-20260407-032442-a38415/slide-06.png",
+    "/tmp-output/exports/production-20260407-032442-a38415/slide-07.png"
+  ],
+  "pdf_export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260407-032442-a38415\\carousel.pdf",
+  "pdf_export_url": "/tmp-output/exports/production-20260407-032442-a38415/carousel.pdf",
   "used_script": "Slide 1: Хотите стать учителем английского? Начните сегодня!\n\nSlide 2: Образование – ваш первый шаг\nПолучите профильное образование или курсы по преподаванию английского языка для уверенного старта.\n\nSlide 3: Развивайте свои языковые навыки\nПостоянно совершенствуйте английский через практику, чтение и прослушивание носителей языка.\n\nSlide 4: Получите квалификацию TEFL или TESOL\nЭти международные сертификаты откроют двери к работе и повысят вашу конкурентоспособность.\n\nSlide 5: Набирайтесь опыта преподавания\nНачните с репетиторства, стажировок или волонтёрских программ, чтобы приобрести практические навыки.\n\nSlide 6: Используйте современные технологии\nОсваивайте онлайн-платформы и интерактивные методы обучения для эффективной работы с учениками.\n\nSlide 7: Готовы начать?",
   "image_assets": [
     {
@@ -126,7 +142,130 @@
     }
   ],
   "visual_status": "visual_resolved",
-  "warnings": [],
-  "fit_metrics": [],
+  "warnings": [
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 32% of the slide height.",
+      "slide_number": 2
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 32% of the slide height.",
+      "slide_number": 3
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 29% of the slide height.",
+      "slide_number": 4
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 32% of the slide height.",
+      "slide_number": 5
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 33% of the slide height.",
+      "slide_number": 6
+    }
+  ],
+  "fit_metrics": [
+    {
+      "slide_number": 1,
+      "role": "cover",
+      "headline_font_size": 94,
+      "body_font_size": null,
+      "headline_lines": 2,
+      "body_lines": null,
+      "content_top": 738,
+      "content_bottom": 1161,
+      "occupied_height_ratio": 0.313,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 2,
+      "role": "body",
+      "headline_font_size": 76,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 632,
+      "occupied_height_ratio": 0.324,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 3,
+      "role": "body",
+      "headline_font_size": 76,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 624,
+      "occupied_height_ratio": 0.319,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 4,
+      "role": "body",
+      "headline_font_size": 76,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 581,
+      "occupied_height_ratio": 0.287,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 5,
+      "role": "body",
+      "headline_font_size": 76,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 632,
+      "occupied_height_ratio": 0.324,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 6,
+      "role": "body",
+      "headline_font_size": 76,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 635,
+      "occupied_height_ratio": 0.327,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 7,
+      "role": "cta",
+      "headline_font_size": 44,
+      "body_font_size": 40,
+      "headline_lines": 2,
+      "body_lines": 3,
+      "content_top": 344,
+      "content_bottom": 926,
+      "occupied_height_ratio": 0.431,
+      "truncated": false,
+      "image_rendered": false
+    }
+  ],
   "error": null
 }

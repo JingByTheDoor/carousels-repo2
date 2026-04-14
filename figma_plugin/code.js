@@ -485,7 +485,7 @@ async function renderCarousel(payload) {
 
     await renderSlide(frame, slide, payload);
     await appendHookCapsule(frame, slide, payload);
-    await appendCarouselMeta(frame, payload);
+    await appendCarouselMeta(frame, slide, payload);
     collectSlideDiagnostics(frame, slide, payload);
     frames.push(frame);
     nodeIds.push(frame.id);
@@ -4153,21 +4153,24 @@ async function appendHookCapsule(frame, slide, payload) {
   });
 }
 
-async function appendCarouselMeta(frame, payload) {
+async function appendCarouselMeta(frame, slide, payload) {
   const y = getCarouselMetaY(frame.height);
   const tone = appendCarouselMetaTone(frame);
+  const isHook = isHookSlide(slide);
+  const leftY = y + 2;
+  const actionY = y + (isHook ? 14 : 8);
   const leftNode = await createTextBlock(frame, {
     text: "© TEFL-TESOL-Certificate.com",
     fontFamily: "Inter",
     fontStyle: "Regular",
     fallbackStyle: "Regular",
     x: 58,
-    y: y,
-    width: Math.min(560, Math.max(360, Math.round(frame.width * 0.46))),
-    maxHeight: 42,
-    maxSize: 34,
-    minSize: 18,
-    lineHeight: 1.02,
+    y: leftY,
+    width: Math.min(640, Math.max(520, Math.round(frame.width * 0.58))),
+    maxHeight: 34,
+    maxSize: 28,
+    minSize: 15,
+    lineHeight: 1.0,
     color: tone.colorHex,
     alignHorizontal: "LEFT"
   });
@@ -4176,25 +4179,25 @@ async function appendCarouselMeta(frame, payload) {
   const iconWidth = 17;
   const iconHeight = 43;
   const iconX = frame.width - 60;
-  const textWidth = 300;
+  const textWidth = 280;
   const actionNode = await createTextBlock(frame, {
     text: getSavePostLabel(payload && payload.language),
     fontFamily: "Inter",
     fontStyle: "Regular",
     fallbackStyle: "Regular",
     x: iconX - textWidth - 14,
-    y: y,
+    y: actionY,
     width: textWidth,
-    maxHeight: 42,
-    maxSize: 34,
-    minSize: 18,
-    lineHeight: 1.02,
+    maxHeight: 34,
+    maxSize: 28,
+    minSize: 15,
+    lineHeight: 1.0,
     color: tone.colorHex,
     alignHorizontal: "RIGHT"
   });
   actionNode.opacity = tone.textOpacity;
 
-  await appendSavePostIcon(frame, payload, iconX, y - 4, iconWidth, iconHeight, tone.iconOpacity);
+  await appendSavePostIcon(frame, payload, iconX, actionY - 6, iconWidth, iconHeight, tone.iconOpacity);
 }
 
 async function appendSavePostIcon(frame, payload, x, y, width, height, opacity) {

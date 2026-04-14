@@ -1,7 +1,7 @@
 {
   "job_id": "production-20260406-220124-b62cb6",
   "created_at": "2026-04-06T22:01:46.310503+00:00",
-  "status": "rendering",
+  "status": "complete",
   "request": {
     "job_id": "production-20260406-220124-b62cb6",
     "source": "manual",
@@ -36,14 +36,30 @@
   "style_recipe": "placeholder_media_glow_v1",
   "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\production-20260406-220124-b62cb6.json",
   "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\production-20260406-220124-b62cb6.render.json",
-  "render_result_path": null,
+  "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\production-20260406-220124-b62cb6.render-result.json",
   "figma_file_url": null,
   "figma_page_url": null,
-  "figma_page_name": null,
-  "export_paths": [],
-  "export_urls": [],
-  "pdf_export_path": null,
-  "pdf_export_url": null,
+  "figma_page_name": "production-20260406-220124-b62cb6-plugin-render",
+  "export_paths": [
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-220124-b62cb6\\slide-01.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-220124-b62cb6\\slide-02.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-220124-b62cb6\\slide-03.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-220124-b62cb6\\slide-04.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-220124-b62cb6\\slide-05.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-220124-b62cb6\\slide-06.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-220124-b62cb6\\slide-07.png"
+  ],
+  "export_urls": [
+    "/tmp-output/exports/production-20260406-220124-b62cb6/slide-01.png",
+    "/tmp-output/exports/production-20260406-220124-b62cb6/slide-02.png",
+    "/tmp-output/exports/production-20260406-220124-b62cb6/slide-03.png",
+    "/tmp-output/exports/production-20260406-220124-b62cb6/slide-04.png",
+    "/tmp-output/exports/production-20260406-220124-b62cb6/slide-05.png",
+    "/tmp-output/exports/production-20260406-220124-b62cb6/slide-06.png",
+    "/tmp-output/exports/production-20260406-220124-b62cb6/slide-07.png"
+  ],
+  "pdf_export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260406-220124-b62cb6\\carousel.pdf",
+  "pdf_export_url": "/tmp-output/exports/production-20260406-220124-b62cb6/carousel.pdf",
   "used_script": "Slide 1: Хотите стать квалифицированным преподавателем английского?\n\nSlide 2: Основные требования к квалификации\nДля преподавания английского необходимо иметь профильное образование и сертификаты, подтверждающие уровень владения языком.\n\nSlide 3: Популярные сертификаты для учителей\nTESOL, CELTA и DELTA — международные сертификаты, повышающие доверие работодателей и качество преподавания.\n\nSlide 4: Практический опыт — ключ к успеху\nВажно набрать часы преподавания, чтобы развить навыки работы с разными группами и ситуациями.\n\nSlide 5: Непрерывное обучение и повышение квалификации\nПроходите курсы повышения, вебинары и конференции, чтобы быть в курсе современных методик и технологий.\n\nSlide 6: Как выбрать подходящую программу обучения?\nОценивайте аккредитацию курсов, отзывы выпускников и актуальность содержания для вашей карьерной цели.\n\nSlide 7: Начните свой путь сегодня!",
   "image_assets": [
     {
@@ -126,7 +142,118 @@
     }
   ],
   "visual_status": "visual_resolved",
-  "warnings": [],
-  "fit_metrics": [],
+  "warnings": [
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 33% of the slide height.",
+      "slide_number": 4
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 32% of the slide height.",
+      "slide_number": 5
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 33% of the slide height.",
+      "slide_number": 6
+    }
+  ],
+  "fit_metrics": [
+    {
+      "slide_number": 1,
+      "role": "cover",
+      "headline_font_size": 94,
+      "body_font_size": null,
+      "headline_lines": 2,
+      "body_lines": null,
+      "content_top": 738,
+      "content_bottom": 1159,
+      "occupied_height_ratio": 0.312,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 2,
+      "role": "body",
+      "headline_font_size": 70,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 672,
+      "occupied_height_ratio": 0.354,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 3,
+      "role": "body",
+      "headline_font_size": 70,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 674,
+      "occupied_height_ratio": 0.356,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 4,
+      "role": "body",
+      "headline_font_size": 76,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 633,
+      "occupied_height_ratio": 0.325,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 5,
+      "role": "body",
+      "headline_font_size": 66,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 632,
+      "occupied_height_ratio": 0.324,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 6,
+      "role": "body",
+      "headline_font_size": 68,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 635,
+      "occupied_height_ratio": 0.327,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 7,
+      "role": "cta",
+      "headline_font_size": 44,
+      "body_font_size": 40,
+      "headline_lines": 2,
+      "body_lines": 3,
+      "content_top": 344,
+      "content_bottom": 926,
+      "occupied_height_ratio": 0.431,
+      "truncated": false,
+      "image_rendered": false
+    }
+  ],
   "error": null
 }

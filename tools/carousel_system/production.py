@@ -116,12 +116,13 @@ def load_latest_production_job() -> ProductionJobRecord | None:
     return load_production_job(state.latest_job_id)
 
 
-def save_production_job(job_record: ProductionJobRecord) -> Path:
+def save_production_job(job_record: ProductionJobRecord, *, mark_latest: bool = True) -> Path:
     PRODUCTION_JOBS_DIR.mkdir(parents=True, exist_ok=True)
     path = PRODUCTION_JOBS_DIR / f"{job_record.job_id}.json"
     path.write_text(job_record.model_dump_json(indent=2), encoding="utf-8")
     state = load_production_state()
-    state.latest_job_id = job_record.job_id
+    if mark_latest:
+        state.latest_job_id = job_record.job_id
     save_production_state(state)
     return path
 
@@ -172,7 +173,7 @@ def create_production_job(settings: Settings, request: ProductionJobCreateReques
 
 
 def acquire_next_production_render_job() -> ProductionJobRecord | None:
-    for job_path in _iter_production_job_paths():
+    for job_path in _ordered_production_job_paths(load_production_state().latest_job_id):
         job_record = ProductionJobRecord.model_validate_json(job_path.read_text(encoding="utf-8"))
         artifact_path = Path(job_record.job_artifact_path)
         updated = False
@@ -186,12 +187,12 @@ def acquire_next_production_render_job() -> ProductionJobRecord | None:
                 job_record.error = output_record.error
                 updated = True
         if updated:
-            save_production_job(job_record)
+            save_production_job(job_record, mark_latest=False)
         if job_record.status != "planned":
             continue
         job_record.status = "rendering"
         job_record.error = None
-        save_production_job(job_record)
+        save_production_job(job_record, mark_latest=False)
         return job_record
     return None
 
@@ -213,7 +214,7 @@ def sync_production_render_result(job_id: str, result: PluginRenderResult, *, re
     job_record.figma_page_name = result.page_name
     job_record.fit_metrics = list(result.fit_metrics)
     _merge_render_warnings(job_record, result)
-    save_production_job(job_record)
+    save_production_job(job_record, mark_latest=False)
 
 
 def sync_production_render_error(job_id: str, error_text: str) -> None:
@@ -222,7 +223,7 @@ def sync_production_render_error(job_id: str, error_text: str) -> None:
         return
     job_record.status = "error"
     job_record.error = error_text
-    save_production_job(job_record)
+    save_production_job(job_record, mark_latest=False)
 
 
 def _build_input_job(
@@ -323,7 +324,21 @@ def _apply_output_snapshot(job_record: ProductionJobRecord, output_record: Carou
 def _iter_production_job_paths() -> list[Path]:
     if not PRODUCTION_JOBS_DIR.exists():
         return []
-    return sorted(PRODUCTION_JOBS_DIR.glob("*.json"), key=lambda path: path.stat().st_mtime, reverse=True)
+    # Sort by the stable job id timestamp so render-result sync writes do not
+    # make older jobs appear newer than freshly created ones.
+    return sorted(PRODUCTION_JOBS_DIR.glob("*.json"), key=lambda path: path.stem, reverse=True)
+
+
+def _ordered_production_job_paths(preferred_job_id: str | None = None) -> list[Path]:
+    job_paths = _iter_production_job_paths()
+    if not preferred_job_id:
+        return job_paths
+    preferred_path = PRODUCTION_JOBS_DIR / f"{preferred_job_id}.json"
+    ordered: list[Path] = []
+    if preferred_path.exists():
+        ordered.append(preferred_path)
+    ordered.extend(path for path in job_paths if path != preferred_path)
+    return ordered
 
 
 def _tmp_url_from_path(path: str | None) -> str | None:

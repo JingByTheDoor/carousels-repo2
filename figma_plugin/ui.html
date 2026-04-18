@@ -224,7 +224,7 @@
       let autoMode = false;
       let autoTimer = null;
       let autoFinishedJobs = 0;
-      const AUTO_MODE_JOB_TARGET = 3;
+      let autoJobTarget = 1;
 
       function setStatus(text, variant) {
         statusNode.textContent = formatStatusText(text);
@@ -270,6 +270,7 @@
 
       function resetAutoProgress() {
         autoFinishedJobs = 0;
+        autoJobTarget = 1;
       }
 
       function stopAutoMode(message, variant) {
@@ -283,7 +284,7 @@
         if (!autoMode) {
           return false;
         }
-        if (autoFinishedJobs >= AUTO_MODE_JOB_TARGET) {
+        if (autoFinishedJobs >= autoJobTarget) {
           stopAutoMode(
             `Auto Mode finished ${autoFinishedJobs} job${autoFinishedJobs === 1 ? "" : "s"} and stopped.`,
             success ? "success" : "error"
@@ -291,6 +292,10 @@
           return true;
         }
         return false;
+      }
+
+      function getAutoJobTarget(payload) {
+        return isStudioPayload(payload) ? 3 : 1;
       }
 
       function clearAutoTimer() {
@@ -447,7 +452,7 @@
         }
         resetAutoProgress();
         setAutoMode(true);
-        setStatus(`Auto Mode started. Polling until ${AUTO_MODE_JOB_TARGET} jobs finish...`, "");
+        setStatus("Auto Mode started. Polling for queued jobs...", "");
         void pollNextJob();
       });
 
@@ -551,6 +556,7 @@
 
         if (message.type === "bridge-next-job") {
           const payload = message.job;
+          autoJobTarget = getAutoJobTarget(payload.payload || payload);
           currentBridgeJobId = payload.job_id || (payload.payload && payload.payload.job_id) || null;
           payloadInput.value = JSON.stringify(payload.payload, null, 2);
           currentPayload = payload.payload;
@@ -565,7 +571,7 @@
             return;
           }
           setStatus(
-            `Render complete and posted back to the local bridge. ${autoFinishedJobs}/${AUTO_MODE_JOB_TARGET} finished.`,
+            `Render complete and posted back to the local bridge. ${autoFinishedJobs}/${autoJobTarget} finished.`,
             "success"
           );
           currentBridgeJobId = null;
@@ -581,7 +587,7 @@
             return;
           }
           setStatus(
-            `Render error posted back to the local bridge. ${autoFinishedJobs}/${AUTO_MODE_JOB_TARGET} finished.`,
+            `Render error posted back to the local bridge. ${autoFinishedJobs}/${autoJobTarget} finished.`,
             "error"
           );
           currentBridgeJobId = null;

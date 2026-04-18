@@ -2,9 +2,12 @@ from __future__ import annotations
 
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import carousel_system.production as production_module
+import carousel_system.studio as studio_module
 from carousel_system.config import Settings
 from carousel_system.image_assets import (
     ImageRequest,
@@ -80,6 +83,90 @@ def make_settings() -> Settings:
         render_server_port=8765,
         render_queue_priority="production_only",
     )
+
+
+def write_test_job_artifacts(job: CarouselInput, job_path: Path, render_payload_path: Path):
+    record = build_output_record(job, make_plan(), prompt_version="baseline_v2", language=job.language)
+    record.status = "planned"
+    job_path.parent.mkdir(parents=True, exist_ok=True)
+    job_path.write_text(record.model_dump_json(indent=2), encoding="utf-8")
+    payload = build_plugin_render_payload(record, source_artifact_path=job_path)
+    render_payload_path.parent.mkdir(parents=True, exist_ok=True)
+    render_payload_path.write_text(payload.model_dump_json(indent=2), encoding="utf-8")
+    return record, payload
+
+
+def write_test_studio_round(root: Path, round_id: str, created_at: str, topic: str) -> str:
+    job_id = f"{round_id}-v1"
+    job_path = root / "jobs" / f"{job_id}.json"
+    render_payload_path = root / "render-jobs" / f"{job_id}.render.json"
+    job = CarouselInput(
+        job_id=job_id,
+        source="manual",
+        generation_mode="review",
+        topic=topic,
+        language="en",
+        reference_style="placeholder_media",
+        reference_file_key="test-file",
+    )
+    _record, payload = write_test_job_artifacts(job, job_path, render_payload_path)
+    round_record = studio_module.StudioRoundRecord(
+        round_id=round_id,
+        created_at=created_at,
+        round_number=1,
+        round_mode="review",
+        request=StudioCreateRequest(topic=topic, language="en", review_mode=True),
+        review_status="rendering",
+        variants=[
+            studio_module.StudioVariantRecord(
+                variant_id=f"{round_id}-variant-1",
+                ordinal=1,
+                job_id=job_id,
+                copy_length="balanced",
+                requested_style="placeholder_media",
+                planner_notes="Test round",
+                prompt_version="baseline_v2",
+                language=payload.language,
+                style_family=payload.style_family,
+                style_recipe=payload.style_recipe,
+                job_artifact_path=str(job_path),
+                render_payload_path=str(render_payload_path),
+                payload=payload,
+            )
+        ],
+    )
+    round_path = root / "rounds" / f"{round_id}.json"
+    round_path.parent.mkdir(parents=True, exist_ok=True)
+    round_path.write_text(round_record.model_dump_json(indent=2), encoding="utf-8")
+    return job_id
+
+
+def write_test_production_job(root: Path, job_id: str, created_at: str, topic: str) -> None:
+    job_path = root / "jobs" / f"{job_id}.json"
+    render_payload_path = root / "render-jobs" / f"{job_id}.render.json"
+    job = CarouselInput(
+        job_id=job_id,
+        source="manual",
+        generation_mode="production",
+        topic=topic,
+        language="ru",
+        reference_style="placeholder_media",
+        reference_file_key="test-file",
+    )
+    write_test_job_artifacts(job, job_path, render_payload_path)
+    job_record = production_module.ProductionJobRecord(
+        job_id=job_id,
+        created_at=created_at,
+        status="planned",
+        request=job,
+        library_item_id="test-library-item",
+        library_label="Test Library Item",
+        job_artifact_path=str(job_path),
+        render_payload_path=str(render_payload_path),
+    )
+    job_record_path = root / "production-jobs" / f"{job_id}.json"
+    job_record_path.parent.mkdir(parents=True, exist_ok=True)
+    job_record_path.write_text(job_record.model_dump_json(indent=2), encoding="utf-8")
 
 
 class QualityRulesTests(unittest.TestCase):
@@ -614,6 +701,92 @@ class QualityRulesTests(unittest.TestCase):
         ):
             item = acquire_next_render_item(settings, queue=None)
         self.assertEqual(item, "production-item")
+
+    def test_sheets_first_bridge_prefers_production_before_studio(self) -> None:
+        settings = make_settings()
+        settings = Settings(
+            openai_api_key=settings.openai_api_key,
+            openai_model=settings.openai_model,
+            pexels_api_key=settings.pexels_api_key,
+            google_service_account_json=settings.google_service_account_json,
+            google_spreadsheet_id=settings.google_spreadsheet_id,
+            google_worksheet_name=settings.google_worksheet_name,
+            figma_access_token=settings.figma_access_token,
+            figma_reference_file_key=settings.figma_reference_file_key,
+            render_server_host=settings.render_server_host,
+            render_server_port=settings.render_server_port,
+            render_queue_priority="sheets_first",
+        )
+        with patch("carousel_system.render_bridge._acquire_sheet_render_item", return_value=None), patch(
+            "carousel_system.render_bridge._acquire_production_render_item",
+            return_value="production-item",
+        ) as production_mock, patch(
+            "carousel_system.render_bridge._acquire_studio_render_item",
+            return_value="studio-item",
+        ) as studio_mock:
+            item = acquire_next_render_item(settings, queue=None)
+        self.assertEqual(item, "production-item")
+        production_mock.assert_called_once()
+        studio_mock.assert_not_called()
+
+    def test_acquire_next_studio_render_variant_prefers_latest_round_over_touched_older_round(self) -> None:
+        with TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            rounds_dir = root / "rounds"
+            state_path = root / "state.json"
+            older_round_id = "studio-20260401-000000-aaaaaa"
+            newer_round_id = "studio-20260402-000000-bbbbbb"
+
+            with patch.object(studio_module, "STUDIO_ROUNDS_DIR", rounds_dir), patch.object(
+                studio_module, "STUDIO_STATE_PATH", state_path
+            ):
+                write_test_studio_round(root, newer_round_id, "2026-04-02T00:00:00+00:00", "Newer round")
+                write_test_studio_round(root, older_round_id, "2026-04-01T00:00:00+00:00", "Older round")
+                studio_module.save_state(StudioState(latest_round_id=newer_round_id))
+
+                variant = studio_module.acquire_next_studio_render_variant()
+
+            self.assertIsNotNone(variant)
+            self.assertEqual(variant.job_id, f"{newer_round_id}-v1")
+
+    def test_mark_variant_rendering_does_not_replace_latest_round(self) -> None:
+        with TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            rounds_dir = root / "rounds"
+            state_path = root / "state.json"
+            older_round_id = "studio-20260401-000000-aaaaaa"
+            newer_round_id = "studio-20260402-000000-bbbbbb"
+
+            with patch.object(studio_module, "STUDIO_ROUNDS_DIR", rounds_dir), patch.object(
+                studio_module, "STUDIO_STATE_PATH", state_path
+            ):
+                older_job_id = write_test_studio_round(root, older_round_id, "2026-04-01T00:00:00+00:00", "Older round")
+                write_test_studio_round(root, newer_round_id, "2026-04-02T00:00:00+00:00", "Newer round")
+                studio_module.save_state(StudioState(latest_round_id=newer_round_id))
+
+                studio_module.mark_variant_rendering(older_job_id)
+
+                self.assertEqual(studio_module.load_state().latest_round_id, newer_round_id)
+
+    def test_acquire_next_production_render_job_prefers_latest_job_over_touched_older_job(self) -> None:
+        with TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            jobs_dir = root / "production-jobs"
+            state_path = root / "production-state.json"
+            older_job_id = "production-20260401-000000-aaaaaa"
+            newer_job_id = "production-20260402-000000-bbbbbb"
+
+            with patch.object(production_module, "PRODUCTION_JOBS_DIR", jobs_dir), patch.object(
+                production_module, "PRODUCTION_STATE_PATH", state_path
+            ):
+                write_test_production_job(root, newer_job_id, "2026-04-02T00:00:00+00:00", "Newer production job")
+                write_test_production_job(root, older_job_id, "2026-04-01T00:00:00+00:00", "Older production job")
+                production_module.save_production_state(production_module.ProductionState(latest_job_id=newer_job_id))
+
+                job_record = production_module.acquire_next_production_render_job()
+
+            self.assertIsNotNone(job_record)
+            self.assertEqual(job_record.job_id, newer_job_id)
 
     def test_next_review_round_keeps_winner_style_even_when_not_review_safe(self) -> None:
         previous_round = SimpleNamespace(

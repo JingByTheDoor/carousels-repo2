@@ -309,6 +309,13 @@
 - Verified:
   - `node --check figma_plugin\\code.js`
   - `python -m compileall tools`
+- Applied a focused hook-slide cleanup for the placeholder-media production family:
+  - `placeholder_media` cover slides no longer render hook body copy under the main headline
+  - the hook “scroll further” capsule now sizes from the actual rendered text width and sits slightly higher above the footer area
+  - plugin Auto Mode now stops after one non-studio job while still rendering three jobs for `studio-*` review rounds
+- Verified:
+  - `node --check figma_plugin\\code.js`
+  - `python -m compileall tools`
   - smoke test showing `placeholder_media` now resolves to `reference_placeholder_media_glow`
   - smoke test showing `device_mockup` now resolves to `reference_device_mockup_gradient`
   - smoke test showing review image queries differ across slides 1, 2, 4, and 6

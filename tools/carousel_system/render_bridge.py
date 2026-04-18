@@ -127,11 +127,15 @@ def acquire_next_render_item(settings: Settings, queue: GoogleSheetsQueue | None
         item = _acquire_studio_render_item()
         if item:
             return item
-        if queue is None:
-            return None
-        return _acquire_sheet_render_item(settings, queue)
+        item = _acquire_sheet_render_item(settings, queue) if queue is not None else None
+        if item:
+            return item
+        return _acquire_production_render_item()
 
     item = _acquire_sheet_render_item(settings, queue) if queue is not None else None
+    if item:
+        return item
+    item = _acquire_production_render_item()
     if item:
         return item
     return _acquire_studio_render_item()

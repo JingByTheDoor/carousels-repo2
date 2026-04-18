@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import atexit
+import json
 import subprocess
 import sys
 import threading
@@ -14,7 +15,7 @@ from urllib.request import urlopen
 import uvicorn
 
 from carousel_system.cli import run
-from carousel_system.config import ROOT_DIR, load_settings
+from carousel_system.config import ConfigError, ROOT_DIR, load_settings
 from carousel_system.studio_web import create_app
 
 
@@ -29,6 +30,23 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _bridge_is_running_in_mode(host: str, port: int, expected_queue_mode: str) -> bool:
+    health_url = f"http://{host}:{port}/health"
+    try:
+        with urlopen(health_url, timeout=1.5) as response:
+            payload = json.loads(response.read().decode("utf-8") or "{}")
+    except URLError:
+        return False
+
+    queue_mode = str(payload.get("queue_mode", "")).strip().lower()
+    if queue_mode and queue_mode != expected_queue_mode:
+        raise ConfigError(
+            f"Render bridge already running at {health_url} in {queue_mode} mode. "
+            "Stop that bridge or start the studio with --bridge-port."
+        )
+    return True
+
+
 def main() -> int:
     args = parse_args()
     app = create_app()
@@ -38,19 +56,20 @@ def main() -> int:
         settings = load_settings(require_openai=True)
         bridge_host = args.bridge_host or settings.render_server_host
         bridge_port = args.bridge_port or settings.render_server_port
-        render_process = subprocess.Popen(
-            [
-                str(Path(sys.executable)),
-                str(ROOT_DIR / "tools" / "render_server.py"),
-                "--host",
-                bridge_host,
-                "--port",
-                str(bridge_port),
-                "--queue-mode",
-                "studio_only",
-            ],
-            cwd=ROOT_DIR,
-        )
+        if not _bridge_is_running_in_mode(bridge_host, bridge_port, "studio_only"):
+            render_process = subprocess.Popen(
+                [
+                    str(Path(sys.executable)),
+                    str(ROOT_DIR / "tools" / "render_server.py"),
+                    "--host",
+                    bridge_host,
+                    "--port",
+                    str(bridge_port),
+                    "--queue-mode",
+                    "studio_only",
+                ],
+                cwd=ROOT_DIR,
+            )
 
         def _cleanup_render_process() -> None:
             if render_process and render_process.poll() is None:

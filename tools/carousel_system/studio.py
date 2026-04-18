@@ -718,13 +718,19 @@ def save_state(state: StudioState) -> Path:
     return STUDIO_STATE_PATH
 
 
-def save_round(round_record: StudioRoundRecord, *, state: StudioState | None = None) -> Path:
+def save_round(
+    round_record: StudioRoundRecord,
+    *,
+    state: StudioState | None = None,
+    mark_latest: bool = True,
+) -> Path:
     _refresh_round_summary(round_record)
     STUDIO_ROUNDS_DIR.mkdir(parents=True, exist_ok=True)
     path = STUDIO_ROUNDS_DIR / f"{round_record.round_id}.json"
     path.write_text(round_record.model_dump_json(indent=2), encoding="utf-8")
     next_state = (state or load_state()).model_copy(deep=True)
-    next_state.latest_round_id = round_record.round_id
+    if mark_latest:
+        next_state.latest_round_id = round_record.round_id
     save_state(next_state)
     return path
 
@@ -750,7 +756,7 @@ def _rehydrate_round_variants(round_record: StudioRoundRecord) -> None:
         )
         updated = True
     if updated:
-        save_round(round_record)
+        save_round(round_record, mark_latest=False)
 
 
 def _clear_active_round(round_id: str | None) -> None:
@@ -762,7 +768,7 @@ def _clear_active_round(round_id: str | None) -> None:
 
 
 def acquire_next_studio_render_variant() -> StudioVariantRecord | None:
-    for round_path in _iter_round_paths():
+    for round_path in _ordered_round_paths(load_state().latest_round_id):
         round_record = StudioRoundRecord.model_validate_json(round_path.read_text(encoding="utf-8"))
         if round_record.round_mode == "review" and round_record.review_status in {"submitted", "discarded"}:
             continue
@@ -788,10 +794,10 @@ def acquire_next_studio_render_variant() -> StudioVariantRecord | None:
                 continue
             if job_record.status in {"planned", "rendering"} and variant.render_status == "planned":
                 if updated:
-                    save_round(round_record)
+                    save_round(round_record, mark_latest=False)
                 return variant
         if updated:
-            save_round(round_record)
+            save_round(round_record, mark_latest=False)
     return None
 
 
@@ -1215,11 +1221,25 @@ def _rotated_values(values: list[str] | list[StudioCopyLength] | tuple[str, ...]
 def _iter_round_paths() -> list[Path]:
     if not STUDIO_ROUNDS_DIR.exists():
         return []
-    return sorted(STUDIO_ROUNDS_DIR.glob("*.json"), key=lambda path: path.stat().st_mtime, reverse=True)
+    # Sort by the stable round id timestamp so internal status rewrites do not
+    # make old rounds jump ahead of newly created ones.
+    return sorted(STUDIO_ROUNDS_DIR.glob("*.json"), key=lambda path: path.stem, reverse=True)
+
+
+def _ordered_round_paths(preferred_round_id: str | None = None) -> list[Path]:
+    round_paths = _iter_round_paths()
+    if not preferred_round_id:
+        return round_paths
+    preferred_path = STUDIO_ROUNDS_DIR / f"{preferred_round_id}.json"
+    ordered: list[Path] = []
+    if preferred_path.exists():
+        ordered.append(preferred_path)
+    ordered.extend(path for path in round_paths if path != preferred_path)
+    return ordered
 
 
 def _update_variant(job_id: str, callback) -> None:
-    for round_path in _iter_round_paths():
+    for round_path in _ordered_round_paths(load_state().latest_round_id):
         round_record = StudioRoundRecord.model_validate_json(round_path.read_text(encoding="utf-8"))
         updated = False
         for variant in round_record.variants:
@@ -1227,7 +1247,7 @@ def _update_variant(job_id: str, callback) -> None:
                 callback(variant)
                 updated = True
         if updated:
-            save_round(round_record)
+            save_round(round_record, mark_latest=False)
 
 
 def _set_variant_rendering(variant: StudioVariantRecord) -> None:

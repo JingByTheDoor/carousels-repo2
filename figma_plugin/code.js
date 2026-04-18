@@ -2565,29 +2565,6 @@ async function renderPlaceholderMediaCoverSlide(frame, slide, payload) {
     maxLines: slide.max_headline_lines
   });
 
-  if (slide.body_display || slide.body) {
-    const bodyY = getTextBottom(headlineNode, 94, 8);
-    const remainingHeight = Math.max(64, contentBottom - bodyY);
-    await createTextBlock(card, {
-      text: slide.body_display || slide.body,
-      fallbackTexts: getBodyFallbackTexts(slide),
-      fontFamily: payload.typography.body_family,
-      fontStyle: payload.typography.body_style,
-      fallbackStyle: "Regular",
-      x: 58,
-      y: bodyY,
-      width: 700,
-      maxHeight: remainingHeight,
-      maxSize: 28,
-      minSize: 16,
-      lineHeight: 1.14,
-      color: "#60657B",
-      alignHorizontal: "LEFT",
-      role: "body",
-      maxLines: slide.max_body_lines
-    });
-  }
-
 }
 
 async function renderLightGrainBodySlide(frame, slide, payload) {
@@ -4129,20 +4106,15 @@ async function appendHookCapsule(frame, slide, payload) {
     return;
   }
   const text = getHookCapsuleLabel(payload && payload.language);
-  const width = Math.max(188, Math.min(372, 54 + text.length * 12));
-  const height = 58;
-  const x = Math.round((frame.width - width) / 2);
-  const y = Math.max(0, getCarouselMetaY(frame.height) - height - 34);
   const fillHex = "#5563D8";
 
-  await appendAutoLayoutCapsule(frame, {
+  const capsule = await appendAutoLayoutCapsule(frame, {
     name: "Hook Capsule",
-    x,
-    y,
-    width,
-    height,
-    paddingLeft: 18,
-    paddingRight: 18,
+    x: 0,
+    y: 0,
+    height: 58,
+    paddingLeft: 24,
+    paddingRight: 24,
     paddingTop: 14,
     paddingBottom: 14,
     fillHex,
@@ -4153,9 +4125,11 @@ async function appendHookCapsule(frame, slide, payload) {
     fontStyle: "Semi Bold",
     fallbackStyle: "Bold",
     lineHeight: 1.0,
-    maxSize: 22,
+    maxSize: 20,
     minSize: 14
   });
+  capsule.x = Math.round((frame.width - capsule.width) / 2);
+  capsule.y = Math.max(0, getCarouselMetaY(frame.height) - capsule.height - 44);
 }
 
 function getBottomScrollHintTone(frame) {

@@ -271,3 +271,9 @@
     - then `default_auto`
     - then `review_safe`
   - Review-mode style resolution also has to honor every explicit family alias, not just the old safe-family shortcuts, or the backend will silently erase the very exploration the Studio UI is asking for.
+- Placeholder-media hook slides break down faster than body slides when the planner emits both a long headline and a body sentence.
+  - For this family, the cover should stay headline-led and suppress hook body copy instead of trying to stack both.
+  - The bottom swipe capsule also needs content-driven sizing; fixed width based on raw character count is too brittle for localized labels like Russian.
+- Production Auto Mode is a different workflow from the 3-variant Studio review lane.
+  - Reusing the same fixed 3-job stop rule makes production look stale because the plugin keeps draining older queued jobs after the intended job finishes.
+  - The safer default is: one job for non-`studio-*` payloads, three jobs for Studio review rounds.

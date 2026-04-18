@@ -1,9 +1,9 @@
 {
-  "job_id": "production-20260414-232306-c9fa34",
-  "created_at": "2026-04-14T23:23:06.490459+00:00",
+  "job_id": "production-20260415-143107-e0bbc4",
+  "created_at": "2026-04-15T14:31:07.745438+00:00",
   "status": "complete",
   "request": {
-    "job_id": "production-20260414-232306-c9fa34",
+    "job_id": "production-20260415-143107-e0bbc4",
     "source": "manual",
     "generation_mode": "production",
     "library_item_id": "placeholder-media-glow-perfect-v1",
@@ -34,32 +34,32 @@
   "library_label": "Placeholder Media Glow",
   "style_family": "reference_placeholder_media_glow",
   "style_recipe": "placeholder_media_glow_v1",
-  "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\production-20260414-232306-c9fa34.json",
-  "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\production-20260414-232306-c9fa34.render.json",
-  "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\production-20260414-232306-c9fa34.render-result.json",
+  "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\production-20260415-143107-e0bbc4.json",
+  "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\production-20260415-143107-e0bbc4.render.json",
+  "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\production-20260415-143107-e0bbc4.render-result.json",
   "figma_file_url": null,
   "figma_page_url": null,
-  "figma_page_name": "production-20260414-232306-c9fa34-plugin-render",
+  "figma_page_name": "production-20260415-143107-e0bbc4-plugin-render",
   "export_paths": [
-    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260414-232306-c9fa34\\slide-01.png",
-    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260414-232306-c9fa34\\slide-02.png",
-    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260414-232306-c9fa34\\slide-03.png",
-    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260414-232306-c9fa34\\slide-04.png",
-    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260414-232306-c9fa34\\slide-05.png",
-    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260414-232306-c9fa34\\slide-06.png",
-    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260414-232306-c9fa34\\slide-07.png"
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-143107-e0bbc4\\slide-01.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-143107-e0bbc4\\slide-02.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-143107-e0bbc4\\slide-03.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-143107-e0bbc4\\slide-04.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-143107-e0bbc4\\slide-05.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-143107-e0bbc4\\slide-06.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-143107-e0bbc4\\slide-07.png"
   ],
   "export_urls": [
-    "/tmp-output/exports/production-20260414-232306-c9fa34/slide-01.png",
-    "/tmp-output/exports/production-20260414-232306-c9fa34/slide-02.png",
-    "/tmp-output/exports/production-20260414-232306-c9fa34/slide-03.png",
-    "/tmp-output/exports/production-20260414-232306-c9fa34/slide-04.png",
-    "/tmp-output/exports/production-20260414-232306-c9fa34/slide-05.png",
-    "/tmp-output/exports/production-20260414-232306-c9fa34/slide-06.png",
-    "/tmp-output/exports/production-20260414-232306-c9fa34/slide-07.png"
+    "/tmp-output/exports/production-20260415-143107-e0bbc4/slide-01.png",
+    "/tmp-output/exports/production-20260415-143107-e0bbc4/slide-02.png",
+    "/tmp-output/exports/production-20260415-143107-e0bbc4/slide-03.png",
+    "/tmp-output/exports/production-20260415-143107-e0bbc4/slide-04.png",
+    "/tmp-output/exports/production-20260415-143107-e0bbc4/slide-05.png",
+    "/tmp-output/exports/production-20260415-143107-e0bbc4/slide-06.png",
+    "/tmp-output/exports/production-20260415-143107-e0bbc4/slide-07.png"
   ],
-  "pdf_export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260414-232306-c9fa34\\carousel.pdf",
-  "pdf_export_url": "/tmp-output/exports/production-20260414-232306-c9fa34/carousel.pdf",
+  "pdf_export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-143107-e0bbc4\\carousel.pdf",
+  "pdf_export_url": "/tmp-output/exports/production-20260415-143107-e0bbc4/carousel.pdf",
   "used_script": "Slide 1: Low-prep writing activities\n\nSlide 2: Quick warm-up\nStart with one focused prompt and a visible timer.\n\nSlide 3: Model the first line\nGive students one example so they can enter faster.\n\nSlide 4: Reduce prep\nReuse the same worksheet with a different writing angle.\n\nSlide 5: Raise participation\nLet students draft first, then share with a partner.\n\nSlide 6: Keep the pace\nUse short reflection prompts instead of long corrections.\n\nSlide 7: Follow for more English teaching materials\nFollow for more English teaching materials",
   "image_assets": [
     {
@@ -150,33 +150,33 @@
       "slide_number": 1
     },
     {
-      "code": "underfilled_layout",
-      "severity": "info",
-      "message": "Primary content only uses 27% of the slide height.",
+      "code": "overpacked_layout",
+      "severity": "warning",
+      "message": "Primary content uses 83% of the slide height and may feel cramped.",
       "slide_number": 2
     },
     {
-      "code": "underfilled_layout",
-      "severity": "info",
-      "message": "Primary content only uses 27% of the slide height.",
+      "code": "overpacked_layout",
+      "severity": "warning",
+      "message": "Primary content uses 83% of the slide height and may feel cramped.",
       "slide_number": 3
     },
     {
-      "code": "underfilled_layout",
-      "severity": "info",
-      "message": "Primary content only uses 27% of the slide height.",
+      "code": "overpacked_layout",
+      "severity": "warning",
+      "message": "Primary content uses 83% of the slide height and may feel cramped.",
       "slide_number": 4
     },
     {
-      "code": "underfilled_layout",
-      "severity": "info",
-      "message": "Primary content only uses 27% of the slide height.",
+      "code": "overpacked_layout",
+      "severity": "warning",
+      "message": "Primary content uses 83% of the slide height and may feel cramped.",
       "slide_number": 5
     },
     {
-      "code": "underfilled_layout",
-      "severity": "info",
-      "message": "Primary content only uses 27% of the slide height.",
+      "code": "overpacked_layout",
+      "severity": "warning",
+      "message": "Primary content uses 83% of the slide height and may feel cramped.",
       "slide_number": 6
     }
   ],
@@ -202,8 +202,8 @@
       "headline_lines": 2,
       "body_lines": 2,
       "content_top": 194,
-      "content_bottom": 558,
-      "occupied_height_ratio": 0.27,
+      "content_bottom": 1316,
+      "occupied_height_ratio": 0.831,
       "truncated": false,
       "image_rendered": false
     },
@@ -215,8 +215,8 @@
       "headline_lines": 2,
       "body_lines": 2,
       "content_top": 194,
-      "content_bottom": 558,
-      "occupied_height_ratio": 0.27,
+      "content_bottom": 1316,
+      "occupied_height_ratio": 0.831,
       "truncated": false,
       "image_rendered": false
     },
@@ -228,8 +228,8 @@
       "headline_lines": 2,
       "body_lines": 2,
       "content_top": 194,
-      "content_bottom": 558,
-      "occupied_height_ratio": 0.27,
+      "content_bottom": 1316,
+      "occupied_height_ratio": 0.831,
       "truncated": false,
       "image_rendered": false
     },
@@ -241,8 +241,8 @@
       "headline_lines": 2,
       "body_lines": 2,
       "content_top": 194,
-      "content_bottom": 558,
-      "occupied_height_ratio": 0.27,
+      "content_bottom": 1316,
+      "occupied_height_ratio": 0.831,
       "truncated": false,
       "image_rendered": false
     },
@@ -254,8 +254,8 @@
       "headline_lines": 2,
       "body_lines": 2,
       "content_top": 194,
-      "content_bottom": 558,
-      "occupied_height_ratio": 0.27,
+      "content_bottom": 1316,
+      "occupied_height_ratio": 0.831,
       "truncated": false,
       "image_rendered": false
     },
@@ -263,12 +263,12 @@
       "slide_number": 7,
       "role": "cta",
       "headline_font_size": 48,
-      "body_font_size": 48,
+      "body_font_size": 38,
       "headline_lines": 2,
-      "body_lines": 2,
+      "body_lines": null,
       "content_top": 344,
-      "content_bottom": 916,
-      "occupied_height_ratio": 0.424,
+      "content_bottom": 920,
+      "occupied_height_ratio": 0.427,
       "truncated": false,
       "image_rendered": false
     }

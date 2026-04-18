@@ -485,6 +485,7 @@ async function renderCarousel(payload) {
 
     await renderSlide(frame, slide, payload);
     await appendHookCapsule(frame, slide, payload);
+    await appendBottomScrollHint(frame, slide, payload);
     await appendCarouselMeta(frame, slide, payload);
     collectSlideDiagnostics(frame, slide, payload);
     frames.push(frame);
@@ -1205,30 +1206,25 @@ async function renderCtaSlide(frame, slide, payload) {
 
   if (!isCtaSlide(slide) && (profile.ctaMode === "headline_button" || profile.ctaMode === "headline_supporting_button")) {
     const pillY = Math.max(804, bodyBottom + 72);
-    const pill = figma.createRectangle();
-    pill.resize(360, 82);
-    pill.x = 360;
-    pill.y = pillY;
-    pill.cornerRadius = 999;
-    pill.fills = [solidPaint(tokens.text_light)];
-    frame.appendChild(pill);
-
-    await createTextBlock(frame, {
+    await appendAutoLayoutCapsule(frame, {
+      name: "CTA Button Capsule",
+      x: 360,
+      y: pillY,
+      width: 360,
+      height: 82,
+      paddingLeft: 22,
+      paddingRight: 22,
+      paddingTop: 18,
+      paddingBottom: 18,
+      fillHex: tokens.text_light,
       text: slide.button_label || "Open the next step",
+      textHex: tokens.text_dark,
       fontFamily: "Inter",
       fontStyle: "Bold",
       fallbackStyle: "Bold",
-      x: 382,
-      y: pillY + 23,
-      width: 316,
-      maxHeight: 38,
-      maxSize: 24,
-      minSize: 16,
       lineHeight: 1.0,
-      color: tokens.text_dark,
-      alignHorizontal: "CENTER",
-      role: "button",
-      maxLines: 1
+      maxSize: 24,
+      minSize: 16
     });
   }
 
@@ -1739,28 +1735,25 @@ async function renderTypographySignalCtaSlide(frame, slide, payload) {
 
   if (!isCtaSlide(slide)) {
     const pillY = Math.max(800, ctaBottom + 62);
-    const pill = figma.createRectangle();
-    pill.resize(330, 76);
-    pill.x = 375;
-    pill.y = pillY;
-    pill.cornerRadius = 999;
-    pill.fills = [solidPaint(tokens.text_light)];
-    frame.appendChild(pill);
-
-    await createTextBlock(frame, {
+    await appendAutoLayoutCapsule(frame, {
+      name: "CTA Button Capsule",
+      x: 375,
+      y: pillY,
+      width: 330,
+      height: 76,
+      paddingLeft: 23,
+      paddingRight: 23,
+      paddingTop: 17,
+      paddingBottom: 17,
+      fillHex: tokens.text_light,
       text: slide.button_label || "Get access",
+      textHex: tokens.text_dark,
       fontFamily: "Inter",
       fontStyle: "Bold",
       fallbackStyle: "Bold",
-      x: 398,
-      y: pillY + 20,
-      width: 284,
-      maxHeight: 34,
-      maxSize: 24,
-      minSize: 16,
       lineHeight: 1.0,
-      color: tokens.text_dark,
-      alignHorizontal: "CENTER"
+      maxSize: 24,
+      minSize: 16
     });
   }
 
@@ -2314,28 +2307,25 @@ async function renderCpSplitCtaSlide(frame, slide, payload) {
 
   if (!isCtaSlide(slide)) {
     const pillY = Math.max(846, ctaBottom + 62);
-    const pill = figma.createRectangle();
-    pill.resize(320, 76);
-    pill.x = 86;
-    pill.y = pillY;
-    pill.cornerRadius = 999;
-    pill.fills = [solidPaint(tokens.text_dark)];
-    frame.appendChild(pill);
-
-    await createTextBlock(frame, {
+    await appendAutoLayoutCapsule(frame, {
+      name: "CTA Button Capsule",
+      x: 86,
+      y: pillY,
+      width: 320,
+      height: 76,
+      paddingLeft: 28,
+      paddingRight: 28,
+      paddingTop: 17,
+      paddingBottom: 17,
+      fillHex: tokens.text_dark,
       text: slide.button_label || "Get access",
+      textHex: tokens.text_light,
       fontFamily: "Inter",
       fontStyle: "Bold",
       fallbackStyle: "Bold",
-      x: 114,
-      y: pillY + 20,
-      width: 264,
-      maxHeight: 34,
-      maxSize: 24,
-      minSize: 16,
       lineHeight: 1.0,
-      color: tokens.text_light,
-      alignHorizontal: "CENTER"
+      maxSize: 24,
+      minSize: 16
     });
   }
 }
@@ -3282,23 +3272,19 @@ async function renderTwitterCardCtaSlide(frame, slide, payload) {
   const tweetLayout = await appendTweetCard(frame, 50, 148, 980, 836, slide, tokens, payload, false);
 
   if (slide.supporting_text) {
-    const headlineSize = Math.min(54, getTextBlockFontSize(tweetLayout && tweetLayout.headlineNode, 42));
-    await createTextBlock(frame, {
-      text: slide.supporting_text,
-      fontFamily: payload.typography.cta_heading_family,
-      fontStyle: payload.typography.cta_heading_style,
-      fallbackStyle: "Bold",
+    await appendCtaSecondaryHeadline(frame, slide, payload, tweetLayout && tweetLayout.headlineNode, {
       x: 126,
-      y: 1018,
+      minY: 1018,
       width: 828,
-      maxHeight: 136,
-      maxSize: headlineSize,
-      minSize: Math.max(22, headlineSize - 12),
-      lineHeight: 1.02,
+      minWidth: 360,
+      height: 70,
+      extraPadding: 18,
+      bottomPadding: 182,
+      lineHeight: 1.0,
       color: tokens.text_dark,
       alignHorizontal: "CENTER",
-      role: "supporting",
-      maxLines: 3
+      fillHex: tokens.accent_blue,
+      textHex: tokens.text_dark
     });
   }
 }
@@ -4126,6 +4112,10 @@ function getHookCapsuleLabel(language) {
   return HOOK_CAPSULE_LABELS[normalized] || HOOK_CAPSULE_LABELS.en;
 }
 
+function getBottomScrollHintLabel(language) {
+  return getHookCapsuleLabel(language);
+}
+
 function isHookSlide(slide) {
   return cleanText(slide && slide.slide_role) === "hook" || cleanText(slide && slide.design_role) === "cover";
 }
@@ -4141,34 +4131,71 @@ async function appendHookCapsule(frame, slide, payload) {
   const text = getHookCapsuleLabel(payload && payload.language);
   const width = Math.max(188, Math.min(372, 54 + text.length * 12));
   const height = 58;
-  const x = frame.width - width - 86;
-  const y = frame.height - 204;
+  const x = Math.round((frame.width - width) / 2);
+  const y = Math.max(0, getCarouselMetaY(frame.height) - height - 34);
   const fillHex = "#5563D8";
 
-  const pill = figma.createRectangle();
-  pill.name = "Hook Capsule";
-  pill.resize(width, height);
-  pill.x = x;
-  pill.y = y;
-  pill.cornerRadius = 999;
-  pill.fills = [solidPaint(fillHex, 0.98)];
-  frame.appendChild(pill);
-
-  await createTextBlock(frame, {
+  await appendAutoLayoutCapsule(frame, {
+    name: "Hook Capsule",
+    x,
+    y,
+    width,
+    height,
+    paddingLeft: 18,
+    paddingRight: 18,
+    paddingTop: 14,
+    paddingBottom: 14,
+    fillHex,
+    fillOpacity: 0.98,
     text,
+    textHex: "#FFFFFF",
     fontFamily: "Inter",
     fontStyle: "Semi Bold",
     fallbackStyle: "Bold",
-    x: x + 18,
-    y: y + 14,
-    width: width - 36,
-    maxHeight: 26,
-    maxSize: 22,
-    minSize: 14,
     lineHeight: 1.0,
-    color: "#FFFFFF",
-    alignHorizontal: "CENTER"
+    maxSize: 22,
+    minSize: 14
   });
+}
+
+function getBottomScrollHintTone(frame) {
+  const fill = getPrimarySolidFill(frame);
+  if (!fill) {
+    return { colorHex: "#2E3447", opacity: 0.94 };
+  }
+  const brightness = getPaintBrightness(fill);
+  if (brightness < 0.42) {
+    return { colorHex: "#F3F6FF", opacity: 0.92 };
+  }
+  if (brightness < 0.7) {
+    return { colorHex: "#F3F6FF", opacity: 0.9 };
+  }
+  return { colorHex: "#2E3447", opacity: 0.94 };
+}
+
+async function appendBottomScrollHint(frame, slide, payload) {
+  if (isHookSlide(slide) || isCtaSlide(slide)) {
+    return;
+  }
+  const tone = getBottomScrollHintTone(frame);
+  const textNode = await createTextBlock(frame, {
+    text: getBottomScrollHintLabel(payload && payload.language),
+    fontFamily: "Inter",
+    fontStyle: "Semi Bold",
+    fallbackStyle: "Bold",
+    x: Math.round((frame.width - 420) / 2),
+    y: frame.height - 152,
+    width: 420,
+    maxHeight: 30,
+    maxSize: 22,
+    minSize: 13,
+    lineHeight: 1.0,
+    color: tone.colorHex,
+    alignHorizontal: "CENTER",
+    role: "scroll_hint",
+    maxLines: 1
+  });
+  textNode.opacity = tone.opacity;
 }
 
 async function appendCarouselMeta(frame, slide, payload) {
@@ -4259,28 +4286,25 @@ async function getSavePostIconHash(payload) {
 
 async function appendLabelPill(frame, x, y, text, fillHex, textHex) {
   const width = Math.max(164, Math.min(360, 42 + text.length * 13));
-  const pill = figma.createRectangle();
-  pill.resize(width, 58);
-  pill.x = x;
-  pill.y = y;
-  pill.cornerRadius = 999;
-  pill.fills = [solidPaint(fillHex)];
-  frame.appendChild(pill);
-
-  await createTextBlock(frame, {
-    text: text,
+  await appendAutoLayoutCapsule(frame, {
+    name: "Label Pill",
+    x,
+    y,
+    width,
+    height: 58,
+    paddingLeft: 18,
+    paddingRight: 18,
+    paddingTop: 12,
+    paddingBottom: 12,
+    fillHex,
+    text,
+    textHex,
     fontFamily: "Inter",
     fontStyle: "Semi Bold",
     fallbackStyle: "Bold",
-    x: x + 18,
-    y: y + 14,
-    width: width - 36,
-    maxHeight: 26,
-    maxSize: 22,
-    minSize: 14,
     lineHeight: 1.0,
-    color: textHex,
-    alignHorizontal: "CENTER"
+    maxSize: 22,
+    minSize: 14
   });
 }
 
@@ -4539,29 +4563,161 @@ async function appendRetroCreatorFooter(frame, tokens, buttonLabel) {
 }
 
 async function appendRetroPillButton(frame, x, y, width, height, tokens, label) {
-  const pill = figma.createRectangle();
-  pill.resize(width, height);
-  pill.x = x;
-  pill.y = y;
-  pill.cornerRadius = 24;
-  pill.fills = [solidPaint(tokens.accent_gold)];
-  frame.appendChild(pill);
-
-  await createTextBlock(frame, {
+  await appendAutoLayoutCapsule(frame, {
+    name: "Retro Pill Button",
+    x,
+    y,
+    width,
+    height,
+    cornerRadius: 24,
+    paddingLeft: 24,
+    paddingRight: 24,
+    paddingTop: 20,
+    paddingBottom: 20,
+    fillHex: tokens.accent_gold,
     text: label,
+    textHex: tokens.text_dark,
     fontFamily: "Inter",
     fontStyle: "Bold",
     fallbackStyle: "Bold",
-    x: x + 24,
-    y: y + 24,
-    width: width - 48,
-    maxHeight: 36,
-    maxSize: 28,
-    minSize: 16,
     lineHeight: 1.0,
-    color: tokens.text_dark,
-    alignHorizontal: "CENTER"
+    maxSize: 28,
+    minSize: 16
   });
+}
+
+async function appendAutoLayoutCapsule(parent, options) {
+  const capsule = figma.createFrame();
+  capsule.name = options.name || "Capsule";
+  capsule.layoutMode = "HORIZONTAL";
+  capsule.primaryAxisAlignItems = "CENTER";
+  capsule.counterAxisAlignItems = "CENTER";
+  capsule.itemSpacing = 0;
+  capsule.paddingLeft = typeof options.paddingLeft === "number" ? options.paddingLeft : 0;
+  capsule.paddingRight = typeof options.paddingRight === "number" ? options.paddingRight : 0;
+  capsule.paddingTop = typeof options.paddingTop === "number" ? options.paddingTop : 0;
+  capsule.paddingBottom = typeof options.paddingBottom === "number" ? options.paddingBottom : 0;
+  capsule.cornerRadius = typeof options.cornerRadius === "number" ? options.cornerRadius : 999;
+  capsule.fills = [solidPaint(options.fillHex, typeof options.fillOpacity === "number" ? options.fillOpacity : 1)];
+  capsule.strokes = options.strokeHex ? [solidPaint(options.strokeHex, typeof options.strokeOpacity === "number" ? options.strokeOpacity : 1)] : [];
+  capsule.strokeWeight = typeof options.strokeWeight === "number" ? options.strokeWeight : 0;
+  capsule.effects = Array.isArray(options.effects) ? options.effects : [];
+  capsule.clipsContent = false;
+  parent.appendChild(capsule);
+
+  const label = figma.createText();
+  label.name = `${capsule.name} Label`;
+  const font = await loadPreferredFont(options.fontFamily, options.fontStyle, options.fallbackStyle);
+  label.fontName = font;
+  label.textAlignHorizontal = "CENTER";
+  label.textAlignVertical = "CENTER";
+  label.fills = [solidPaint(options.textHex)];
+  label.textAutoResize = options.allowWrap ? "HEIGHT" : "WIDTH_AND_HEIGHT";
+  capsule.appendChild(label);
+
+  const capsuleWidth = typeof options.width === "number" ? Math.round(options.width) : null;
+  const capsuleHeight = typeof options.height === "number" ? Math.round(options.height) : null;
+  const maxTextWidth = capsuleWidth === null
+    ? null
+    : Math.max(1, capsuleWidth - capsule.paddingLeft - capsule.paddingRight);
+  const maxTextHeight = capsuleHeight === null
+    ? null
+    : Math.max(1, capsuleHeight - capsule.paddingTop - capsule.paddingBottom);
+  fitCapsuleText(label, cleanText(options.text), {
+    maxSize: typeof options.maxSize === "number" ? options.maxSize : 22,
+    minSize: typeof options.minSize === "number" ? options.minSize : 14,
+    lineHeight: typeof options.lineHeight === "number" ? options.lineHeight : 1,
+    maxWidth: maxTextWidth,
+    maxHeight: maxTextHeight,
+    maxLines: typeof options.maxLines === "number" ? options.maxLines : 1,
+    allowWrap: Boolean(options.allowWrap)
+  });
+
+  capsule.primaryAxisSizingMode = capsuleWidth === null ? "AUTO" : "FIXED";
+  capsule.counterAxisSizingMode = capsuleHeight === null ? "AUTO" : "FIXED";
+  capsule.resizeWithoutConstraints(
+    capsuleWidth === null ? Math.ceil(capsule.width) : capsuleWidth,
+    capsuleHeight === null ? Math.ceil(capsule.height) : capsuleHeight
+  );
+  capsule.x = Math.round(options.x || 0);
+  capsule.y = Math.round(options.y || 0);
+  return capsule;
+}
+
+function fitCapsuleText(node, text, options) {
+  const normalized = cleanText(text) || "";
+  const maxSize = Math.max(8, typeof options.maxSize === "number" ? options.maxSize : 22);
+  const minSize = Math.max(8, Math.min(maxSize, typeof options.minSize === "number" ? options.minSize : 14));
+  const maxWidth = typeof options.maxWidth === "number" ? options.maxWidth : Number.POSITIVE_INFINITY;
+  const maxHeight = typeof options.maxHeight === "number" ? options.maxHeight : Number.POSITIVE_INFINITY;
+  const lineHeightRatio = typeof options.lineHeight === "number" ? options.lineHeight : 1;
+  const maxLines = typeof options.maxLines === "number" && options.maxLines > 0 ? options.maxLines : 1;
+
+  if (options.allowWrap) {
+    for (let fontSize = maxSize; fontSize >= minSize; fontSize -= 2) {
+      applyCapsuleTextStyle(node, normalized, fontSize, lineHeightRatio, true, maxWidth);
+      const lineHeightPixels = Math.max(1, Math.round(fontSize * lineHeightRatio));
+      const lineCount = normalized ? estimateLineCount(node.height, lineHeightPixels) : 0;
+      const measuredHeight = normalized ? getConservativeTextHeight(node, fontSize, lineHeightPixels, lineCount) : 0;
+      if (measuredHeight <= maxHeight && lineCount <= maxLines) {
+        return;
+      }
+    }
+
+    let fallback = normalized;
+    while (fallback.length > 8) {
+      fallback = truncatePhrase(fallback.slice(0, -2)) || fallback.slice(0, -4).trim();
+      const candidate = fallback ? `${fallback}...` : "";
+      for (let fontSize = maxSize; fontSize >= minSize; fontSize -= 2) {
+        applyCapsuleTextStyle(node, candidate, fontSize, lineHeightRatio, true, maxWidth);
+        const lineHeightPixels = Math.max(1, Math.round(fontSize * lineHeightRatio));
+        const lineCount = candidate ? estimateLineCount(node.height, lineHeightPixels) : 0;
+        const measuredHeight = candidate ? getConservativeTextHeight(node, fontSize, lineHeightPixels, lineCount) : 0;
+        if (measuredHeight <= maxHeight && lineCount <= maxLines) {
+          return;
+        }
+      }
+    }
+
+    applyCapsuleTextStyle(node, normalized, minSize, lineHeightRatio, true, maxWidth);
+    return;
+  }
+
+  for (let fontSize = maxSize; fontSize >= minSize; fontSize -= 2) {
+    applyCapsuleTextStyle(node, normalized, fontSize, lineHeightRatio, false, maxWidth);
+    if (node.width <= maxWidth && node.height <= maxHeight) {
+      return;
+    }
+  }
+
+  let fallback = normalized;
+  while (fallback.length > 8) {
+    fallback = truncatePhrase(fallback.slice(0, -2)) || fallback.slice(0, -4).trim();
+    const candidate = fallback ? `${fallback}...` : "";
+    for (let fontSize = maxSize; fontSize >= minSize; fontSize -= 2) {
+      applyCapsuleTextStyle(node, candidate, fontSize, lineHeightRatio, false, maxWidth);
+      if (node.width <= maxWidth && node.height <= maxHeight) {
+        return;
+      }
+    }
+  }
+
+  applyCapsuleTextStyle(node, normalized, minSize, lineHeightRatio, false, maxWidth);
+}
+
+function applyCapsuleTextStyle(node, text, fontSize, lineHeightRatio, allowWrap, width) {
+  node.characters = text;
+  node.fontSize = fontSize;
+  node.lineHeight = {
+    unit: "PIXELS",
+    value: Math.max(1, Math.round(fontSize * lineHeightRatio))
+  };
+  if (allowWrap) {
+    node.textAutoResize = "HEIGHT";
+    node.resize(Math.max(1, Math.round(width)), 100);
+  } else {
+    node.textAutoResize = "WIDTH_AND_HEIGHT";
+  }
 }
 
 function appendRetroArrow(frame, x, y, tokens) {
@@ -4874,31 +5030,76 @@ async function appendCtaSecondaryHeadline(parent, slide, payload, anchorNode, op
   if (!slide.supporting_text || !anchorNode) {
     return anchorNode ? getTextBottom(anchorNode, options.fallbackFontSize || 24, 0) : (options.minY || 0);
   }
+  const isCtaPill = isCtaSlide(slide);
   const anchorFontSize = Math.round(getTextBlockFontSize(anchorNode, options.fallbackFontSize || options.maxSize || 24));
-  const preferredMaxSize = Math.max(options.minSize || 18, Math.min(anchorFontSize, options.maxSize || anchorFontSize));
+  const preferredMaxSize = Math.max(
+    options.minSize || 14,
+    Math.min(anchorFontSize, options.maxSize || Math.min(24, anchorFontSize))
+  );
   const shrinkAllowance = typeof options.shrinkAllowance === "number" ? options.shrinkAllowance : 10;
-  const supportingY = Math.max(options.minY || 0, getTextBottom(anchorNode, anchorFontSize, options.extraPadding || 12));
-  const supportingMaxHeight = typeof options.maxHeight === "number"
-    ? options.maxHeight
-    : clampTextHeight(parent, supportingY, Math.max(112, preferredMaxSize * 3), options.bottomPadding || 220);
-  const supportingNode = await createTextBlock(parent, {
-    text: slide.supporting_text,
-    fontFamily: payload.typography.cta_heading_family,
-    fontStyle: payload.typography.cta_heading_style,
-    fallbackStyle: "Bold",
-    x: options.x,
+  const pillHeight = typeof options.height === "number" ? options.height : (isCtaPill ? 152 : 70);
+  const desiredY = Math.max(options.minY || 0, getTextBottom(anchorNode, anchorFontSize, options.extraPadding || 12));
+  const maxY = Math.max(options.minY || 0, parent.height - (options.bottomPadding || 220) - pillHeight);
+  const supportingY = Math.min(desiredY, maxY);
+  const maxWidth = typeof options.width === "number" ? options.width : Math.max(420, Math.round(parent.width * 0.72));
+  const minWidth = typeof options.minWidth === "number" ? options.minWidth : (isCtaPill ? 720 : 320);
+  const effectiveMinWidth = Math.min(minWidth, maxWidth);
+  const contentDrivenWidth = isCtaPill
+    ? Math.round(320 + slide.supporting_text.length * 8.4)
+    : Math.round(160 + slide.supporting_text.length * 7.2);
+  const pillWidth = Math.max(effectiveMinWidth, Math.min(maxWidth, contentDrivenWidth));
+  const align = options.alignHorizontal || "CENTER";
+  const supportingX = align === "CENTER"
+    ? Math.round((parent.width - pillWidth) / 2)
+    : align === "RIGHT"
+      ? Math.round((options.x || 0) + maxWidth - pillWidth)
+      : Math.round(options.x || 0);
+  const fillHex = options.fillHex || (isCtaPill ? "#111111" : options.color || "#5563D8");
+  const textHex = options.textHex || (isCtaPill ? "#FFFFFF" : (isLightColorHex(fillHex) ? "#111111" : "#FFFFFF"));
+  await appendAutoLayoutCapsule(parent, {
+    name: options.name || "CTA Supporting Pill",
+    x: supportingX,
     y: supportingY,
-    width: options.width,
-    maxHeight: supportingMaxHeight,
-    maxSize: preferredMaxSize,
-    minSize: Math.max(options.minSize || 18, preferredMaxSize - shrinkAllowance),
-    lineHeight: options.lineHeight || 1.02,
-    color: options.color,
-    alignHorizontal: options.alignHorizontal || "CENTER",
-    role: options.role || "supporting",
-    maxLines: options.maxLines || 3
+    width: pillWidth,
+    height: pillHeight,
+    paddingLeft: typeof options.paddingLeft === "number" ? options.paddingLeft : (isCtaPill ? 46 : 28),
+    paddingRight: typeof options.paddingRight === "number" ? options.paddingRight : (isCtaPill ? 46 : 28),
+    paddingTop: typeof options.paddingTop === "number" ? options.paddingTop : (isCtaPill ? 30 : 18),
+    paddingBottom: typeof options.paddingBottom === "number" ? options.paddingBottom : (isCtaPill ? 30 : 18),
+    cornerRadius: typeof options.cornerRadius === "number" ? options.cornerRadius : (isCtaPill ? 44 : 999),
+    fillHex: fillHex,
+    fillOpacity: typeof options.fillOpacity === "number" ? options.fillOpacity : 0.98,
+    strokeHex: options.strokeHex || (isCtaPill ? "#FFFFFF" : null),
+    strokeOpacity: typeof options.strokeOpacity === "number" ? options.strokeOpacity : 1,
+    strokeWeight: typeof options.strokeWeight === "number" ? options.strokeWeight : (isCtaPill ? 6 : 0),
+    effects: Array.isArray(options.effects) ? options.effects : (isCtaPill ? [dropShadow("#111111", 0.32, 0, 14, 40)] : []),
+    text: slide.supporting_text,
+    textHex: textHex,
+    fontFamily: options.fontFamily || (isCtaPill ? "Inter" : payload.typography.cta_heading_family),
+    fontStyle: options.fontStyle || (isCtaPill ? "Black" : payload.typography.cta_heading_style),
+    fallbackStyle: "Bold",
+    lineHeight: options.lineHeight || 1.0,
+    maxSize: isCtaPill ? Math.max(36, preferredMaxSize) : preferredMaxSize,
+    minSize: isCtaPill
+      ? Math.max(options.minSize || 24, Math.max(34, preferredMaxSize) - shrinkAllowance)
+      : Math.max(options.minSize || 18, preferredMaxSize - shrinkAllowance),
+    allowWrap: true,
+    maxLines: options.maxLines || (isCtaPill ? 2 : 3)
   });
-  return getTextBottom(supportingNode, preferredMaxSize, 0);
+  return supportingY + pillHeight;
+}
+
+function isLightColorHex(color) {
+  const normalized = cleanText(color);
+  if (!normalized || !/^#?[0-9a-f]{6}$/i.test(normalized)) {
+    return false;
+  }
+  const hex = normalized.startsWith("#") ? normalized.slice(1) : normalized;
+  const red = parseInt(hex.slice(0, 2), 16);
+  const green = parseInt(hex.slice(2, 4), 16);
+  const blue = parseInt(hex.slice(4, 6), 16);
+  const luminance = (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
+  return luminance >= 0.62;
 }
 
 async function appendFooterSignal(frame, label, x, y, align) {

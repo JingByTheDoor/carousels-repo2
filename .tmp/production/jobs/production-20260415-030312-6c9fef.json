@@ -1,0 +1,277 @@
+{
+  "job_id": "production-20260415-030312-6c9fef",
+  "created_at": "2026-04-15T03:04:21.554209+00:00",
+  "status": "complete",
+  "request": {
+    "job_id": "production-20260415-030312-6c9fef",
+    "source": "manual",
+    "generation_mode": "production",
+    "library_item_id": "placeholder-media-glow-perfect-v1",
+    "niche_preset": null,
+    "topic": "How to teach English online",
+    "script": null,
+    "cta_text": null,
+    "language": "ru",
+    "aspect_ratio": "portrait_1080x1350",
+    "output_modes": [
+      "figma",
+      "png"
+    ],
+    "reference_style": "placeholder_media",
+    "image_mode": "auto",
+    "image_source_preference": "pexels",
+    "allow_ai_fallback": true,
+    "image_focus": "brand_safe",
+    "reference_file_key": "SsqVEXMsFxp9WPbPIy9Sww",
+    "reference_node_ids": [
+      "local:light-1",
+      "local:light-2",
+      "local:light-6"
+    ],
+    "notes": null
+  },
+  "library_item_id": "placeholder-media-glow-perfect-v1",
+  "library_label": "Placeholder Media Glow",
+  "style_family": "reference_placeholder_media_glow",
+  "style_recipe": "placeholder_media_glow_v1",
+  "job_artifact_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\jobs\\production-20260415-030312-6c9fef.json",
+  "render_payload_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-jobs\\production-20260415-030312-6c9fef.render.json",
+  "render_result_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\render-results\\production-20260415-030312-6c9fef.render-result.json",
+  "figma_file_url": null,
+  "figma_page_url": null,
+  "figma_page_name": "production-20260415-030312-6c9fef-plugin-render",
+  "export_paths": [
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-030312-6c9fef\\slide-01.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-030312-6c9fef\\slide-02.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-030312-6c9fef\\slide-03.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-030312-6c9fef\\slide-04.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-030312-6c9fef\\slide-05.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-030312-6c9fef\\slide-06.png",
+    "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-030312-6c9fef\\slide-07.png"
+  ],
+  "export_urls": [
+    "/tmp-output/exports/production-20260415-030312-6c9fef/slide-01.png",
+    "/tmp-output/exports/production-20260415-030312-6c9fef/slide-02.png",
+    "/tmp-output/exports/production-20260415-030312-6c9fef/slide-03.png",
+    "/tmp-output/exports/production-20260415-030312-6c9fef/slide-04.png",
+    "/tmp-output/exports/production-20260415-030312-6c9fef/slide-05.png",
+    "/tmp-output/exports/production-20260415-030312-6c9fef/slide-06.png",
+    "/tmp-output/exports/production-20260415-030312-6c9fef/slide-07.png"
+  ],
+  "pdf_export_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\exports\\production-20260415-030312-6c9fef\\carousel.pdf",
+  "pdf_export_url": "/tmp-output/exports/production-20260415-030312-6c9fef/carousel.pdf",
+  "used_script": "Slide 1: Зарабатывай онлайн на преподавании английского!\n\nSlide 2: Выбери платформу под свои сильные стороны\nОт Zoom до специализированных сервисов — найди удобный формат и инструмент для занятий.\n\nSlide 3: Разработай программу под уровень ученика\nНастраивай уроки под потребности новичков и продвинутых, чтобы обучение было эффективным.\n\nSlide 4: Используй интерактивные материалы\nВключай видео, игры и упражнения для удержания внимания и мотивации учеников.\n\nSlide 5: Настрой удобный график занятий\nГибкость расписания поможет привлечь больше учеников с разным режимом дня.\n\nSlide 6: Не забывай про постоянное обучение\nПовышай квалификацию и адаптируй методики для роста дохода и качества уроков.\n\nSlide 7: Готов начать свой путь в онлайн-преподавании?",
+  "image_assets": [
+    {
+      "slide_number": 1,
+      "role": "hook",
+      "source_mode": "stock",
+      "provider": "pexels",
+      "query_or_prompt": "female English teacher in classroom with whiteboard",
+      "original_url": "https://images.pexels.com/photos/6503133/pexels-photo-6503133.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+      "local_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\image-assets\\production-20260415-030312-6c9fef\\slide-01-pexels-6503133.jpeg",
+      "credit": "Photo by Thirdman on Pexels",
+      "width": 4133,
+      "height": 6200,
+      "alt_text": "Teacher writes English sentences on a whiteboard in a classroom setting with students."
+    },
+    {
+      "slide_number": 2,
+      "role": "info",
+      "source_mode": "stock",
+      "provider": "pexels",
+      "query_or_prompt": "teacher desk with lesson planning materials and laptop",
+      "original_url": "https://images.pexels.com/photos/6683407/pexels-photo-6683407.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+      "local_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\image-assets\\production-20260415-030312-6c9fef\\slide-02-pexels-6683407.jpeg",
+      "credit": "Photo by Andy Barbour on Pexels",
+      "width": 4480,
+      "height": 6720,
+      "alt_text": "A laptop on a desk in a bright classroom with papers and a pencil nearby."
+    },
+    {
+      "slide_number": 3,
+      "role": "info",
+      "source_mode": "stock",
+      "provider": "pexels",
+      "query_or_prompt": "English grammar workbook open with student notes",
+      "original_url": "https://images.pexels.com/photos/5676740/pexels-photo-5676740.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+      "local_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\image-assets\\production-20260415-030312-6c9fef\\slide-03-pexels-5676740.jpeg",
+      "credit": "Photo by Ivan S on Pexels",
+      "width": 4000,
+      "height": 6000,
+      "alt_text": "High-angle view of an English grammar book and a laptop with stickers on a wooden desk."
+    },
+    {
+      "slide_number": 4,
+      "role": "info",
+      "source_mode": "stock",
+      "provider": "pexels",
+      "query_or_prompt": "students playing educational games in classroom",
+      "original_url": "https://images.pexels.com/photos/10643464/pexels-photo-10643464.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+      "local_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\image-assets\\production-20260415-030312-6c9fef\\slide-04-pexels-10643464.jpeg",
+      "credit": "Photo by Ron Lach on Pexels",
+      "width": 2390,
+      "height": 3575,
+      "alt_text": "Young boy in school uniform playing computer games in a classroom environment."
+    },
+    {
+      "slide_number": 5,
+      "role": "info",
+      "source_mode": "stock",
+      "provider": "pexels",
+      "query_or_prompt": "online tutor planning schedule with laptop and notebook",
+      "original_url": "https://images.pexels.com/photos/19915766/pexels-photo-19915766.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+      "local_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\image-assets\\production-20260415-030312-6c9fef\\slide-05-pexels-19915766.jpeg",
+      "credit": "Photo by Ahmed ؜ on Pexels",
+      "width": 4621,
+      "height": 6932,
+      "alt_text": "A woman types on a laptop while planning her weekly schedule using a digital calendar."
+    },
+    {
+      "slide_number": 6,
+      "role": "info",
+      "source_mode": "stock",
+      "provider": "pexels",
+      "query_or_prompt": "English teaching worksheets and flashcards on desk",
+      "original_url": "https://images.pexels.com/photos/8926405/pexels-photo-8926405.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800",
+      "local_path": "C:\\Users\\User\\OneDrive - Board of Education of SD 39 (Vancouver)\\Documents\\Carousels\\carousels-repo2\\.tmp\\image-assets\\production-20260415-030312-6c9fef\\slide-06-pexels-8926405.jpeg",
+      "credit": "Photo by Thirdman on Pexels",
+      "width": 3861,
+      "height": 5791,
+      "alt_text": "Classroom interior featuring globes, English book, and desks in sunlight"
+    }
+  ],
+  "visual_status": "visual_resolved",
+  "warnings": [
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 26% of the slide height.",
+      "slide_number": 1
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 29% of the slide height.",
+      "slide_number": 2
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 33% of the slide height.",
+      "slide_number": 3
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 29% of the slide height.",
+      "slide_number": 4
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 29% of the slide height.",
+      "slide_number": 5
+    },
+    {
+      "code": "underfilled_layout",
+      "severity": "info",
+      "message": "Primary content only uses 27% of the slide height.",
+      "slide_number": 6
+    }
+  ],
+  "fit_metrics": [
+    {
+      "slide_number": 1,
+      "role": "cover",
+      "headline_font_size": 94,
+      "body_font_size": null,
+      "headline_lines": 1,
+      "body_lines": null,
+      "content_top": 738,
+      "content_bottom": 1091,
+      "occupied_height_ratio": 0.261,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 2,
+      "role": "body",
+      "headline_font_size": 70,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 582,
+      "occupied_height_ratio": 0.287,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 3,
+      "role": "body",
+      "headline_font_size": 70,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 634,
+      "occupied_height_ratio": 0.326,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 4,
+      "role": "body",
+      "headline_font_size": 70,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 581,
+      "occupied_height_ratio": 0.287,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 5,
+      "role": "body",
+      "headline_font_size": 76,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 580,
+      "occupied_height_ratio": 0.286,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 6,
+      "role": "body",
+      "headline_font_size": 70,
+      "body_font_size": 44,
+      "headline_lines": 2,
+      "body_lines": 2,
+      "content_top": 194,
+      "content_bottom": 562,
+      "occupied_height_ratio": 0.273,
+      "truncated": false,
+      "image_rendered": true
+    },
+    {
+      "slide_number": 7,
+      "role": "cta",
+      "headline_font_size": 44,
+      "body_font_size": 40,
+      "headline_lines": 2,
+      "body_lines": 3,
+      "content_top": 344,
+      "content_bottom": 926,
+      "occupied_height_ratio": 0.431,
+      "truncated": false,
+      "image_rendered": false
+    }
+  ],
+  "error": null
+}
